@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Digital Heritage Archive — Vendor Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@600;700&family=Noto+Sans+Devanagari:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    /* heritage — light companion. Same ink/paper/brass/indigo system as the kiosk,
+       flipped for a lit workshop screen: ink text on warm paper instead of cream on charcoal. */
+    :root{
+      --canvas:#EDE8DC; --device:#FBF9F2; --surface:#ffffff; --raised:#F3EEE1;
+      --text:#17191F; --secondary:#5B5F6B; --muted:#878B95;
+      --action:#3D6FE8; --action-pressed:#2A54BC; --action-soft:rgba(61,111,232,.12);
+      --brass:#8A701C; --brass-soft:rgba(201,162,39,.14);
+      --green:#227A50; --green-soft:rgba(76,175,125,.14);
+      --violet:#6E4FBD; --violet-soft:rgba(155,126,222,.16);
+      --amber:#8A701C; --amber-soft:rgba(201,162,39,.14);
+      --red:#B23E22; --red-soft:rgba(178,62,34,.13);
+      --border:rgba(23,25,31,.07); --border-strong:rgba(23,25,31,.14);
+      --shadow:0 18px 48px rgba(23,25,31,.14);
+    }
+    /* heritage — exact kiosk tokens. bg/base·surface·raised, text/primary·secondary·muted,
+       action/default·pressed·subtle, accent/brass, state/verified·ai, border/hairline·strong. */
+    [data-theme="dark"]{
+      --canvas:#090b0e; --device:#101319; --surface:#1a1e28; --raised:#242a38;
+      --text:#f2ede3; --secondary:#a6a79e; --muted:#6E7280;
+      --action:#3D6FE8; --action-pressed:#2A54BC; --action-soft:rgba(61,111,232,.14);
+      --brass:#c9a227; --brass-soft:rgba(201,162,39,.14);
+      --green:#4caf7d; --green-soft:rgba(76,175,125,.14);
+      --violet:#9b7ede; --violet-soft:rgba(155,126,222,.14);
+      --amber:#c9a227; --amber-soft:rgba(201,162,39,.14);
+      --red:#D9694F; --red-soft:rgba(217,105,79,.16);
+      --border:rgba(242,237,227,.10); --border-strong:rgba(242,237,227,.22);
+      --shadow:0 18px 48px rgba(0,0,0,.42);
+    }
+    *{box-sizing:border-box}
+    button,input,select,textarea{font:inherit}
+    button{touch-action:manipulation}
+    body{margin:0;min-height:100vh;background:var(--canvas);color:var(--text);font-family:Inter,"Noto Sans Devanagari",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:flex;align-items:center;justify-content:center;padding:22px;transition:background .2s,color .2s}
+    .phone{width:390px;height:826px;background:var(--device);border:9px solid #20242c;border-radius:46px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;position:relative;transition:background .2s}
+    .notch{position:absolute;z-index:50;top:10px;left:50%;transform:translateX(-50%);width:88px;height:24px;border-radius:18px;background:#050607}
+    .statusbar{height:45px;flex:none;padding:12px 21px 0;display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:700;color:var(--text)}
+    .status-icons{display:flex;gap:6px;align-items:center}.online-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
+    .topbar{height:62px;flex:none;border-bottom:1px solid var(--border);padding:0 18px;display:flex;align-items:center;justify-content:space-between;background:var(--device)}
+    .brand-kicker{font-size:9px;line-height:1.2;text-transform:uppercase;letter-spacing:.13em;font-weight:800;color:var(--brass);margin-bottom:3px}
+    .brand-title{font-family:"Source Serif 4",Georgia,serif;font-size:18px;line-height:1;font-weight:700}
+    .role-chip{height:28px;padding:0 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface);font-size:9px;font-weight:800;color:var(--secondary);display:flex;align-items:center;gap:6px}
+    .role-chip i{width:6px;height:6px;background:var(--action);border-radius:50%}
+    .app{flex:1;overflow-y:auto;scrollbar-width:none;padding:17px 16px 20px}.app::-webkit-scrollbar{display:none}
+    .screen{display:none;animation:fade .16s ease}.screen.active{display:block}@keyframes fade{from{opacity:.45;transform:translateY(3px)}to{opacity:1;transform:none}}
+    .screen-head{margin-bottom:15px}.eyebrow{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:5px}.screen-head h1{font-size:22px;line-height:1.15;margin:0 0 5px}.screen-head p{font-size:11px;line-height:1.5;color:var(--secondary);margin:0;max-width:34ch}
+    .capture-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+    .capture{min-height:92px;border:1px solid var(--border);background:var(--surface);border-radius:18px;color:var(--text);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:10px 7px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.025)}
+    .capture:active{transform:scale(.97);background:var(--action-soft)}.capture-icon{width:36px;height:36px;border-radius:12px;background:var(--action-soft);color:var(--action);display:grid;place-items:center}.capture-icon svg{width:20px;height:20px}.capture span{font-size:10px;font-weight:800;text-align:center}
+    .flow-note{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;background:var(--brass-soft);border:1px solid color-mix(in srgb,var(--brass) 24%,transparent);border-radius:15px;color:var(--secondary);font-size:10px;line-height:1.45;margin-bottom:14px}.flow-note b{color:var(--brass)}.flow-icon{color:var(--brass);font-weight:900;font-size:15px;line-height:1}
+    .segmented{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--raised);border:1px solid var(--border);padding:4px;border-radius:14px;margin-bottom:12px}.segmented button{height:34px;border:0;background:transparent;color:var(--muted);border-radius:10px;font-size:9px;font-weight:800;cursor:pointer}.segmented button.active{background:var(--surface);color:var(--text);box-shadow:0 2px 7px rgba(0,0,0,.06)}
+    .upload-zone{border:1.5px dashed var(--border-strong);background:var(--surface);border-radius:18px;padding:20px 14px;text-align:center;display:flex;flex-direction:column;align-items:center;color:var(--muted);cursor:pointer;margin-bottom:4px}.upload-zone.has-file{border-color:color-mix(in srgb,var(--green) 50%,transparent);background:var(--green-soft)}.upload-zone svg{color:var(--action);margin-bottom:8px}.upload-zone strong{font-size:12px;color:var(--text);margin-bottom:4px}.upload-zone span{font-size:9px;line-height:1.45}
+    .field{margin-top:11px}.field label{display:block;font-size:8px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);font-weight:800;margin:0 0 6px}.input,.select,.textarea{width:100%;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:13px;outline:none}.input,.select{height:45px;padding:0 12px;font-size:11px}.textarea{min-height:74px;padding:11px 12px;resize:none;font-size:11px;line-height:1.45}.input:focus,.select:focus,.textarea:focus{border-color:var(--action);box-shadow:0 0 0 3px var(--action-soft)}
+    .automation{margin-top:13px;background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:0 12px}.toggle-row{min-height:55px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border)}.toggle-row:last-child{border-bottom:0}.toggle-copy strong{display:block;font-size:10px}.toggle-copy span{display:block;font-size:8.5px;color:var(--muted);margin-top:3px}.switch{width:38px;height:22px;border-radius:999px;background:var(--raised);border:1px solid var(--border);padding:2px;cursor:pointer;transition:.15s}.switch:after{content:"";display:block;width:16px;height:16px;border-radius:50%;background:var(--muted);transition:.15s}.switch.on{background:var(--action-soft);border-color:color-mix(in srgb,var(--action) 35%,transparent)}.switch.on:after{transform:translateX(16px);background:var(--action)}
+    .primary{width:100%;height:48px;border:0;border-radius:14px;background:var(--action);color:#fff;font-size:11px;font-weight:800;margin-top:15px;cursor:pointer;box-shadow:0 8px 20px color-mix(in srgb,var(--action) 22%,transparent)}.primary:active{transform:scale(.985);background:var(--action-pressed)}
+    .scope{display:flex;background:var(--surface);border:1px solid var(--border);padding:4px;border-radius:14px;margin-bottom:11px}.scope button{flex:1;height:34px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-size:9px;font-weight:800;cursor:pointer}.scope button.active{background:var(--raised);color:var(--text);box-shadow:0 2px 6px rgba(0,0,0,.04)}
+    .search{height:43px;border:1px solid var(--border);background:var(--surface);border-radius:13px;display:flex;align-items:center;gap:8px;padding:0 11px;margin-bottom:9px;color:var(--muted)}.search input{border:0;outline:0;background:transparent;color:var(--text);flex:1;min-width:0;font-size:10px}.search input::placeholder{color:var(--muted)}
+    .admin-filter-row{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px}.worker-select{height:40px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:12px;padding:0 10px;font-size:10px;outline:none}
+    .filters{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:11px;padding-bottom:1px}.filters::-webkit-scrollbar{display:none}.filter{height:30px;padding:0 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:8px;font-weight:800;white-space:nowrap;cursor:pointer}.filter.active{background:var(--action-soft);border-color:color-mix(in srgb,var(--action) 28%,transparent);color:var(--action)}
+    .record-list{display:flex;flex-direction:column;gap:9px}.record-card{background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:12px;display:flex;gap:10px;align-items:flex-start}.record-icon{width:38px;height:42px;border-radius:11px;background:var(--raised);color:var(--secondary);display:grid;place-items:center;flex:none;font-size:16px}.record-body{min-width:0;flex:1}.record-title{font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px}.record-meta{font-size:8.5px;color:var(--muted);line-height:1.55}.chip{height:20px;padding:0 7px;border-radius:999px;display:inline-flex;align-items:center;font-size:7.5px;font-weight:800;text-transform:uppercase;letter-spacing:.02em}.chip.processing{background:var(--violet-soft);color:var(--violet)}.chip.pending{background:var(--amber-soft);color:var(--amber)}.chip.approved{background:var(--green-soft);color:var(--green)}.chip.fix{background:var(--red-soft);color:var(--red)}
+    .uploader{display:flex;align-items:center;gap:6px;margin-top:7px}.mini-avatar{width:23px;height:23px;border-radius:50%;background:var(--action-soft);color:var(--action);display:grid;place-items:center;font-size:7.5px;font-weight:900}.uploader-copy{min-width:0}.uploader-copy b{display:block;font-size:8.5px;color:var(--secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.uploader-copy span{display:block;font-size:7.5px;color:var(--muted);margin-top:1px}.record-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-end}.record-more,.review-btn{border:1px solid var(--border);background:var(--raised);color:var(--text);cursor:pointer}.record-more{width:29px;height:29px;border-radius:9px;font-size:14px}.review-btn{height:28px;padding:0 9px;border-radius:9px;color:var(--action);font-size:8px;font-weight:800}.empty{display:none;text-align:center;color:var(--muted);font-size:10px;padding:30px 10px}
+    .profile-hero{background:linear-gradient(135deg,var(--action-soft),transparent 62%),var(--surface);border:1px solid var(--border);border-radius:20px;padding:15px;display:flex;gap:12px;align-items:center;margin-bottom:13px}.avatar{width:50px;height:50px;border-radius:50%;background:var(--action-soft);color:var(--action);display:grid;place-items:center;font-size:14px;font-weight:900;border:1px solid color-mix(in srgb,var(--action) 28%,transparent)}.profile-name{font-size:14px;font-weight:800}.profile-id{font-size:8.5px;color:var(--muted);margin-top:3px}.profile-role{display:inline-flex;margin-top:6px;height:21px;padding:0 8px;border-radius:999px;align-items:center;background:var(--brass-soft);color:var(--brass);font-size:7.5px;font-weight:800;text-transform:uppercase}
+    .section-title{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:var(--muted);margin:17px 2px 8px}.info-card,.settings-card{background:var(--surface);border:1px solid var(--border);border-radius:17px;overflow:hidden}.info-row,.setting-row{min-height:52px;padding:10px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}.info-row:last-child,.setting-row:last-child{border-bottom:0}.info-row span,.setting-copy span{font-size:9px;color:var(--muted)}.info-row b{font-size:9px;color:var(--text);text-align:right;max-width:58%}.setting-row{cursor:pointer}.setting-main{display:flex;align-items:center;gap:10px}.setting-icon{width:31px;height:31px;border-radius:10px;background:var(--raised);color:var(--secondary);display:grid;place-items:center}.setting-copy b{display:block;font-size:9.5px}.setting-copy span{display:block;margin-top:2px}.chev{color:var(--muted);font-size:15px}.theme-choice{display:flex;gap:5px}.theme-choice button{height:29px;padding:0 9px;border:1px solid var(--border);background:var(--raised);color:var(--muted);border-radius:9px;font-size:8px;font-weight:800;cursor:pointer}.theme-choice button.active{color:var(--action);background:var(--action-soft);border-color:color-mix(in srgb,var(--action) 28%,transparent)}
+    .permission-note{font-size:9px;line-height:1.5;color:var(--secondary);padding:11px 12px;background:var(--action-soft);border:1px solid color-mix(in srgb,var(--action) 18%,transparent);border-radius:14px;margin-top:11px}
+    .bottomnav{height:69px;flex:none;border-top:1px solid var(--border);background:var(--surface);display:flex;padding-bottom:5px}.nav{flex:1;border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;font-size:9px;font-weight:800;cursor:pointer}.nav svg{width:19px;height:19px}.navbubble{width:40px;height:27px;border-radius:999px;display:grid;place-items:center}.nav.active{color:var(--action)}.nav.active:before{content:"";position:absolute;top:0;width:30px;height:3px;background:var(--brass);border-radius:0 0 5px 5px}.nav.active .navbubble{background:var(--action-soft)}
+    .sheet-backdrop{position:absolute;inset:0;z-index:100;background:rgba(6,8,12,.5);display:none;align-items:flex-end}.sheet-backdrop.open{display:flex}.sheet{width:100%;background:var(--surface);border-radius:24px 24px 0 0;padding:17px 16px 22px;border-top:1px solid var(--border-strong);animation:up .17s ease}@keyframes up{from{transform:translateY(28px);opacity:.6}to{transform:none;opacity:1}}.grab{width:36px;height:4px;border-radius:99px;background:var(--border-strong);margin:0 auto 14px}.sheet h3{font-size:14px;margin:0 0 4px}.sheet p{font-size:9px;color:var(--muted);margin:0 0 12px}.lang-option{width:100%;min-height:50px;border:0;border-top:1px solid var(--border);background:transparent;color:var(--text);display:flex;align-items:center;justify-content:space-between;padding:0 3px;cursor:pointer}.lang-option:first-of-type{border-top:0}.lang-left{display:flex;align-items:center;gap:10px}.lang-symbol{width:33px;height:33px;border-radius:10px;background:var(--raised);display:grid;place-items:center;font-weight:800;font-size:10px}.lang-copy b{display:block;text-align:left;font-size:10px}.lang-copy span{display:block;text-align:left;color:var(--muted);font-size:8px;margin-top:2px}.radio{width:18px;height:18px;border:1.5px solid var(--border-strong);border-radius:50%;display:grid;place-items:center}.lang-option.selected .radio{border-color:var(--action)}.lang-option.selected .radio:after{content:"";width:9px;height:9px;border-radius:50%;background:var(--action)}
+    .toast{position:absolute;left:50%;bottom:82px;transform:translate(-50%,12px);z-index:200;background:#111722;color:#fff;padding:9px 12px;border-radius:10px;font-size:9px;font-weight:700;opacity:0;pointer-events:none;transition:.18s;white-space:nowrap;box-shadow:0 10px 25px rgba(0,0,0,.22)}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:430px){body{padding:0;background:var(--device)}.phone{width:100vw;height:100dvh;border:0;border-radius:0;box-shadow:none}.notch{display:none}.statusbar{padding-top:9px}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+<div class="phone">
+  <div class="notch"></div>
+  <div class="statusbar"><span>09:41</span><div class="status-icons"><span class="online-dot"></span><span>5G</span><span>92%</span></div></div>
+  <header class="topbar">
+    <div><div class="brand-kicker">Digital Heritage Archive</div><div class="brand-title">Vendor Portal</div></div>
+    <div class="role-chip"><i></i><span id="roleLabel">Admin</span></div>
+  </header>
+
+  <main class="app">
+    <section class="screen active" id="screen-upload">
+      <div class="screen-head"><div class="eyebrow">New archive record</div><h1>Upload material</h1><p>Capture or add source material, then send it through OCR/transcription and admin review.</p></div>
+
+      <div class="capture-grid">
+        <button class="capture" onclick="openCamera()"><div class="capture-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7V5a2 2 0 0 1 2-2h2M16 3h2a2 2 0 0 1 2 2v2M20 17v2a2 2 0 0 1-2 2h-2M8 21H6a2 2 0 0 1-2-2v-2"/><rect x="7" y="8" width="10" height="8" rx="1"/></svg></div><span>Scan with camera</span></button>
+        <button class="capture" onclick="startRecording()"><div class="capture-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></div><span>Record audio</span></button>
+        <button class="capture" onclick="document.getElementById('fileInput').click()"><div class="capture-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></div><span>Add files</span></button>
+      </div>
+
+      <div class="flow-note"><div class="flow-icon">→</div><div><b>Record workflow:</b> Processing means OCR, transcription, or AI extraction is running. When finished, the item moves to Pending Review for an admin to approve or return for correction.</div></div>
+
+      <div class="segmented" id="typeSegment"><button class="active" onclick="setType('Document',this)">Document</button><button onclick="setType('Image',this)">Image</button><button onclick="setType('Audio',this)">Audio</button><button onclick="setType('Video',this)">Video</button></div>
+
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+        <strong id="uploadTitle">Tap to add source file</strong><span id="uploadHint">PDF, TIFF, JPG · 300–600 DPI preferred</span>
+      </div>
+      <input id="fileInput" type="file" hidden onchange="fileSelected(this)" />
+      <input id="cameraInput" type="file" accept="image/*" capture="environment" hidden onchange="fileSelected(this)" />
+      <input id="audioInput" type="file" accept="audio/*" capture="microphone" hidden onchange="fileSelected(this)" />
+
+      <div class="field"><label>Record title</label><input class="input" id="recordTitle" value="DOC_20260824_2146" /></div>
+      <div class="field"><label>Archival category</label><select class="select"><option>Constitutional Debates</option><option>Rare Manuscripts</option><option>Speeches & Audio</option><option>Historical Photographs</option><option>Books & Writings</option><option>Interviews & Documentaries</option></select></div>
+      <div class="field"><label>Source language</label><select class="select"><option>English</option><option>Hindi</option><option>Marathi</option><option>Mixed / Other</option></select></div>
+      <div class="field"><label>Source / collection</label><input class="input" placeholder="e.g. Museum Library Collection" /></div>
+      <div class="field"><label>Upload notes</label><textarea class="textarea" placeholder="Condition, scan quality, missing pages, source details…"></textarea></div>
+
+      <div class="automation">
+        <div class="toggle-row"><div class="toggle-copy"><strong>Run OCR / transcription</strong><span>Create searchable text automatically</span></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="toggle-row"><div class="toggle-copy"><strong>AI metadata suggestions</strong><span>Suggest title, keywords, people and dates for admin review</span></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
+      </div>
+      <button class="primary" onclick="submitRecord()">Upload for processing</button>
+    </section>
+
+    <section class="screen" id="screen-records">
+      <div class="screen-head"><div class="eyebrow">Digitization records</div><h1>Uploads</h1><p id="recordsSubtitle">View your uploads or, as an admin, review work submitted by the full team.</p></div>
+
+      <div class="scope admin-only" id="scopeControl"><button onclick="setScope('mine',this)">My uploads</button><button class="active" onclick="setScope('all',this)">All workers</button></div>
+
+      <div class="search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="recordSearch" placeholder="Search title, worker, category…" oninput="filterRecords()"></div>
+
+      <div class="admin-filter-row admin-only"><select class="worker-select" id="workerFilter" onchange="filterRecords()"><option value="all">All workers</option><option value="ADM-01">Ananya Kapoor · ADM-01</option><option value="W-014">Asha Kulkarni · W-014</option><option value="W-021">Rahul Mehta · W-021</option><option value="W-032">Priya Singh · W-032</option></select></div>
+
+      <div class="filters"><button class="filter active" onclick="setFilter('all',this)">All</button><button class="filter" onclick="setFilter('processing',this)">Processing</button><button class="filter" onclick="setFilter('pending',this)">Pending Review</button><button class="filter" onclick="setFilter('approved',this)">Approved</button><button class="filter" onclick="setFilter('fix',this)">Needs Correction</button></div>
+
+      <div class="record-list" id="recordList">
+        <div class="record-card" data-state="approved" data-worker="W-014" data-search="states and minorities folio asha kulkarni constitutional debates">
+          <div class="record-icon">▧</div><div class="record-body"><div class="record-title">States and Minorities Folio</div><div class="record-meta"><span class="chip approved">Approved</span> · Constitutional Debates<br>Approved by Admin · 24 Aug, 10:12 AM</div><div class="uploader"><div class="mini-avatar">AK</div><div class="uploader-copy"><b>Asha Kulkarni</b><span>Worker W-014 · Uploaded 24 Aug, 9:48 AM</span></div></div></div><div class="record-actions"><button class="record-more" onclick="showToast('Record actions opened')">⋯</button></div>
+        </div>
+        <div class="record-card" data-state="processing" data-worker="W-021" data-search="drafting committee folio 4 rahul mehta manuscript">
+          <div class="record-icon">▤</div><div class="record-body"><div class="record-title">Drafting_Committee_Folio_4</div><div class="record-meta"><span class="chip processing">Processing</span> · Rare Manuscript<br>OCR extraction 82%</div><div class="uploader"><div class="mini-avatar">RM</div><div class="uploader-copy"><b>Rahul Mehta</b><span>Worker W-021 · Uploaded 24 Aug, 2:45 PM</span></div></div></div><div class="record-actions"><button class="record-more" onclick="showToast('Processing details opened')">⋯</button></div>
+        </div>
+        <div class="record-card" data-state="pending" data-worker="W-032" data-search="bbc interview 1953 priya singh speech audio">
+          <div class="record-icon">◉</div><div class="record-body"><div class="record-title">BBC Interview 1953</div><div class="record-meta"><span class="chip pending">Pending Review</span> · Speeches & Audio<br>Transcript and metadata ready</div><div class="uploader"><div class="mini-avatar">PS</div><div class="uploader-copy"><b>Priya Singh</b><span>Worker W-032 · Uploaded 24 Aug, 4:22 PM</span></div></div></div><div class="record-actions"><button class="record-more" onclick="showToast('Record actions opened')">⋯</button><button class="review-btn admin-only" onclick="showToast('Admin review opened')">Review</button></div>
+        </div>
+        <div class="record-card" data-state="fix" data-worker="ADM-01" data-search="round table conference photo ananya kapoor photograph">
+          <div class="record-icon">▣</div><div class="record-body"><div class="record-title">Round Table Conference Photo</div><div class="record-meta"><span class="chip fix">Needs Correction</span> · Historical Photograph<br>Missing source date</div><div class="uploader"><div class="mini-avatar">AN</div><div class="uploader-copy"><b>Ananya Kapoor</b><span>Admin ADM-01 · Uploaded 23 Aug, 6:30 PM</span></div></div></div><div class="record-actions"><button class="record-more" onclick="showToast('Correction details opened')">⋯</button></div>
+        </div>
+        <div class="record-card" data-state="approved" data-worker="W-021" data-search="constitution assembly debate volume vii rahul mehta debates">
+          <div class="record-icon">▧</div><div class="record-body"><div class="record-title">Constituent Assembly Debate · Vol. VII</div><div class="record-meta"><span class="chip approved">Approved</span> · Constitutional Debates<br>Published to digital archive</div><div class="uploader"><div class="mini-avatar">RM</div><div class="uploader-copy"><b>Rahul Mehta</b><span>Worker W-021 · Uploaded 23 Aug, 11:05 AM</span></div></div></div><div class="record-actions"><button class="record-more" onclick="showToast('Record actions opened')">⋯</button></div>
+        </div>
+      </div>
+      <div class="empty" id="emptyState">No uploads match these filters.</div>
+    </section>
+
+    <section class="screen" id="screen-profile">
+      <div class="screen-head"><div class="eyebrow">Account & settings</div><h1>Profile</h1><p>Your institution assignment, role permissions, language and appearance preferences.</p></div>
+
+      <div class="profile-hero"><div class="avatar" id="profileAvatar">AN</div><div><div class="profile-name" id="profileName">Ananya Kapoor</div><div class="profile-id" id="profileId">ADM-01 · Archive Digitization Team</div><div class="profile-role" id="profileRole">Administrator</div></div></div>
+
+      <div class="section-title">Institution</div>
+      <div class="info-card">
+        <div class="info-row"><span>Organization</span><b>Dr. Ambedkar International Centre</b></div>
+        <div class="info-row"><span>Assigned kiosk</span><b>Kiosk-Library-01</b></div>
+        <div class="info-row"><span>Role access</span><b id="roleAccess">Upload · Review team records</b></div>
+      </div>
+      <div class="permission-note admin-only"><b>Admin visibility:</b> you can view uploads from every worker in this institution and approve or return records after processing. Worker accounts see only their own uploads.</div>
+
+      <div class="section-title">Settings</div>
+      <div class="settings-card">
+        <div class="setting-row" onclick="openLanguageSheet()"><div class="setting-main"><div class="setting-icon">文</div><div class="setting-copy"><b>App language</b><span id="languageValue">English</span></div></div><div class="chev">›</div></div>
+        <div class="setting-row" style="cursor:default"><div class="setting-main"><div class="setting-icon">◐</div><div class="setting-copy"><b>Appearance</b><span>Choose the interface theme</span></div></div><div class="theme-choice"><button id="lightBtn" class="active" onclick="setTheme('light')">Light</button><button id="darkBtn" onclick="setTheme('dark')">Dark</button></div></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottomnav">
+    <button class="nav active" data-page="upload" onclick="goTo('upload')"><div class="navbubble"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg></div><span>Upload</span></button>
+    <button class="nav" data-page="records" onclick="goTo('records')"><div class="navbubble"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h11"/></svg></div><span>Records</span></button>
+    <button class="nav" data-page="profile" onclick="goTo('profile')"><div class="navbubble"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-4 3.1-6 7-6s6.2 2 7 6"/></svg></div><span>Profile</span></button>
+  </nav>
+
+  <div class="sheet-backdrop" id="languageSheet" onclick="if(event.target===this) closeLanguageSheet()">
+    <div class="sheet"><div class="grab"></div><h3>Select app language</h3><p>This changes the dashboard interface. OCR source-language support is configured separately per upload.</p>
+      <button class="lang-option selected" data-lang="English" onclick="selectLanguage(this)"><div class="lang-left"><div class="lang-symbol">EN</div><div class="lang-copy"><b>English</b><span>Interface language</span></div></div><div class="radio"></div></button>
+      <button class="lang-option" data-lang="Hindi" onclick="selectLanguage(this)"><div class="lang-left"><div class="lang-symbol">हि</div><div class="lang-copy"><b>हिन्दी</b><span>Hindi interface</span></div></div><div class="radio"></div></button>
+    </div>
+  </div>
+  <div class="toast" id="toast">Done</div>
+</div>
+
+<script>
+  // Production behavior: role is supplied by authentication.
+  // Prototype preview: append ?role=worker to show worker-only visibility.
+  const roleParam = new URLSearchParams(location.search).get('role');
+  const currentUser = roleParam === 'worker'
+    ? { role:'worker', workerId:'W-014', name:'Asha Kulkarni', initials:'AK' }
+    : { role:'admin', workerId:'ADM-01', name:'Ananya Kapoor', initials:'AN' };
+  let activeFilter = 'all';
+  let activeScope = currentUser.role === 'admin' ? 'all' : 'mine';
+
+  function goTo(page){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen-'+page).classList.add('active');
+    document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.page===page));
+    document.querySelector('.app').scrollTop=0;
+  }
+  function showToast(text){const t=document.getElementById('toast');t.textContent=text;t.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),1700)}
+  function setType(type,btn){
+    document.querySelectorAll('#typeSegment button').forEach(b=>b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    const hints={Document:'PDF, TIFF, JPG · 300–600 DPI preferred',Image:'TIFF, PNG, JPG · high-resolution preferred',Audio:'WAV, MP3, FLAC · lossless preferred',Video:'MP4, MOV · archival master preferred'};
+    document.getElementById('uploadHint').textContent=hints[type];
+  }
+  function fileSelected(input){
+    if(!input.files?.length) return;
+    const f=input.files[0], z=document.getElementById('uploadZone');
+    z.classList.add('has-file'); document.getElementById('uploadTitle').textContent=f.name;
+    document.getElementById('uploadHint').textContent=(f.size/1024/1024).toFixed(1)+' MB · ready to upload';
+    if(document.getElementById('recordTitle').value.startsWith('DOC_')) document.getElementById('recordTitle').value=f.name.replace(/\.[^.]+$/,'');
+    showToast('Source file added');
+  }
+  function openCamera(){setType('Image',[...document.querySelectorAll('#typeSegment button')][1]);document.getElementById('cameraInput').click()}
+  function startRecording(){setType('Audio',[...document.querySelectorAll('#typeSegment button')][2]);document.getElementById('audioInput').click()}
+  function submitRecord(){showToast('Upload started · processing next');setTimeout(()=>goTo('records'),650)}
+
+  function setScope(scope,btn){activeScope=scope;document.querySelectorAll('#scopeControl button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');filterRecords()}
+  function setFilter(filter,btn){activeFilter=filter;document.querySelectorAll('.filter').forEach(f=>f.classList.remove('active'));btn.classList.add('active');filterRecords()}
+  function filterRecords(){
+    const q=document.getElementById('recordSearch').value.trim().toLowerCase();
+    const worker=document.getElementById('workerFilter')?.value || 'all'; let visible=0;
+    document.querySelectorAll('#recordList .record-card').forEach(card=>{
+      const stateOK=activeFilter==='all'||card.dataset.state===activeFilter;
+      const scopeOK=currentUser.role==='admin' ? (activeScope==='all'||card.dataset.worker===currentUser.workerId) : card.dataset.worker===currentUser.workerId;
+      const workerOK=currentUser.role!=='admin'||worker==='all'||card.dataset.worker===worker;
+      const textOK=!q||card.dataset.search.includes(q)||card.innerText.toLowerCase().includes(q);
+      const show=stateOK&&scopeOK&&workerOK&&textOK; card.style.display=show?'flex':'none'; if(show) visible++;
+    });
+    document.getElementById('emptyState').style.display=visible?'none':'block';
+  }
+
+  function openLanguageSheet(){document.getElementById('languageSheet').classList.add('open')}
+  function closeLanguageSheet(){document.getElementById('languageSheet').classList.remove('open')}
+  function selectLanguage(btn){document.querySelectorAll('.lang-option').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');document.getElementById('languageValue').textContent=btn.dataset.lang;closeLanguageSheet();showToast(btn.dataset.lang+' selected')}
+  function setTheme(theme){document.documentElement.dataset.theme=theme;document.getElementById('lightBtn').classList.toggle('active',theme==='light');document.getElementById('darkBtn').classList.toggle('active',theme==='dark');showToast(theme==='light'?'Light mode enabled':'Dark mode enabled')}
+  function applyRole(){
+    const admin=currentUser.role==='admin';
+    document.getElementById('roleLabel').textContent=admin?'Admin':'Worker';
+    document.getElementById('profileAvatar').textContent=currentUser.initials;
+    document.getElementById('profileName').textContent=currentUser.name;
+    document.getElementById('profileId').textContent=currentUser.workerId+' · Archive Digitization Team';
+    document.getElementById('profileRole').textContent=admin?'Administrator':'Digitization Worker';
+    document.getElementById('roleAccess').textContent=admin?'Upload · Review team records':'Upload · View own records';
+    document.querySelectorAll('.admin-only').forEach(el=>el.style.display=admin?'':'none');
+    document.getElementById('recordsSubtitle').textContent=admin?'View your uploads or review work submitted by the full team.':'Only your own uploads are visible in this account.';
+    if(!admin) activeScope='mine'; filterRecords();
+  }
+  applyRole();
+</script>
+</body>
+</html>

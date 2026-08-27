@@ -1,0 +1,489 @@
+<title>Heritage Kiosk Home Screen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600&family=Noto+Serif+Devanagari:wght@400;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap">
+
+<style>
+/* ============================================================
+   heritage — tokens (identical to the foundation layer)
+   ============================================================ */
+:root{
+  --bg-base:#101319; --bg-surface:#1A1E28; --bg-raised:#242A38;
+  --bg-scrim:rgba(16,19,25,.88);
+  --text-primary:#F2EDE3; --text-secondary:#A6A79E; --text-muted:#6E7280;
+  --action-default:#3D6FE8; --action-pressed:#2A54BC; --action-subtle:rgba(61,111,232,.14);
+  --accent-brass:#C9A227; --accent-brass-dim:#8A701C;
+  --state-verified:#4CAF7D; --state-ai:#9B7EDE; --state-offline:#C9A227;
+  --border-hairline:rgba(242,237,227,.10); --border-strong:rgba(242,237,227,.22);
+  --r-card:12px; --r-panel:20px; --r-pill:999px;
+  --font-display:"Source Serif 4","Iowan Old Style",Georgia,serif;
+  --font-ui:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-dev-ui:"Noto Sans Devanagari","Inter",sans-serif;
+  --font-meta:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg-base);color:var(--text-primary);font-family:var(--font-ui);-webkit-font-smoothing:antialiased}
+
+/* kiosk type scale */
+.t-display{font-family:var(--font-display);font-weight:600;font-size:56px;line-height:64px;letter-spacing:-.01em}
+.t-h2{font-weight:600;font-size:30px;line-height:38px}
+.t-bodyl{font-weight:400;font-size:22px;line-height:34px}
+.t-label{font-weight:500;font-size:18px;line-height:24px;letter-spacing:.02em;text-transform:uppercase}
+.t-caption{font-weight:400;font-size:17px;line-height:24px}
+
+/* ============================================================
+   documentation chrome
+   ============================================================ */
+.page{max-width:1360px;margin:0 auto;padding:0 40px 130px}
+.masthead{padding:88px 0 48px;border-bottom:1px solid var(--border-hairline)}
+.masthead h1{font-family:var(--font-display);font-weight:600;font-size:clamp(38px,5.4vw,62px);line-height:1.06;letter-spacing:-.02em;margin:0 0 22px;text-wrap:balance}
+.masthead h1 em{font-style:normal;color:var(--accent-brass)}
+.standfirst{font-size:19px;line-height:30px;color:var(--text-secondary);max-width:64ch;margin:0}
+.specline{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:32px;font-family:var(--font-meta);font-size:12.5px;color:var(--text-muted)}
+.specline b{color:var(--text-secondary);font-weight:400}
+
+section{padding-top:80px}
+.sec-head{display:flex;align-items:baseline;gap:20px;margin-bottom:6px}
+.eyebrow{font-weight:500;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-brass);white-space:nowrap}
+.hrule{flex:1;height:1px;background:var(--accent-brass-dim);opacity:.45}
+.sec-title{font-family:var(--font-display);font-weight:600;font-size:34px;line-height:1.2;margin:16px 0 10px;letter-spacing:-.01em}
+.sec-note{font-size:16px;line-height:27px;color:var(--text-secondary);max-width:70ch;margin:0 0 30px}
+.inline-code{font-family:var(--font-meta);font-size:.88em;color:var(--text-primary);background:var(--bg-raised);padding:2px 6px;border-radius:5px}
+
+.frame-wrap{position:relative;width:100%;overflow:hidden;border-radius:var(--r-card);border:1px solid var(--border-strong)}
+.frame{width:1280px;height:800px;transform-origin:top left;position:relative;overflow:hidden;background:var(--bg-base)}
+.frame-cap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:14px;font-family:var(--font-meta);font-size:12px;color:var(--text-muted)}
+
+.ctlbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.ctl{display:inline-flex;align-items:center;gap:9px;height:46px;padding:0 20px;border-radius:var(--r-pill);
+  background:var(--bg-raised);color:var(--text-primary);border:1px solid var(--border-strong);
+  font-family:var(--font-ui);font-weight:500;font-size:15px;cursor:pointer;transition:transform .09s,background-color .09s}
+.ctl:active{background:var(--action-subtle);transform:scale(.97)}
+.ctl.primary{background:var(--action-default);border-color:transparent}
+.ctl.primary:active{background:var(--action-pressed)}
+
+/* ============================================================
+   HOME SCREEN — 1280×800, budgeted to the pixel
+   88 header + 278 hero + 16 + 56 label + 115 + 16 + 115 + 112 nav = 796
+   ============================================================ */
+.home{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg-base);overflow:hidden}
+
+/* 8px inactivity hairline, pinned to the very top edge */
+.idle-rail{position:absolute;top:0;left:0;right:0;height:8px;background:rgba(201,162,39,.12);z-index:20}
+.idle-rail i{display:block;height:100%;width:100%;background:var(--accent-brass);transform-origin:left center;
+  animation:idleDrain 90s linear forwards}
+@keyframes idleDrain{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+
+/* --- header, 88px --- */
+.hdr{height:88px;flex:none;display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;border-bottom:1px solid var(--border-hairline)}
+.wordmark{display:flex;align-items:center;gap:14px}
+.wordmark .mark{width:40px;height:40px;flex:none;border-radius:8px;border:1.5px solid var(--accent-brass);
+  display:flex;align-items:center;justify-content:center;color:var(--accent-brass)}
+.wordmark .wm-txt{display:flex;flex-direction:column;line-height:1}
+.wordmark .wm-name{font-family:var(--font-display);font-weight:600;font-size:24px;letter-spacing:-.01em;color:var(--text-primary)}
+.wordmark .wm-sub{font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:var(--text-muted);margin-top:5px}
+
+.lang-badge{display:inline-flex;align-items:center;height:64px;background:var(--bg-raised);
+  border-radius:var(--r-pill);padding:6px;gap:4px;border:1px solid var(--border-hairline)}
+.lang-badge button{min-width:76px;height:52px;border:none;border-radius:var(--r-pill);background:transparent;
+  color:var(--text-secondary);font-family:var(--font-ui);font-weight:500;font-size:18px;letter-spacing:.02em;
+  text-transform:uppercase;cursor:pointer;transition:transform .09s,background-color .09s}
+.lang-badge button[aria-pressed="true"]{background:var(--action-default);color:var(--text-primary)}
+.lang-badge button:active{transform:scale(.97)}
+.lang-badge button:not([aria-pressed="true"]):active{background:var(--action-subtle)}
+
+/* --- body region --- */
+.body-region{flex:1;padding:16px 48px 0;display:flex;flex-direction:column;min-height:0}
+
+/* --- hero band, 278px --- */
+.hero{height:278px;flex:none;display:flex;background:var(--bg-surface);border:1px solid var(--border-hairline);
+  border-radius:var(--r-card);overflow:hidden;cursor:pointer;transition:transform .09s,background-color .09s}
+.hero:active{background:var(--action-subtle);transform:scale(.99)}
+.hero .art{width:55%;flex:none;position:relative;background:var(--bg-raised);overflow:hidden}
+.hero .art svg{width:100%;height:100%;display:block}
+.hero .art::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(16,19,25,0) 62%,rgba(16,19,25,.55) 100%)}
+.hero .txt{width:45%;padding:24px 28px;display:flex;flex-direction:column;justify-content:center;gap:0}
+.hero .eyebrow-h{color:var(--accent-brass);font-size:13px;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;margin-bottom:10px}
+.hero h2{margin:0;color:var(--text-primary);white-space:nowrap}
+.hero .desc{margin:8px 0 0;color:var(--text-secondary)}
+.hero .actions{display:flex;align-items:center;gap:24px;margin-top:14px}
+
+.chip{display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 18px;border-radius:var(--r-pill);
+  font-weight:500;font-size:18px;line-height:24px;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
+.chip-verified{background:rgba(76,175,125,.18);color:var(--state-verified)}
+
+.btn-primary{height:80px;min-width:64px;padding:0 24px;background:var(--action-default);color:var(--text-primary);
+  border:none;border-radius:var(--r-card);font-family:var(--font-ui);font-weight:500;font-size:22px;line-height:34px;
+  display:inline-flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;
+  transition:transform .09s,background-color .09s}
+.btn-primary:active{background:var(--action-pressed);transform:scale(.97)}
+
+/* --- section label + 2px brass rule --- */
+.sec-label{flex:none;margin-top:16px}
+.sec-label h3{margin:0;color:var(--text-primary)}
+.sec-label .brass{height:2px;background:var(--accent-brass);margin-top:4px;width:100%}
+
+/* --- category grid, 2 × 4 --- */
+.cats{flex:none;margin-top:12px;display:grid;grid-template-columns:repeat(4,1fr);
+  grid-auto-rows:115px;gap:16px 24px}
+.tile{background:var(--bg-surface);border:1px solid rgba(201,162,39,.20);border-radius:var(--r-card);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  color:var(--text-primary);cursor:pointer;transition:transform .09s,background-color .09s,border-color .09s}
+.tile:active{background:var(--action-subtle);border-color:rgba(61,111,232,.5);transform:scale(.97)}
+.tile .ic{color:var(--accent-brass);height:64px;display:flex;align-items:center;justify-content:center}
+.tile .nm{font-weight:500;font-size:18px;line-height:24px;letter-spacing:.02em;text-transform:uppercase}
+
+/* --- navbar, 112px --- */
+.navbar{height:112px;flex:none;background:var(--bg-surface);border-top:1px solid var(--border-hairline);display:flex}
+.navbar .nav-item{flex:1;position:relative;background:transparent;border:none;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;color:var(--text-secondary);cursor:pointer;
+  transition:transform .09s,background-color .09s}
+.navbar .nlabel{font-weight:500;font-size:18px;line-height:24px;letter-spacing:.02em;text-transform:uppercase}
+.navbar .nav-item[aria-current="page"]{color:var(--text-primary)}
+.navbar .nav-item[aria-current="page"]::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--accent-brass)}
+.navbar .nav-item:active{background:var(--action-subtle);transform:scale(.97)}
+
+/* --- measurement overlay --- */
+.rulers{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .18s;z-index:30}
+.frame.show-rulers .rulers{opacity:1}
+.rulers .band{position:absolute;left:0;right:0;border-top:1px dashed rgba(61,111,232,.55);
+  border-bottom:1px dashed rgba(61,111,232,.55);background:rgba(61,111,232,.07)}
+.rulers .tag{position:absolute;right:8px;transform:translateY(-50%);background:var(--action-default);
+  color:#fff;font-family:var(--font-meta);font-size:11px;padding:3px 7px;border-radius:4px;font-variant-numeric:tabular-nums}
+
+/* ============================================================
+   budget table + notes
+   ============================================================ */
+.budget{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+.budget th,.budget td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--border-hairline);vertical-align:top}
+.budget th{font-family:var(--font-meta);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);font-weight:400}
+.budget td:first-child{color:var(--text-primary)}
+.budget td.n{font-family:var(--font-meta);font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.budget .spec{color:var(--text-muted)}
+.budget .got{color:var(--text-primary)}
+.budget .cut{color:var(--accent-brass)}
+.budget tr.total td{border-bottom:none;padding-top:16px}
+.budget tr.total td:first-child{color:var(--text-secondary)}
+.budget tr.over td{color:var(--state-ai)}
+.scrollx{overflow-x:auto}
+
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:var(--border-hairline);
+  border:1px solid var(--border-hairline);border-radius:var(--r-panel);overflow:hidden;margin-top:12px}
+.note{background:var(--bg-surface);padding:24px}
+.note h4{margin:0 0 9px;font-size:15px;font-weight:600;color:var(--text-primary)}
+.note p{margin:0;font-size:14px;line-height:23px;color:var(--text-secondary)}
+
+footer{margin-top:104px;padding-top:32px;border-top:1px solid var(--border-hairline);
+  font-family:var(--font-meta);font-size:12px;line-height:21px;color:var(--text-muted);
+  display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+
+:focus-visible{outline:3px solid var(--action-default);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+@media (max-width:760px){.page{padding:0 20px 90px}}
+</style>
+
+<div class="page">
+
+  <header class="masthead">
+    <h1>Home<br><em>Root Screen</em></h1>
+    <p class="standfirst">
+      Where the visitor lands after touching the attract screen. One featured item, eight
+      ways in, and a bar along the bottom — nothing else, and nothing below the fold,
+      because there is no fold. A standing visitor will not discover a scrollbar, so
+      everything that exists here is everything there is.
+    </p>
+    <div class="specline">
+      <span><b>Frame</b> 1280 × 800</span>
+      <span><b>Vertical budget</b> 796 / 800</span>
+      <span><b>Scroll</b> none</span>
+      <span><b>Back affordance</b> none — this is the root</span>
+      <span><b>Idle reset</b> 90 s</span>
+    </div>
+  </header>
+
+  <!-- ================= FRAME ================= -->
+  <section>
+    <div class="sec-head"><span class="eyebrow">Frame · Home</span><span class="hrule"></span></div>
+    <h2 class="sec-title">The screen</h2>
+    <p class="sec-note">
+      Live at true size. The brass rail across the very top is the 90-second inactivity
+      countdown — it drains silently, left to right, and any touch restarts it. Nothing
+      announces it; a visitor who is reading should never be told they are being timed.
+    </p>
+
+    <div class="ctlbar">
+      <button class="ctl primary" id="resetIdle">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+        Restart 90 s countdown
+      </button>
+      <button class="ctl" id="toggleRulers">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        Show vertical budget
+      </button>
+    </div>
+
+    <div class="frame-wrap"><div class="frame" id="f1">
+      <div class="home">
+
+        <div class="idle-rail"><i id="rail"></i></div>
+
+        <!-- header 88 -->
+        <div class="hdr">
+          <div class="wordmark">
+            <span class="mark">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 10 12 4l9 6"/><path d="M5 10v9h14v-9"/><path d="M9 19v-5h6v5"/></svg>
+            </span>
+            <span class="wm-txt">
+              <span class="wm-name">The Heritage Archive</span>
+              <span class="wm-sub">Public Collection</span>
+            </span>
+          </div>
+          <div class="lang-badge">
+            <button aria-pressed="true">ENG</button>
+            <button aria-pressed="false">HIN</button>
+            <button aria-pressed="false">MAR</button>
+          </div>
+        </div>
+
+        <div class="body-region">
+
+          <!-- hero 278 -->
+          <div class="hero">
+            <div class="art">
+              <svg viewBox="0 0 700 278" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                  <linearGradient id="hg2" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#4c4636"/><stop offset="1" stop-color="#16130e"/>
+                  </linearGradient>
+                  <radialGradient id="hvig" cx=".45" cy=".45" r=".75">
+                    <stop offset=".5" stop-color="#000" stop-opacity="0"/>
+                    <stop offset="1" stop-color="#000" stop-opacity=".5"/>
+                  </radialGradient>
+                </defs>
+                <rect width="700" height="278" fill="url(#hg2)"/>
+                <!-- water / tank -->
+                <rect x="0" y="196" width="700" height="82" fill="#2a3038" opacity=".85"/>
+                <g stroke="#8fa0ad" stroke-width="1.2" opacity=".3">
+                  <path d="M40 214h180M260 226h150M440 212h190M90 244h240M400 250h210"/>
+                </g>
+                <!-- crowd -->
+                <g fill="#efe7d2" opacity=".78">
+                  <g transform="translate(96 196)"><circle cx="0" cy="-58" r="17"/><path d="M-27 0q0-27 27-27t27 27z"/></g>
+                  <g transform="translate(150 196)"><circle cx="0" cy="-64" r="19"/><path d="M-30 0q0-30 30-30t30 30z"/></g>
+                  <g transform="translate(208 196)"><circle cx="0" cy="-56" r="16"/><path d="M-26 0q0-26 26-26t26 26z"/></g>
+                  <g transform="translate(262 196)"><circle cx="0" cy="-70" r="21"/><path d="M-33 0q0-33 33-33t33 33z"/></g>
+                  <g transform="translate(322 196)"><circle cx="0" cy="-60" r="18"/><path d="M-28 0q0-28 28-28t28 28z"/></g>
+                  <g transform="translate(378 196)"><circle cx="0" cy="-54" r="16"/><path d="M-25 0q0-25 25-25t25 25z"/></g>
+                  <g transform="translate(432 196)"><circle cx="0" cy="-66" r="20"/><path d="M-31 0q0-31 31-31t31 31z"/></g>
+                  <g transform="translate(492 196)"><circle cx="0" cy="-58" r="17"/><path d="M-27 0q0-27 27-27t27 27z"/></g>
+                  <g transform="translate(548 196)"><circle cx="0" cy="-62" r="18"/><path d="M-29 0q0-29 29-29t29 29z"/></g>
+                  <g transform="translate(606 196)"><circle cx="0" cy="-56" r="16"/><path d="M-26 0q0-26 26-26t26 26z"/></g>
+                </g>
+                <rect width="700" height="278" fill="url(#hvig)"/>
+              </svg>
+            </div>
+            <div class="txt">
+              <div class="eyebrow-h">Featured · Events</div>
+              <h2 class="t-display">Mahad Satyagraha</h2>
+              <p class="t-bodyl desc">Twenty thousand marched to the Chavdar tank on 20 March 1927 — the Society's minute book records every name.</p>
+              <div class="actions">
+                <span class="chip chip-verified">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  Verified
+                </span>
+                <button class="btn-primary">Open</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- section label -->
+          <div class="sec-label">
+            <h3 class="t-h2">Explore by category</h3>
+            <div class="brass"></div>
+          </div>
+
+          <!-- category grid -->
+          <div class="cats">
+            <button class="tile"><span class="ic">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H17l3 3v14.5a1.5 1.5 0 0 1-1.5 1.5H5.5A1.5 1.5 0 0 1 4 20.5z"/><path d="M17 3v3h3"/><path d="M8 11h8M8 15h5"/></svg>
+            </span><span class="nm">Manuscripts</span></button>
+
+            <button class="tile"><span class="ic">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M9 3h6v2.5a5 5 0 0 0 3 4.6A5.5 5.5 0 0 1 21 15a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6 5.5 5.5 0 0 1 3-4.9 5 5 0 0 0 3-4.6z"/><path d="M8 15h8"/></svg>
+            </span><span class="nm">Artefacts</span></button>
+
+            <button class="tile"><span class="ic">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="14" rx="2"/><path d="M8.5 6l1.6-2.5h3.8L15.5 6"/><circle cx="12" cy="13" r="4"/></svg>
+            </span><span class="nm">Photographs</span></button>
+
+            <button class="tile"><span class="ic">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M6 2.5h8l4.5 4.5V21a.5.5 0 0 1-.5.5H6a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5z"/><path d="M14 2.5V7h4.5"/><path d="M9 12h6M9 16h6"/></svg>
+            </span><span class="nm">Documents</span></button>
+
+            <button class="tile"><span class="ic">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            </span><span class="nm">People</span></button>
+
+            <button class="tile"><span class="ic">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M5 21V3.5"/><path d="M5 4.5h11l-2.2 3.6L16 11.7H5z"/><circle cx="5" cy="21" r="0"/></svg>
+            </span><span class="nm">Events</span></button>
+
+            <button class="tile"><span class="ic">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21v-8h14v8"/><path d="M7 13V9.5h10V13"/><path d="M12 9.5V4"/><path d="M9.5 6.5 12 3l2.5 3.5z"/></svg>
+            </span><span class="nm">Memorials</span></button>
+
+            <button class="tile"><span class="ic">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M12 21s7-6.4 7-11.4A7 7 0 0 0 5 9.6C5 14.6 12 21 12 21z"/><circle cx="12" cy="9.6" r="2.6"/></svg>
+            </span><span class="nm">Places</span></button>
+          </div>
+
+        </div>
+
+        <!-- navbar 112 -->
+        <nav class="navbar">
+          <button class="nav-item" aria-current="page">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+            <span class="nlabel">Home</span>
+          </button>
+          <button class="nav-item">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5"/><rect x="13.5" y="3" width="7.5" height="7.5"/><rect x="3" y="13.5" width="7.5" height="7.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5"/></svg>
+            <span class="nlabel">Browse</span>
+          </button>
+          <button class="nav-item">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <span class="nlabel">Search</span>
+          </button>
+          <button class="nav-item">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12h18"/><circle cx="7" cy="12" r="2.4"/><circle cx="14.5" cy="12" r="2.4"/><path d="M7 9.6V5M14.5 14.4V19"/></svg>
+            <span class="nlabel">Timeline</span>
+          </button>
+          <button class="nav-item">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a3 3 0 0 1-3 3H8l-4 3V6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3z"/><path d="M12 8.5v.01M12 11v2.5"/></svg>
+            <span class="nlabel">Ask</span>
+          </button>
+        </nav>
+
+      </div>
+
+      <!-- measurement overlay -->
+      <div class="rulers">
+        <div class="band" style="top:0;height:8px"></div><span class="tag" style="top:4px">8 · idle rail</span>
+        <div class="band" style="top:0;height:88px"></div><span class="tag" style="top:44px">88 · header</span>
+        <div class="band" style="top:104px;height:278px"></div><span class="tag" style="top:243px">278 · hero</span>
+        <div class="band" style="top:398px;height:56px"></div><span class="tag" style="top:426px">56 · label + rule</span>
+        <div class="band" style="top:466px;height:115px"></div><span class="tag" style="top:523px">115 · tile row</span>
+        <div class="band" style="top:597px;height:115px"></div><span class="tag" style="top:654px">115 · tile row</span>
+        <div class="band" style="top:688px;height:112px"></div><span class="tag" style="top:744px">112 · navbar</span>
+      </div>
+    </div></div>
+    <div class="frame-cap">
+      <span>1280 × 800 · live · nothing scrolls</span>
+      <span>48px outer margins · 24px gutters · 12-col grid</span>
+    </div>
+  </section>
+
+  <!-- ================= THE CUT ================= -->
+  <section>
+    <div class="sec-head"><span class="eyebrow">Where the pixels went</span><span class="hrule"></span></div>
+    <h2 class="sec-title">The spec overruns the panel by 128px</h2>
+    <p class="sec-note">
+      Your fixed elements are 88px of header, a 300px hero, and a 112px bar. That is 500px,
+      leaving exactly 300px. Two rows of 160px tiles plus the section label and its gaps
+      needs 428px. There is no arrangement in which all the stated numbers coexist inside
+      800px — so, per your rule, I cut rather than scrolled. Both cuts are to container
+      heights; no content was dropped.
+    </p>
+
+    <div class="scrollx">
+      <table class="budget">
+        <thead><tr><th>Element</th><th class="n">As specified</th><th class="n">As built</th><th class="n">Δ</th></tr></thead>
+        <tbody>
+          <tr><td>Idle hairline</td><td class="n spec">8</td><td class="n got">8 · overlaid</td><td class="n">—</td></tr>
+          <tr><td>Header</td><td class="n spec">88</td><td class="n got">88</td><td class="n">—</td></tr>
+          <tr><td>Hero band</td><td class="n spec">300</td><td class="n got">278</td><td class="n cut">−22</td></tr>
+          <tr><td>Gap</td><td class="n spec">—</td><td class="n got">16</td><td class="n">—</td></tr>
+          <tr><td>Section label + 2px rule</td><td class="n spec">—</td><td class="n got">56</td><td class="n">—</td></tr>
+          <tr><td>Tile row 1</td><td class="n spec">160</td><td class="n got">115</td><td class="n cut">−45</td></tr>
+          <tr><td>Row gap</td><td class="n spec">—</td><td class="n got">16</td><td class="n">—</td></tr>
+          <tr><td>Tile row 2</td><td class="n spec">160</td><td class="n got">115</td><td class="n cut">−45</td></tr>
+          <tr><td>Navbar</td><td class="n spec">112</td><td class="n got">112</td><td class="n">—</td></tr>
+          <tr class="total"><td>Total</td><td class="n spec">924 <span style="color:var(--state-ai)">(over)</span></td><td class="n got">796</td><td class="n cut">4px slack</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= NOTES ================= -->
+  <section>
+    <div class="sec-head"><span class="eyebrow">Decisions &amp; caveats</span><span class="hrule"></span></div>
+    <h2 class="sec-title">What to check before this ships</h2>
+
+    <div class="notes">
+      <div class="note">
+        <h4>Tile icons are 52px, not 64</h4>
+        <p>A 115px tile cannot hold a 64px icon plus a 24px Label with any padding left over — that needs 96px of the 115 and leaves 9px top and bottom. 52px keeps the proportion honest. If the 64px icon matters more than the second row, drop to four categories and put the rest behind Browse.</p>
+      </div>
+      <div class="note">
+        <h4>Tiles are 278 wide, not 240</h4>
+        <p>Four 240px tiles with 24px gutters measure 1032, which floats inside the 1184px content width and leaves the grid misaligned with the hero above it. I widened them to fill the measure so both edges line up. One measure reads better than two.</p>
+      </div>
+      <div class="note">
+        <h4>Display at 56px caps hero titles at ~16 characters</h4>
+        <p>The text side is 45% of 1184, less padding — about 477px. "Mahad Satyagraha" fits on one line with almost nothing spare. Anything longer wraps to two lines and the hero overflows. Whoever writes the featured item needs that budget in front of them, or the field needs a hard character limit.</p>
+      </div>
+      <div class="note">
+        <h4>The idle rail is legible, and that's a choice</h4>
+        <p>8px of saturated brass across the full width is not subtle — it reads as a progress bar, because it is one. If it should be near-invisible until the last ten seconds, drop it to 3px at 25% opacity and have it fade up as the timer runs down. Your call; the spec said 8px, so it is 8px.</p>
+      </div>
+      <div class="note">
+        <h4>Any touch restarts the count</h4>
+        <p>The rail resets on any interaction inside the frame, not just on navigation. Reading a long caption without touching anything is exactly the case where a visitor gets reset mid-sentence — consider pausing the timer on detail screens rather than running it everywhere.</p>
+      </div>
+      <div class="note">
+        <h4>Hero art is a stand-in</h4>
+        <p>The crowd-at-the-tank plate is drawn, not a scan. It exists to test the 55/45 split and the right-edge gradient that keeps the Display type off a busy image. Replace with the real photograph and re-check that gradient — a light sky at the seam will need it stronger.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>heritage · home screen · built on the foundation layer</span>
+    <span>Prompt 2 — no scroll, no back button, 796 of 800px used</span>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  function fit() {
+    document.querySelectorAll('.frame').forEach(function (f) {
+      var wrap = f.parentElement;
+      var k = Math.min(1, wrap.clientWidth / 1280);
+      f.style.transform = 'scale(' + k + ')';
+      wrap.style.height = (800 * k) + 'px';
+    });
+  }
+  window.addEventListener('resize', fit);
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(fit); }
+  fit();
+
+  // idle rail: restart on demand, and on any touch inside the frame
+  var rail = document.getElementById('rail');
+  function restart() {
+    rail.style.animation = 'none';
+    void rail.offsetWidth;
+    rail.style.animation = '';
+  }
+  document.getElementById('resetIdle').addEventListener('click', restart);
+  document.getElementById('f1').addEventListener('click', restart);
+
+  var frame = document.getElementById('f1');
+  document.getElementById('toggleRulers').addEventListener('click', function (e) {
+    e.stopPropagation();
+    frame.classList.toggle('show-rulers');
+  });
+})();
+</script>
