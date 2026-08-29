@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Digital Heritage Archive — Vendor Portal</title>
+  <title>Digital Heritage Archive — Archivist App</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@600;700&family=Noto+Sans+Devanagari:wght@500;600&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     :root{
       --canvas:#EDE8DC; --device:#FBF9F2; --surface:#ffffff; --raised:#F3EEE1;
       --text:#17191F; --secondary:#5B5F6B; --muted:#878B95;
-      --action:#3D6FE8; --action-pressed:#2A54BC; --action-soft:rgba(61,111,232,.12);
+      --action:#A54A2A; --action-pressed:#7F341D; --action-soft:rgba(165,74,42,.12);
       --brass:#8A701C; --brass-soft:rgba(201,162,39,.14);
       --green:#227A50; --green-soft:rgba(76,175,125,.14);
       --violet:#6E4FBD; --violet-soft:rgba(155,126,222,.16);
@@ -27,7 +27,7 @@
     [data-theme="dark"]{
       --canvas:#090b0e; --device:#101319; --surface:#1a1e28; --raised:#242a38;
       --text:#f2ede3; --secondary:#a6a79e; --muted:#6E7280;
-      --action:#3D6FE8; --action-pressed:#2A54BC; --action-soft:rgba(61,111,232,.14);
+      --action:#D47B52; --action-pressed:#B55F3B; --action-soft:rgba(212,123,82,.14);
       --brass:#c9a227; --brass-soft:rgba(201,162,39,.14);
       --green:#4caf7d; --green-soft:rgba(76,175,125,.14);
       --violet:#9b7ede; --violet-soft:rgba(155,126,222,.14);
@@ -70,6 +70,12 @@
     .profile-hero{background:linear-gradient(135deg,var(--action-soft),transparent 62%),var(--surface);border:1px solid var(--border);border-radius:20px;padding:15px;display:flex;gap:12px;align-items:center;margin-bottom:13px}.avatar{width:50px;height:50px;border-radius:50%;background:var(--action-soft);color:var(--action);display:grid;place-items:center;font-size:14px;font-weight:900;border:1px solid color-mix(in srgb,var(--action) 28%,transparent)}.profile-name{font-size:14px;font-weight:800}.profile-id{font-size:8.5px;color:var(--muted);margin-top:3px}.profile-role{display:inline-flex;margin-top:6px;height:21px;padding:0 8px;border-radius:999px;align-items:center;background:var(--brass-soft);color:var(--brass);font-size:7.5px;font-weight:800;text-transform:uppercase}
     .section-title{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:var(--muted);margin:17px 2px 8px}.info-card,.settings-card{background:var(--surface);border:1px solid var(--border);border-radius:17px;overflow:hidden}.info-row,.setting-row{min-height:52px;padding:10px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}.info-row:last-child,.setting-row:last-child{border-bottom:0}.info-row span,.setting-copy span{font-size:9px;color:var(--muted)}.info-row b{font-size:9px;color:var(--text);text-align:right;max-width:58%}.setting-row{cursor:pointer}.setting-main{display:flex;align-items:center;gap:10px}.setting-icon{width:31px;height:31px;border-radius:10px;background:var(--raised);color:var(--secondary);display:grid;place-items:center}.setting-copy b{display:block;font-size:9.5px}.setting-copy span{display:block;margin-top:2px}.chev{color:var(--muted);font-size:15px}.theme-choice{display:flex;gap:5px}.theme-choice button{height:29px;padding:0 9px;border:1px solid var(--border);background:var(--raised);color:var(--muted);border-radius:9px;font-size:8px;font-weight:800;cursor:pointer}.theme-choice button.active{color:var(--action);background:var(--action-soft);border-color:color-mix(in srgb,var(--action) 28%,transparent)}
     .permission-note{font-size:9px;line-height:1.5;color:var(--secondary);padding:11px 12px;background:var(--action-soft);border:1px solid color-mix(in srgb,var(--action) 18%,transparent);border-radius:14px;margin-top:11px}
+    .welcome-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.welcome-row h1{font-family:"Source Serif 4",Georgia,serif;font-size:24px;line-height:1.05;margin:0}.welcome-row p{font-size:9px;color:var(--muted);margin:4px 0 0}.sync-pill{height:29px;border-radius:999px;background:var(--green-soft);color:var(--green);padding:0 9px;display:flex;align-items:center;gap:5px;font-size:8px;font-weight:800}.sync-pill i{width:6px;height:6px;border-radius:50%;background:var(--green)}
+    .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:14px}.stat-card{min-height:88px;background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:12px;position:relative;overflow:hidden}.stat-card:after{content:"";position:absolute;width:52px;height:52px;border-radius:50%;right:-18px;bottom:-20px;background:var(--action-soft)}.stat-card span{display:block;font-size:8px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:800}.stat-card b{display:block;font-family:"Source Serif 4",Georgia,serif;font-size:27px;line-height:1;margin:8px 0 4px}.stat-card small{font-size:8px;color:var(--secondary)}
+    .quick-actions{display:grid;grid-template-columns:1.3fr 1fr;gap:9px;margin-bottom:15px}.quick-card{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:17px;padding:13px;text-align:left;min-height:85px}.quick-card.primary-quick{background:var(--action);color:#fff;border-color:var(--action)}.quick-card span{display:grid;place-items:center;width:29px;height:29px;border-radius:9px;background:var(--raised);color:var(--action);font-size:16px;margin-bottom:8px}.quick-card.primary-quick span{background:rgba(255,255,255,.17);color:#fff}.quick-card b{display:block;font-size:10px}.quick-card small{display:block;font-size:8px;line-height:1.4;margin-top:3px;color:var(--muted)}.quick-card.primary-quick small{color:rgba(255,255,255,.75)}
+    .queue-card{background:var(--surface);border:1px solid var(--border);border-radius:17px;overflow:hidden}.queue-row{min-height:62px;padding:10px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}.queue-row:last-child{border-bottom:0}.queue-symbol{width:36px;height:40px;border-radius:10px;background:var(--raised);display:grid;place-items:center;color:var(--secondary);font-size:15px}.queue-copy{flex:1;min-width:0}.queue-copy b{display:block;font-size:9.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.queue-copy span{display:block;font-size:7.5px;color:var(--muted);margin-top:3px}.progress{height:4px;background:var(--raised);border-radius:4px;margin-top:6px;overflow:hidden}.progress i{height:100%;display:block;background:var(--action);border-radius:4px}.queue-state{font-size:7.5px;font-weight:800;color:var(--amber);text-align:right}.queue-state.ready{color:var(--green)}
+    .stepper{display:grid;grid-template-columns:repeat(4,1fr);margin:-2px 0 14px}.step{text-align:center;position:relative;color:var(--muted);font-size:7.5px;font-weight:700}.step:before{content:"";display:block;width:21px;height:21px;border-radius:50%;background:var(--raised);border:1px solid var(--border);margin:0 auto 5px;position:relative;z-index:2}.step:after{content:"";position:absolute;height:2px;background:var(--border-strong);left:50%;right:-50%;top:10px}.step:last-child:after{display:none}.step.active{color:var(--action)}.step.active:before{background:var(--action);border-color:var(--action);box-shadow:inset 0 0 0 6px var(--surface)}
+    .review-head{display:flex;align-items:center;gap:10px;margin-bottom:13px}.review-back{width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:20px}.review-head h1{font-size:19px;margin:0}.review-head p{font-size:8px;color:var(--muted);margin:3px 0 0}.preview-box{height:212px;background:#292723;border-radius:17px;padding:14px;display:grid;place-items:center;position:relative;overflow:hidden;margin-bottom:12px}.preview-page{height:182px;width:130px;background:#efe4cd;box-shadow:0 8px 22px rgba(0,0,0,.28);padding:22px 15px;position:relative}.preview-page:after{content:"";display:block;height:2px;background:#a99a80;box-shadow:0 9px 0 #b4a58b,0 18px 0 #9d8e74,0 27px 0 #b4a58b,0 45px 0 #a99a80,0 54px 0 #b4a58b,0 63px 0 #9d8e74,0 72px 0 #b4a58b}.confidence-pill{position:absolute;right:12px;top:12px;padding:6px 8px;border-radius:8px;background:rgba(34,122,80,.93);color:white;font-size:8px;font-weight:800}.review-tabs{display:grid;grid-template-columns:repeat(3,1fr);background:var(--raised);padding:4px;border-radius:12px;margin-bottom:10px}.review-tabs button{height:33px;border:0;border-radius:9px;background:transparent;color:var(--muted);font-size:8px;font-weight:800}.review-tabs button.active{background:var(--surface);color:var(--text);box-shadow:0 2px 6px rgba(0,0,0,.05)}.suggestion-card{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:12px;margin-bottom:10px}.suggestion-card label{display:block;font-size:7.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:800}.suggestion-card strong{display:block;font-size:10px;margin-top:5px}.suggestion-card p{font-size:8.5px;line-height:1.45;color:var(--secondary);margin:6px 0 0}.review-actions{display:grid;grid-template-columns:1fr 1.35fr;gap:8px;position:sticky;bottom:-20px;background:var(--device);padding:10px 0 2px}.secondary-action{height:46px;border:1px solid var(--border-strong);background:var(--surface);color:var(--red);border-radius:13px;font-size:9px;font-weight:800}.approve-action{height:46px;border:0;background:var(--green);color:white;border-radius:13px;font-size:9px;font-weight:800}
     .bottomnav{height:69px;flex:none;border-top:1px solid var(--border);background:var(--surface);display:flex;padding-bottom:5px}.nav{flex:1;border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;font-size:9px;font-weight:800;cursor:pointer}.nav svg{width:19px;height:19px}.navbubble{width:40px;height:27px;border-radius:999px;display:grid;place-items:center}.nav.active{color:var(--action)}.nav.active:before{content:"";position:absolute;top:0;width:30px;height:3px;background:var(--brass);border-radius:0 0 5px 5px}.nav.active .navbubble{background:var(--action-soft)}
     .sheet-backdrop{position:absolute;inset:0;z-index:100;background:rgba(6,8,12,.5);display:none;align-items:flex-end}.sheet-backdrop.open{display:flex}.sheet{width:100%;background:var(--surface);border-radius:24px 24px 0 0;padding:17px 16px 22px;border-top:1px solid var(--border-strong);animation:up .17s ease}@keyframes up{from{transform:translateY(28px);opacity:.6}to{transform:none;opacity:1}}.grab{width:36px;height:4px;border-radius:99px;background:var(--border-strong);margin:0 auto 14px}.sheet h3{font-size:14px;margin:0 0 4px}.sheet p{font-size:9px;color:var(--muted);margin:0 0 12px}.lang-option{width:100%;min-height:50px;border:0;border-top:1px solid var(--border);background:transparent;color:var(--text);display:flex;align-items:center;justify-content:space-between;padding:0 3px;cursor:pointer}.lang-option:first-of-type{border-top:0}.lang-left{display:flex;align-items:center;gap:10px}.lang-symbol{width:33px;height:33px;border-radius:10px;background:var(--raised);display:grid;place-items:center;font-weight:800;font-size:10px}.lang-copy b{display:block;text-align:left;font-size:10px}.lang-copy span{display:block;text-align:left;color:var(--muted);font-size:8px;margin-top:2px}.radio{width:18px;height:18px;border:1.5px solid var(--border-strong);border-radius:50%;display:grid;place-items:center}.lang-option.selected .radio{border-color:var(--action)}.lang-option.selected .radio:after{content:"";width:9px;height:9px;border-radius:50%;background:var(--action)}
     .toast{position:absolute;left:50%;bottom:82px;transform:translate(-50%,12px);z-index:200;background:#111722;color:#fff;padding:9px 12px;border-radius:10px;font-size:9px;font-weight:700;opacity:0;pointer-events:none;transition:.18s;white-space:nowrap;box-shadow:0 10px 25px rgba(0,0,0,.22)}.toast.show{opacity:1;transform:translate(-50%,0)}
@@ -82,13 +88,32 @@
   <div class="notch"></div>
   <div class="statusbar"><span>09:41</span><div class="status-icons"><span class="online-dot"></span><span>5G</span><span>92%</span></div></div>
   <header class="topbar">
-    <div><div class="brand-kicker">Digital Heritage Archive</div><div class="brand-title">Vendor Portal</div></div>
+    <div><div class="brand-kicker">Digital Heritage Archive</div><div class="brand-title">Archivist App</div></div>
     <div class="role-chip"><i></i><span id="roleLabel">Admin</span></div>
   </header>
 
   <main class="app">
-    <section class="screen active" id="screen-upload">
+    <section class="screen active" id="screen-dashboard">
+      <div class="welcome-row"><div><div class="eyebrow">Thursday, 28 August</div><h1>Good morning, <span id="dashboardName">Ananya</span></h1><p>Your digitization workspace is ready.</p></div><span class="sync-pill"><i></i> Synced</span></div>
+      <div class="stats-grid">
+        <article class="stat-card"><span>Uploaded today</span><b>12</b><small>38 pages captured</small></article>
+        <article class="stat-card"><span>Processing</span><b>04</b><small>OCR and transcription</small></article>
+        <article class="stat-card"><span>Pending review</span><b>07</b><small>3 assigned to you</small></article>
+        <article class="stat-card"><span>Published</span><b>28</b><small>This week</small></article>
+      </div>
+      <div class="quick-actions"><button class="quick-card primary-quick" onclick="goTo('upload')"><span>＋</span><b>New archive record</b><small>Scan, record or add a source file</small></button><button class="quick-card" onclick="goTo('records')"><span>✓</span><b>Review queue</b><small>7 items require attention</small></button></div>
+      <div class="section-title">Active processing</div>
+      <div class="queue-card">
+        <div class="queue-row"><div class="queue-symbol">▤</div><div class="queue-copy"><b>Drafting_Committee_Folio_4</b><span>OCR extraction · 82%</span><div class="progress"><i style="width:82%"></i></div></div><div class="queue-state">Running</div></div>
+        <div class="queue-row"><div class="queue-symbol">◉</div><div class="queue-copy"><b>BBC Interview 1953</b><span>Transcript and metadata ready</span></div><div class="queue-state ready">Review</div></div>
+        <div class="queue-row"><div class="queue-symbol">▧</div><div class="queue-copy"><b>Mahad correspondence · Box 2</b><span>Queued for image analysis</span></div><div class="queue-state">Queued</div></div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-upload">
       <div class="screen-head"><div class="eyebrow">New archive record</div><h1>Upload material</h1><p>Capture or add source material, then send it through OCR/transcription and admin review.</p></div>
+
+      <div class="stepper"><div class="step active">Source</div><div class="step">Details</div><div class="step">Options</div><div class="step">Review</div></div>
 
       <div class="capture-grid">
         <button class="capture" onclick="openCamera()"><div class="capture-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7V5a2 2 0 0 1 2-2h2M16 3h2a2 2 0 0 1 2 2v2M20 17v2a2 2 0 0 1-2 2h-2M8 21H6a2 2 0 0 1-2-2v-2"/><rect x="7" y="8" width="10" height="8" rx="1"/></svg></div><span>Scan with camera</span></button>
@@ -140,7 +165,7 @@
           <div class="record-icon">▤</div><div class="record-body"><div class="record-title">Drafting_Committee_Folio_4</div><div class="record-meta"><span class="chip processing">Processing</span> · Rare Manuscript<br>OCR extraction 82%</div><div class="uploader"><div class="mini-avatar">RM</div><div class="uploader-copy"><b>Rahul Mehta</b><span>Worker W-021 · Uploaded 24 Aug, 2:45 PM</span></div></div></div><div class="record-actions"><button class="record-more" onclick="showToast('Processing details opened')">⋯</button></div>
         </div>
         <div class="record-card" data-state="pending" data-worker="W-032" data-search="bbc interview 1953 priya singh speech audio">
-          <div class="record-icon">◉</div><div class="record-body"><div class="record-title">BBC Interview 1953</div><div class="record-meta"><span class="chip pending">Pending Review</span> · Speeches & Audio<br>Transcript and metadata ready</div><div class="uploader"><div class="mini-avatar">PS</div><div class="uploader-copy"><b>Priya Singh</b><span>Worker W-032 · Uploaded 24 Aug, 4:22 PM</span></div></div></div><div class="record-actions"><button class="record-more" onclick="showToast('Record actions opened')">⋯</button><button class="review-btn admin-only" onclick="showToast('Admin review opened')">Review</button></div>
+          <div class="record-icon">◉</div><div class="record-body"><div class="record-title">BBC Interview 1953</div><div class="record-meta"><span class="chip pending">Pending Review</span> · Speeches & Audio<br>Transcript and metadata ready</div><div class="uploader"><div class="mini-avatar">PS</div><div class="uploader-copy"><b>Priya Singh</b><span>Worker W-032 · Uploaded 24 Aug, 4:22 PM</span></div></div></div><div class="record-actions"><button class="record-more" aria-label="More actions for BBC Interview 1953" onclick="showToast('Record actions opened')">⋯</button><button class="review-btn admin-only" onclick="goTo('review')">Review</button></div>
         </div>
         <div class="record-card" data-state="fix" data-worker="ADM-01" data-search="round table conference photo ananya kapoor photograph">
           <div class="record-icon">▣</div><div class="record-body"><div class="record-title">Round Table Conference Photo</div><div class="record-meta"><span class="chip fix">Needs Correction</span> · Historical Photograph<br>Missing source date</div><div class="uploader"><div class="mini-avatar">AN</div><div class="uploader-copy"><b>Ananya Kapoor</b><span>Admin ADM-01 · Uploaded 23 Aug, 6:30 PM</span></div></div></div><div class="record-actions"><button class="record-more" onclick="showToast('Correction details opened')">⋯</button></div>
@@ -150,6 +175,16 @@
         </div>
       </div>
       <div class="empty" id="emptyState">No uploads match these filters.</div>
+    </section>
+
+    <section class="screen" id="screen-review">
+      <div class="review-head"><button class="review-back" onclick="goTo('records')" aria-label="Back to records">‹</button><div><div class="eyebrow">Pending review</div><h1>BBC Interview 1953</h1><p>Submitted by Priya Singh · W-032</p></div></div>
+      <div class="preview-box"><div class="preview-page"></div><span class="confidence-pill">Transcript · 94%</span></div>
+      <div class="review-tabs"><button class="active">Metadata</button><button>Transcript</button><button>Files</button></div>
+      <article class="suggestion-card"><label>Suggested title</label><strong>BBC Interview: Democracy in India</strong></article>
+      <article class="suggestion-card"><label>AI description</label><p>Digitally restored interview discussing parliamentary democracy, constitutional safeguards and social equality. Verify wording against the synchronized transcript before publication.</p></article>
+      <article class="suggestion-card"><label>Detected metadata</label><strong>English · Interview · 1953 · 18 min 42 sec</strong></article>
+      <div class="review-actions"><button class="secondary-action" onclick="returnRecord()">Return for correction</button><button class="approve-action" onclick="approveRecord()">Approve and publish</button></div>
     </section>
 
     <section class="screen" id="screen-profile">
@@ -174,7 +209,8 @@
   </main>
 
   <nav class="bottomnav">
-    <button class="nav active" data-page="upload" onclick="goTo('upload')"><div class="navbubble"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg></div><span>Upload</span></button>
+    <button class="nav active" data-page="dashboard" onclick="goTo('dashboard')"><div class="navbubble"><span style="font-size:18px">⌂</span></div><span>Home</span></button>
+    <button class="nav" data-page="upload" onclick="goTo('upload')"><div class="navbubble"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg></div><span>Upload</span></button>
     <button class="nav" data-page="records" onclick="goTo('records')"><div class="navbubble"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h11"/></svg></div><span>Records</span></button>
     <button class="nav" data-page="profile" onclick="goTo('profile')"><div class="navbubble"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-4 3.1-6 7-6s6.2 2 7 6"/></svg></div><span>Profile</span></button>
   </nav>
@@ -222,6 +258,8 @@
   function openCamera(){setType('Image',[...document.querySelectorAll('#typeSegment button')][1]);document.getElementById('cameraInput').click()}
   function startRecording(){setType('Audio',[...document.querySelectorAll('#typeSegment button')][2]);document.getElementById('audioInput').click()}
   function submitRecord(){showToast('Upload started · processing next');setTimeout(()=>goTo('records'),650)}
+  function returnRecord(){showToast('Returned with correction request');setTimeout(()=>goTo('records'),650)}
+  function approveRecord(){showToast('Approved and ready to publish');setTimeout(()=>goTo('records'),650)}
 
   function setScope(scope,btn){activeScope=scope;document.querySelectorAll('#scopeControl button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');filterRecords()}
   function setFilter(filter,btn){activeFilter=filter;document.querySelectorAll('.filter').forEach(f=>f.classList.remove('active'));btn.classList.add('active');filterRecords()}
@@ -247,6 +285,7 @@
     document.getElementById('roleLabel').textContent=admin?'Admin':'Worker';
     document.getElementById('profileAvatar').textContent=currentUser.initials;
     document.getElementById('profileName').textContent=currentUser.name;
+    document.getElementById('dashboardName').textContent=currentUser.name.split(' ')[0];
     document.getElementById('profileId').textContent=currentUser.workerId+' · Archive Digitization Team';
     document.getElementById('profileRole').textContent=admin?'Administrator':'Digitization Worker';
     document.getElementById('roleAccess').textContent=admin?'Upload · Review team records':'Upload · View own records';

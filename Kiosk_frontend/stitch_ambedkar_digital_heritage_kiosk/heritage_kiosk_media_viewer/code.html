@@ -1,0 +1,338 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Ambedkar Digital Heritage - Media Viewer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Serif+4:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1c1c15",
+                        "tertiary-fixed": "#ffe08e",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1c1c15",
+                        "surface-container-high": "#ebe8dd",
+                        "tertiary-fixed-dim": "#ecc246",
+                        "inverse-on-surface": "#f4f1e5",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "on-secondary-container": "#67645c",
+                        "primary-container": "#1a1e28",
+                        "surface-container-highest": "#e6e2d7",
+                        "ink-pressed": "#0D0F14",
+                        "on-tertiary-container": "#503d00",
+                        "outline": "#76777c",
+                        "inverse-primary": "#c3c6d4",
+                        "secondary": "#615e57",
+                        "background": "#fdf9ee",
+                        "on-surface-variant": "#45464b",
+                        "secondary-fixed": "#e7e2d8",
+                        "secondary-container": "#e7e2d8",
+                        "ai-assisted-blue": "#2E5077",
+                        "primary-fixed-dim": "#c3c6d4",
+                        "on-primary-fixed-variant": "#434752",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-tint": "#5a5e6a",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#313129",
+                        "tertiary": "#755b00",
+                        "on-secondary-fixed": "#1d1c16",
+                        "parchment-bright": "#FAF9F6",
+                        "on-primary-fixed": "#171b25",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#cea72c",
+                        "surface-variant": "#e6e2d7",
+                        "surface-bright": "#fdf9ee",
+                        "secondary-fixed-dim": "#cac6bd",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#828692",
+                        "verified-green": "#2D5A27",
+                        "on-secondary-fixed-variant": "#494740",
+                        "primary": "#02050d",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#dddacf",
+                        "surface": "#fdf9ee",
+                        "surface-container-low": "#f7f3e8",
+                        "surface-container": "#f1eee2",
+                        "primary-fixed": "#dfe2f0",
+                        "outline-variant": "#c6c6cc",
+                        "ink": "#02050d",
+                        "parchment-base": "#fdf9ee",
+                        "brass-patina": "#9D8454",
+                        "brass-light": "#cea72c",
+                        "stone": "#dddacf"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-kiosk": "64px",
+                        "margin-portrait": "64px",
+                        "gutter": "32px",
+                        "touch-lg": "80px",
+                        "touch-min": "64px",
+                        "touch-target": "64px",
+                        "stack-section": "80px",
+                        "stack-md": "32px",
+                        "rail-width": "120px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter", "sans-serif"],
+                        "body-lg": ["\"Source Serif 4\"", "serif"],
+                        "headline-lg-mobile": ["\"Source Serif 4\"", "serif"],
+                        "headline-lg": ["\"Source Serif 4\"", "serif"],
+                        "headline-md": ["\"Source Serif 4\"", "serif"],
+                        "body-md": ["\"Source Serif 4\"", "serif"],
+                        "display-lg": ["\"Source Serif 4\"", "serif"],
+                        "label-lg": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "body-lg": ["24px", { "lineHeight": "36px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["36px", { "lineHeight": "44px", "fontWeight": "600" }],
+                        "headline-lg": ["48px", { "lineHeight": "56px", "fontWeight": "600" }],
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "display-lg": ["72px", { "lineHeight": "84px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-filled {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom scrollbar for transcript */
+        .transcript-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .transcript-scroll::-webkit-scrollbar-track {
+            background: #fdf9ee; 
+            border-left: 1px solid #dddacf;
+        }
+        .transcript-scroll::-webkit-scrollbar-thumb {
+            background: #9D8454; 
+            border-radius: 4px;
+        }
+        .transcript-scroll::-webkit-scrollbar-thumb:hover {
+            background: #755b00; 
+        }
+    </style>
+</head>
+<body class="bg-parchment-base text-on-surface font-body-lg min-h-screen flex flex-col m-0 p-0 overflow-x-hidden selection:bg-brass-patina selection:text-ink">
+<!-- TopAppBar -->
+<header class="w-full top-0 px-margin-portrait border-b border-stone bg-parchment-base flex justify-between items-center h-touch-target z-40 fixed">
+<button aria-label="Menu" class="text-ink hover:opacity-80 transition-opacity duration-200 flex items-center justify-center w-12 h-12 rounded-full">
+<span class="material-symbols-outlined text-3xl" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-ink uppercase tracking-tight text-center flex-grow">Ambedkar Digital Heritage</h1>
+<button aria-label="Language" class="text-ink hover:opacity-80 transition-opacity duration-200 font-label-md text-label-md px-4 py-2 border border-ink rounded-lg">
+            ENG/हिं/म
+        </button>
+</header>
+<!-- Main Layout Grid -->
+<main class="flex-grow pt-[80px] pb-[120px] md:pb-0 flex flex-col md:flex-row h-screen">
+<!-- Navigation Rail (Web) -->
+<nav class="hidden md:flex h-full w-rail-width fixed left-0 top-[80px] bg-parchment-bright border-r-2 border-brass-patina flex-col items-center py-stack-md z-30 shadow-xl">
+<div class="flex flex-col gap-12 w-full mt-8">
+<!-- Home -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors duration-300 w-full py-4 group">
+<span class="material-symbols-outlined text-4xl mb-2 group-hover:text-brass-patina transition-colors" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</button>
+<!-- Life Journey -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors duration-300 w-full py-4 group">
+<span class="material-symbols-outlined text-4xl mb-2 group-hover:text-brass-patina transition-colors" data-icon="timeline">timeline</span>
+<span class="font-label-md text-label-md text-center px-2">Life Journey</span>
+</button>
+<!-- Archive -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors duration-300 w-full py-4 group">
+<span class="material-symbols-outlined text-4xl mb-2 group-hover:text-brass-patina transition-colors" data-icon="folder_open">folder_open</span>
+<span class="font-label-md text-label-md">Archive</span>
+</button>
+<!-- Media (Active) -->
+<button class="flex flex-col items-center justify-center text-brass-patina font-bold bg-surface-container-low w-full py-4 border-r-4 border-brass-patina relative">
+<span class="material-symbols-outlined text-4xl mb-2 icon-filled" data-icon="play_circle">play_circle</span>
+<span class="font-label-md text-label-md">Media</span>
+</button>
+<!-- Ask -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors duration-300 w-full py-4 group">
+<span class="material-symbols-outlined text-4xl mb-2 group-hover:text-brass-patina transition-colors" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-md text-label-md">Ask</span>
+</button>
+</div>
+</nav>
+<!-- Content Canvas -->
+<div class="flex-grow md:ml-rail-width w-full px-margin-kiosk py-stack-section flex flex-col lg:flex-row gap-gutter overflow-y-auto">
+<!-- Left Column: Media Player & Visuals -->
+<div class="w-full lg:w-3/5 flex flex-col gap-8">
+<!-- Artifact Visual Anchor -->
+<div class="w-full aspect-[4/3] bg-parchment-bright border border-stone rounded-lg relative overflow-hidden shadow-sm group">
+<!-- Subtle inner border for mounting effect -->
+<div class="absolute inset-2 border border-ink/10 rounded pointer-events-none z-10"></div>
+<img alt="Historical Event Photo" class="w-full h-full object-cover opacity-90 sepia-[.2] mix-blend-multiply" data-alt="A vintage, high-resolution black and white photograph of Dr. B.R. Ambedkar delivering a powerful speech at a wooden podium. The image has a subtle sepia tone, characteristic of historical archival materials. The lighting is focused on his face, highlighting his expression of determination. The background is slightly out of focus, showing a crowd of listeners in a grand, dimly lit auditorium with classical architectural columns." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhIrxwaJvgpWryK1U3DoHwTDUziZXiazNL9NGzwWMv52OW6AAE0D1lE_K-r-Kobsms9IoSCphFYc5PwNQ8E3OEUwC2gkRfZA0UYsTPaKKvXcwu303M9gg5flhuRpplsYrX7falg4UsAtd98d2JfiXFBlKy0D3tbtmDaHBDZ3ew74-xWLJJz1JEby3QIQUi16OB1ZJ01iThwSmtvlabbL72hRzcE2d0dk1l4Nq658S9otsU5v8UZ5g5">
+<!-- Overlay Gradient for text readability if needed -->
+<div class="absolute bottom-0 w-full h-1/3 bg-gradient-to-t from-parchment-base/80 to-transparent"></div>
+</div>
+<!-- Playback Controls Container -->
+<div class="bg-parchment-bright border border-stone rounded-xl p-8 flex flex-col gap-6 shadow-sm">
+<!-- Metadata -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<span class="bg-stone text-on-surface font-label-md text-label-md px-3 py-1 rounded-sm">Audio Archive</span>
+<span class="bg-verified-green/10 text-verified-green font-label-md text-label-md px-3 py-1 rounded-sm border border-verified-green/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="verified">verified</span> Authenticated
+                            </span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-ink mt-2">Speech at the Constituent Assembly</h2>
+<div class="font-body-md text-body-md text-on-surface-variant flex items-center gap-4">
+<span>Dr. B.R. Ambedkar</span>
+<span class="w-1 h-1 bg-brass-patina rounded-full"></span>
+<span>November 25, 1949</span>
+</div>
+</div>
+<!-- Progress Bar (Waveform placeholder) -->
+<div class="w-full mt-4 group cursor-pointer">
+<!-- Abstract Waveform representation -->
+<div class="h-16 w-full flex items-end gap-1 opacity-60 mb-2">
+<!-- JS will generate bars here -->
+<div class="w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybikiIC8+PHBhdHRlcm4gaWQ9InBhdHRlcm4iIHdpZHRoPSI0IiBoZWlnaHQ9IjIwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSIyMCIgZmlsbD0iIzlEODQ1NCIgLz48L3BhdHRlcm4+PC9zdmc+')] bg-repeat-x opacity-40"></div>
+</div>
+<!-- Track -->
+<div class="h-2 w-full bg-surface-variant rounded-full relative overflow-hidden">
+<!-- Progress -->
+<div class="absolute top-0 left-0 h-full bg-brass-patina w-1/3 rounded-full"></div>
+</div>
+<div class="flex justify-between mt-2 font-label-md text-label-md text-on-surface-variant">
+<span>12:45</span>
+<span>38:12</span>
+</div>
+</div>
+<!-- Primary Controls -->
+<div class="flex items-center justify-between mt-2">
+<!-- Left: Volume & Caption -->
+<div class="flex gap-4">
+<button aria-label="Volume" class="w-16 h-16 rounded-full border border-stone flex items-center justify-center text-ink hover:bg-surface-container-low transition-colors active:border-brass-patina active:border-2">
+<span class="material-symbols-outlined text-3xl" data-icon="volume_up">volume_up</span>
+</button>
+<button aria-label="Captions" class="w-16 h-16 rounded-full border border-stone flex items-center justify-center text-ink hover:bg-surface-container-low transition-colors active:border-brass-patina active:border-2">
+<span class="material-symbols-outlined text-3xl" data-icon="closed_caption">closed_caption</span>
+</button>
+</div>
+<!-- Center: Playback -->
+<div class="flex items-center gap-6">
+<button aria-label="Rewind 15 seconds" class="w-16 h-16 rounded-full flex items-center justify-center text-ink hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-4xl" data-icon="replay_10">replay_10</span>
+</button>
+<!-- Massive Play Button -->
+<button aria-label="Play/Pause" class="w-24 h-24 rounded-full bg-ink text-parchment-bright flex items-center justify-center shadow-lg hover:opacity-90 active:scale-95 transition-all focus:outline-none focus:ring-4 focus:ring-brass-patina">
+<span class="material-symbols-outlined text-5xl icon-filled" data-icon="play_arrow">play_arrow</span>
+</button>
+<button aria-label="Forward 15 seconds" class="w-16 h-16 rounded-full flex items-center justify-center text-ink hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-4xl" data-icon="forward_10">forward_10</span>
+</button>
+</div>
+<!-- Right: Options -->
+<div class="flex gap-4">
+<button aria-label="More Options" class="w-16 h-16 rounded-full border border-stone flex items-center justify-center text-ink hover:bg-surface-container-low transition-colors active:border-brass-patina active:border-2">
+<span class="material-symbols-outlined text-3xl" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Synchronized Transcript -->
+<div class="w-full lg:w-2/5 flex flex-col h-full max-h-[800px]">
+<div class="bg-parchment-bright border border-stone rounded-xl flex flex-col h-full shadow-sm">
+<!-- Transcript Header -->
+<div class="p-6 border-b-2 border-stone flex justify-between items-center bg-surface-container-low rounded-t-xl">
+<h3 class="font-headline-md text-headline-md text-ink">Transcript</h3>
+<div class="flex gap-2">
+<span class="bg-ai-assisted-blue/10 text-ai-assisted-blue font-label-md text-label-md px-3 py-1 rounded-sm border border-ai-assisted-blue/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="auto_awesome">auto_awesome</span> Auto-synced
+                            </span>
+</div>
+</div>
+<!-- Scrolling Text Area -->
+<div class="p-8 overflow-y-auto flex-grow transcript-scroll flex flex-col gap-6 font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+<p class="opacity-50 hover:opacity-100 transition-opacity cursor-pointer pl-4 border-l-2 border-transparent hover:border-stone py-2">
+                            "...I feel that the Constitution is workable, it is flexible and it is strong enough to hold the country together both in peacetime and in wartime."
+                        </p>
+<!-- Active Transcript Line -->
+<p class="text-ink font-semibold pl-4 border-l-4 border-brass-patina bg-brass-patina/5 py-4 rounded-r-lg transition-all shadow-sm">
+                            "Indeed, if I may say so, if things go wrong under the new Constitution, the reason will not be that we had a bad Constitution. What we will have to say is, that Man was vile."
+                        </p>
+<p class="opacity-50 hover:opacity-100 transition-opacity cursor-pointer pl-4 border-l-2 border-transparent hover:border-stone py-2">
+                            "Sir, I feel that it is the duty of the majority to realize that the minorities are a reality."
+                        </p>
+<p class="opacity-50 hover:opacity-100 transition-opacity cursor-pointer pl-4 border-l-2 border-transparent hover:border-stone py-2">
+                            "They have agreed to place their existence in the hands of the majority. In the history of negotiations for preventing the partition of Ireland, Redmond said to Carson: 'Ask for any safeguard you like for the Protestant minority but let us have a United Ireland.'"
+                        </p>
+<p class="opacity-50 hover:opacity-100 transition-opacity cursor-pointer pl-4 border-l-2 border-transparent hover:border-stone py-2">
+                            "Carson's reply was: 'Damn your safeguards, we don't want to be ruled by you.' No minority in India has taken this stand."
+                        </p>
+<p class="opacity-50 hover:opacity-100 transition-opacity cursor-pointer pl-4 border-l-2 border-transparent hover:border-stone py-2">
+                            "They have loyally accepted the rule of the majority which is basically a communal majority and not a political majority. It is for the majority to realize its duty not to discriminate against minorities."
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 w-full z-50 h-[120px] rounded-t-full border-t-2 border-brass-patina bg-parchment-bright shadow-[0px_-2px_8px_rgba(157,132,84,0.15)] flex justify-around items-center px-margin-portrait pb-8 md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-transform duration-150 p-2 rounded-xl" href="#">
+<span class="material-symbols-outlined text-3xl mb-1" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-transform duration-150 p-2 rounded-xl" href="#">
+<span class="material-symbols-outlined text-3xl mb-1" data-icon="timeline">timeline</span>
+<span class="font-label-md text-label-md">Life Journey</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-transform duration-150 p-2 rounded-xl" href="#">
+<span class="material-symbols-outlined text-3xl mb-1" data-icon="folder_open">folder_open</span>
+<span class="font-label-md text-label-md">Archive</span>
+</a>
+<!-- Active State -->
+<a class="flex flex-col items-center justify-center bg-brass-patina text-ink rounded-full w-24 h-24 -mt-10 shadow-lg active:scale-95 transition-transform duration-150 border-4 border-parchment-base" href="#">
+<span class="material-symbols-outlined text-4xl mb-1 icon-filled" data-icon="play_circle">play_circle</span>
+<span class="font-label-md text-label-md">Media</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-transform duration-150 p-2 rounded-xl" href="#">
+<span class="material-symbols-outlined text-3xl mb-1" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-md text-label-md">Ask</span>
+</a>
+</nav>
+<script>
+        // Simple script to handle play button toggle state visually
+        const playBtn = document.querySelector('button[aria-label="Play/Pause"]');
+        let isPlaying = false;
+        
+        playBtn.addEventListener('click', function() {
+            isPlaying = !isPlaying;
+            const iconSpan = this.querySelector('.material-symbols-outlined');
+            if (isPlaying) {
+                iconSpan.textContent = 'pause';
+                iconSpan.setAttribute('data-icon', 'pause');
+            } else {
+                iconSpan.textContent = 'play_arrow';
+                iconSpan.setAttribute('data-icon', 'play_arrow');
+            }
+        });
+    </script>
+</body></html>

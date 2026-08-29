@@ -1,0 +1,253 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Interactive Chronicle - Digital Heritage Archive</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Source+Serif+4:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom scrollbar for kiosk - hidden but functional */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "ai-assisted-blue": "#2E5077",
+                        "outline": "#76777c",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "inverse-primary": "#c3c6d4",
+                        "secondary-fixed-dim": "#cac6bd",
+                        "on-secondary-container": "#67645c",
+                        "surface-container": "#f1eee2",
+                        "on-secondary-fixed-variant": "#494740",
+                        "inverse-surface": "#313129",
+                        "secondary-fixed": "#e7e2d8",
+                        "tertiary-fixed-dim": "#ecc246",
+                        "surface-dim": "#dddacf",
+                        "tertiary": "#755b00",
+                        "tertiary-fixed": "#ffe08e",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#fdf9ee",
+                        "tertiary-container": "#cea72c",
+                        "surface-container-highest": "#e6e2d7",
+                        "on-error": "#ffffff",
+                        "primary": "#02050d",
+                        "primary-container": "#1a1e28",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f4f1e5",
+                        "on-primary-fixed": "#171b25",
+                        "surface-tint": "#5a5e6a",
+                        "outline-variant": "#c6c6cc",
+                        "on-surface-variant": "#45464b",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-tertiary-container": "#503d00",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "ink-pressed": "#0D0F14",
+                        "primary-fixed-dim": "#c3c6d4",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "parchment-bright": "#FAF9F6",
+                        "secondary-container": "#e7e2d8",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e6e2d7",
+                        "background": "#fdf9ee",
+                        "on-primary-fixed-variant": "#434752",
+                        "on-surface": "#1c1c15",
+                        "surface": "#fdf9ee",
+                        "surface-container-high": "#ebe8dd",
+                        "surface-container-low": "#f7f3e8",
+                        "verified-green": "#2D5A27",
+                        "on-primary-container": "#828692",
+                        "secondary": "#615e57",
+                        "on-background": "#1c1c15",
+                        "on-secondary-fixed": "#1d1c16",
+                        "primary-fixed": "#dfe2f0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-section": "80px",
+                        "rail-width": "120px",
+                        "margin-kiosk": "64px",
+                        "touch-min": "64px",
+                        "gutter": "32px",
+                        "touch-lg": "80px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["\"Source Serif 4\""],
+                        "headline-md": ["\"Source Serif 4\""],
+                        "body-md": ["\"Source Serif 4\""],
+                        "headline-lg-mobile": ["\"Source Serif 4\""],
+                        "label-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["\"Source Serif 4\""],
+                        "body-lg": ["\"Source Serif 4\""]
+                    },
+                    "fontSize": {
+                        "display-lg": ["72px", { "lineHeight": "84px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["36px", { "lineHeight": "44px", "fontWeight": "600" }],
+                        "label-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-lg": ["48px", { "lineHeight": "56px", "fontWeight": "600" }],
+                        "body-lg": ["24px", { "lineHeight": "36px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface h-screen w-screen overflow-hidden flex flex-col font-body-md select-none">
+<!-- TopAppBar -->
+<header class="bg-surface border-b-2 border-tertiary/20 flex justify-between items-center w-full px-margin-kiosk h-touch-lg shrink-0 z-50">
+<div class="flex items-center gap-4">
+<span aria-hidden="true" class="material-symbols-outlined text-primary text-3xl">language</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary uppercase tracking-widest">Digital Heritage Archive</h1>
+</div>
+<button class="h-touch-min px-6 flex items-center justify-center gap-2 bg-primary text-on-primary hover:bg-ink-pressed active:bg-primary-container rounded transition-colors duration-200">
+<span class="font-label-lg text-label-lg uppercase tracking-wider">90s</span>
+</button>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- NavigationDrawer (Rail) -->
+<nav class="bg-surface-container border-r-2 border-tertiary w-rail-width h-full shrink-0 flex flex-col items-center justify-center space-y-stack-section z-40">
+<h2 class="sr-only">Heritage Rail</h2>
+<button class="text-secondary flex flex-col items-center justify-center py-6 w-full hover:bg-secondary-fixed-dim transition-transform active:scale-95 group">
+<span class="material-symbols-outlined text-[40px] mb-2 group-hover:text-primary transition-colors">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</button>
+<button aria-current="page" class="bg-tertiary-container text-on-tertiary-container border-r-4 border-tertiary flex flex-col items-center justify-center py-6 w-full hover:bg-secondary-fixed-dim transition-transform active:scale-95 group">
+<span class="material-symbols-outlined text-[40px] mb-2" style="font-variation-settings: 'FILL' 1;">timeline</span>
+<span class="font-label-md text-label-md font-bold">Timeline</span>
+</button>
+<button class="text-secondary flex flex-col items-center justify-center py-6 w-full hover:bg-secondary-fixed-dim transition-transform active:scale-95 group">
+<span class="material-symbols-outlined text-[40px] mb-2 group-hover:text-primary transition-colors">inventory_2</span>
+<span class="font-label-md text-label-md">Archive</span>
+</button>
+<button class="text-secondary flex flex-col items-center justify-center py-6 w-full hover:bg-secondary-fixed-dim transition-transform active:scale-95 group">
+<span class="material-symbols-outlined text-[40px] mb-2 group-hover:text-primary transition-colors">perm_media</span>
+<span class="font-label-md text-label-md">Media</span>
+</button>
+<button class="text-secondary flex flex-col items-center justify-center py-6 w-full hover:bg-secondary-fixed-dim transition-transform active:scale-95 group">
+<span class="material-symbols-outlined text-[40px] mb-2 group-hover:text-primary transition-colors">contact_support</span>
+<span class="font-label-md text-label-md">Ask</span>
+</button>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 h-full overflow-y-auto px-margin-kiosk py-16 scroll-smooth" id="timeline-container">
+<div class="max-w-4xl mx-auto relative pb-32">
+<!-- Central Timeline Line -->
+<div class="absolute left-1/2 top-0 bottom-0 w-[2px] bg-tertiary/20 -translate-x-1/2 z-0"></div>
+<!-- Timeline Header -->
+<div class="text-center mb-stack-section relative z-10 bg-surface py-4">
+<h2 class="font-display-lg text-display-lg text-primary mb-4">Chronicles of Industry</h2>
+<p class="font-body-lg text-body-lg text-secondary max-w-2xl mx-auto">A vertical journey tracing the evolution of rail infrastructure through key historical milestones.</p>
+</div>
+<!-- Beat Cards Container -->
+<div class="space-y-stack-section">
+<!-- Beat Card 1: Image Heavy -->
+<article class="relative flex items-center justify-between group cursor-pointer w-full">
+<!-- Date Indicator Center -->
+<div class="absolute left-1/2 -translate-x-1/2 w-32 h-32 bg-surface rounded-full flex items-center justify-center border-2 border-tertiary/30 z-10 group-hover:border-tertiary transition-colors duration-300 shadow-sm">
+<span class="font-headline-md text-headline-md text-tertiary">1840</span>
+</div>
+<!-- Content Left -->
+<div class="w-[calc(50%-4rem)] pr-8 text-right flex flex-col items-end opacity-90 group-hover:opacity-100 transition-opacity">
+<h3 class="font-headline-lg text-headline-lg text-primary mb-2">The First Tracks</h3>
+<p class="font-body-md text-body-md text-secondary mb-4">Laying the foundation lines that would soon connect the major industrial hubs, transforming trade forever.</p>
+<div class="flex gap-2">
+<span class="bg-surface-variant text-on-surface-variant font-label-md text-label-md px-3 py-1 rounded border border-outline/20">Infrastructure</span>
+<span class="bg-verified-green/10 text-verified-green border border-verified-green/30 font-label-md text-label-md px-3 py-1 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">verified</span> Verified
+                                </span>
+</div>
+</div>
+<!-- Media Right -->
+<div class="w-[calc(50%-4rem)] pl-8">
+<div class="bg-parchment-bright border border-outline/20 p-2 rounded-lg shadow-sm group-hover:-translate-y-1 transition-transform duration-300">
+<div class="relative h-64 w-full rounded border border-outline/10 overflow-hidden bg-surface-container-high">
+<img alt="Archival image of early track laying" class="object-cover w-full h-full grayscale mix-blend-multiply opacity-80" data-alt="Sepia toned archival photograph of workers laying early railway tracks in the 1840s. High contrast, scholarly museum aesthetic, deep ink shadows, bright parchment highlights, showcasing industrial labor and early steam era infrastructure in a solemn, monumental framing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApw9xfFLbSuO-m2e067NBqW-sW7nZvx3d8ubAamnrKA3yiLRrNxxvluv3IxUWGok5eaCjVIGPpIkKgoAGsgmtI9jrP9JL8UR1m0W6Q1L_uDQUWlBOwo8xhJYnRFn5SlGeSJqV6ClHMNvz-lponNTo7nI83omb2T7Ofj088OyhPKcCDjMgd_p9M8CP15ZdZB9HHu4COcIp7KcUnXzOWUGCedXrYte1sDvxByfhWj3kMjpBFZNpQSarn">
+</div>
+</div>
+</div>
+</article>
+<!-- Beat Card 2: Text Focus -->
+<article class="relative flex items-center justify-between group cursor-pointer w-full flex-row-reverse">
+<!-- Date Indicator Center -->
+<div class="absolute left-1/2 -translate-x-1/2 w-32 h-32 bg-surface rounded-full flex items-center justify-center border-2 border-tertiary/30 z-10 group-hover:border-tertiary transition-colors duration-300 shadow-sm">
+<span class="font-headline-md text-headline-md text-tertiary">1876</span>
+</div>
+<!-- Content Right -->
+<div class="w-[calc(50%-4rem)] pl-8 text-left opacity-90 group-hover:opacity-100 transition-opacity">
+<h3 class="font-headline-lg text-headline-lg text-primary mb-2">The Great Expansion</h3>
+<p class="font-body-md text-body-md text-secondary mb-4">A decade of unprecedented growth, seeing the rail network double in size, reaching previously isolated western territories and sparking a new era of migration.</p>
+<div class="flex gap-2">
+<span class="bg-surface-variant text-on-surface-variant font-label-md text-label-md px-3 py-1 rounded border border-outline/20">Expansion</span>
+</div>
+</div>
+<!-- Media Left (Minimal) -->
+<div class="w-[calc(50%-4rem)] pr-8 flex justify-end">
+<div class="bg-parchment-bright border border-outline/20 p-4 rounded-lg shadow-sm group-hover:-translate-y-1 transition-transform duration-300 max-w-xs w-full">
+<div class="font-display-lg text-display-lg text-tertiary/20 text-center py-8">
+                                   "The Iron Spine"
+                               </div>
+</div>
+</div>
+</article>
+<!-- Beat Card 3: Blueprint/Map -->
+<article class="relative flex items-center justify-between group cursor-pointer w-full">
+<!-- Date Indicator Center -->
+<div class="absolute left-1/2 -translate-x-1/2 w-32 h-32 bg-surface rounded-full flex items-center justify-center border-2 border-tertiary/30 z-10 group-hover:border-tertiary transition-colors duration-300 shadow-sm">
+<span class="font-headline-md text-headline-md text-tertiary">1912</span>
+</div>
+<!-- Content Left -->
+<div class="w-[calc(50%-4rem)] pr-8 text-right flex flex-col items-end opacity-90 group-hover:opacity-100 transition-opacity">
+<h3 class="font-headline-lg text-headline-lg text-primary mb-2">Standardization Act</h3>
+<p class="font-body-md text-body-md text-secondary mb-4">The national mandate to standardize rail gauges across all major operators, drastically reducing transfer times for freight and passengers.</p>
+<div class="flex gap-2">
+<span class="bg-surface-variant text-on-surface-variant font-label-md text-label-md px-3 py-1 rounded border border-outline/20">Policy</span>
+<span class="bg-ai-assisted-blue/10 text-ai-assisted-blue border border-ai-assisted-blue/30 font-label-md text-label-md px-3 py-1 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">auto_awesome</span> AI Restored
+                                </span>
+</div>
+</div>
+<!-- Media Right -->
+<div class="w-[calc(50%-4rem)] pl-8">
+<div class="bg-parchment-bright border border-outline/20 p-2 rounded-lg shadow-sm group-hover:-translate-y-1 transition-transform duration-300">
+<div class="relative h-80 w-full rounded border border-outline/10 overflow-hidden bg-surface-container-high p-4 flex items-center justify-center">
+<!-- Using CSS pattern to represent blueprint/grid instead of image for variety -->
+<div class="absolute inset-0" style="background-image: radial-gradient(var(--tw-colors-tertiary) 1px, transparent 1px); background-size: 20px 20px; opacity: 0.1;"></div>
+<div class="relative z-10 border-2 border-tertiary/40 w-3/4 h-3/4 flex items-center justify-center">
+<span class="material-symbols-outlined text-[64px] text-tertiary/50">architecture</span>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+</div>
+</main>
+</div>
+</body></html>

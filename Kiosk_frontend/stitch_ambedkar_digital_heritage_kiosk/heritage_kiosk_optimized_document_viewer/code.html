@@ -1,0 +1,251 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Ambedkar Digital Heritage - Document Viewer</title>
+<!-- Google Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config injected from system prompt instructions -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1c1c15",
+                        "tertiary-fixed": "#ffe08e",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1c1c15",
+                        "surface-container-high": "#ebe8dd",
+                        "tertiary-fixed-dim": "#ecc246",
+                        "inverse-on-surface": "#f4f1e5",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "on-secondary-container": "#67645c",
+                        "primary-container": "#1a1e28",
+                        "surface-container-highest": "#e6e2d7",
+                        "ink-pressed": "#0D0F14",
+                        "on-tertiary-container": "#503d00",
+                        "outline": "#76777c",
+                        "inverse-primary": "#c3c6d4",
+                        "secondary": "#615e57",
+                        "background": "#fdf9ee",
+                        "on-surface-variant": "#45464b",
+                        "secondary-fixed": "#e7e2d8",
+                        "secondary-container": "#e7e2d8",
+                        "ai-assisted-blue": "#2E5077",
+                        "primary-fixed-dim": "#c3c6d4",
+                        "on-primary-fixed-variant": "#434752",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-tint": "#5a5e6a",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#313129",
+                        "tertiary": "#755b00",
+                        "on-secondary-fixed": "#1d1c16",
+                        "parchment-bright": "#FAF9F6",
+                        "on-primary-fixed": "#171b25",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#cea72c",
+                        "surface-variant": "#e6e2d7",
+                        "surface-bright": "#fdf9ee",
+                        "secondary-fixed-dim": "#cac6bd",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#828692",
+                        "verified-green": "#2D5A27",
+                        "on-secondary-fixed-variant": "#494740",
+                        "primary": "#02050d",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#dddacf",
+                        "surface": "#fdf9ee",
+                        "surface-container-low": "#f7f3e8",
+                        "surface-container": "#f1eee2",
+                        "primary-fixed": "#dfe2f0",
+                        "outline-variant": "#c6c6cc",
+                        "brass-patina": "#9D8454",
+                        "brass-light": "#d8b775",
+                        "ink": "#02050d",
+                        "stone": "#e6e2d7",
+                        "parchment-base": "#fdf9ee"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-kiosk": "64px",
+                        "margin-portrait": "64px",
+                        "gutter": "32px",
+                        "touch-lg": "80px",
+                        "touch-min": "64px",
+                        "stack-section": "80px",
+                        "stack-md": "32px",
+                        "rail-width": "120px",
+                        "touch-target": "80px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter", "sans-serif"],
+                        "body-lg": ["\"Source Serif 4\"", "serif"],
+                        "headline-lg-mobile": ["\"Source Serif 4\"", "serif"],
+                        "headline-lg": ["\"Source Serif 4\"", "serif"],
+                        "headline-md": ["\"Source Serif 4\"", "serif"],
+                        "body-md": ["\"Source Serif 4\"", "serif"],
+                        "display-lg": ["\"Source Serif 4\"", "serif"],
+                        "label-lg": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "body-lg": ["24px", { "lineHeight": "36px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["36px", { "lineHeight": "44px", "fontWeight": "600" }],
+                        "headline-lg": ["48px", { "lineHeight": "56px", "fontWeight": "600" }],
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "display-lg": ["72px", { "lineHeight": "84px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "label-xl": ["20px", { "lineHeight": "28px", "letterSpacing": "0.02em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #fdf9ee; }
+        /* Custom scrollbar for webkit to keep it subtle */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e6e2d7; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c6c6cc; }
+    </style>
+</head>
+<body class="bg-parchment-base text-ink font-body-lg antialiased overflow-hidden min-h-screen flex flex-col md:flex-row pb-[2in]">
+<!-- Mobile Shell Navigation (BottomNavBar) - JSON Output -->
+<nav class="md:hidden fixed bottom-[2in] left-0 w-full z-50 flex justify-around items-center px-margin-portrait fixed w-full z-50 h-[80px] rounded-t-full border-t-2 border-brass-patina bg-parchment-bright shadow-[0px_-2px_8px_rgba(157,132,84,0.15)] bg-parchment-bright dark:bg-ink text-brass-patina dark:text-brass-light font-label-md text-label-md">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-transform duration-150 h-full min-h-[80px] min-w-[80px] px-4 rounded-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-transform duration-150 h-full min-h-[80px] min-w-[80px] px-4 rounded-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">timeline</span>
+<span class="mt-1">Life Journey</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-brass-patina text-ink rounded-full min-w-[80px] min-h-[80px] h-full active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder_open</span>
+<span class="mt-1">Archive</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-transform duration-150 h-full min-h-[80px] min-w-[80px] px-4 rounded-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">play_circle</span>
+<span class="mt-1">Media</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-transform duration-150 h-full min-h-[80px] min-w-[80px] px-4 rounded-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">chat_bubble</span>
+<span class="mt-1">Ask</span>
+</a>
+</nav>
+<!-- Desktop TopAppBar (JSON Output) -->
+<header class="hidden md:flex flex justify-between items-center h-touch-target w-full w-full top-0 px-margin-portrait border-b border-stone bg-parchment-base dark:bg-ink text-ink dark:text-parchment-base font-headline-md text-headline-md z-40 relative">
+<div class="flex items-center gap-4">
+<button class="min-h-[80px] min-w-[80px] flex items-center justify-center hover:opacity-80 transition-opacity duration-200 text-ink">
+<span class="material-symbols-outlined" style="font-size: 32px;">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-ink dark:text-parchment-base uppercase tracking-tight">Ambedkar Digital Heritage</h1>
+</div>
+<div class="flex items-center gap-8 font-label-lg text-label-lg">
+<a class="text-ink hover:opacity-80 transition-opacity duration-200 min-h-[80px] flex items-center justify-center" href="#">Home</a>
+<a class="text-ink hover:opacity-80 transition-opacity duration-200 min-h-[80px] flex items-center justify-center" href="#">Life Journey</a>
+<a class="text-brass-patina hover:opacity-80 transition-opacity duration-200 border-b-2 border-brass-patina min-h-[80px] flex items-center justify-center" href="#">Archive</a>
+<a class="text-ink hover:opacity-80 transition-opacity duration-200 min-h-[80px] flex items-center justify-center" href="#">Media</a>
+<button class="min-h-[80px] px-4 font-label-lg text-label-lg text-ink uppercase tracking-wide hover:opacity-80 transition-opacity duration-200 border border-stone rounded-lg">ENG/हिं/म</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-[1440px] mx-auto flex flex-col md:flex-row h-[calc(100vh-64px)] overflow-hidden">
+<!-- Document Viewer Pane (Left) -->
+<section class="w-full md:w-1/2 h-[50vh] md:h-full bg-parchment-bright border-b md:border-b-0 md:border-r border-stone flex flex-col relative">
+<!-- Context Action Bar -->
+<div class="h-touch-target flex items-center justify-between px-gutter border-b border-stone bg-parchment-bright/90 backdrop-blur z-10 absolute top-0 w-full">
+<button class="flex items-center gap-2 text-on-surface-variant font-label-xl text-label-xl hover:text-ink transition-colors min-h-[80px] min-w-[80px]">
+<span class="material-symbols-outlined">arrow_back</span>
+                    Back to Collection
+                </button>
+<div class="flex items-center gap-2">
+<button aria-label="Zoom In" class="min-w-[80px] min-h-[80px] flex items-center justify-center rounded-full hover:bg-stone transition-colors">
+<span class="material-symbols-outlined">zoom_in</span>
+</button>
+<button aria-label="Zoom Out" class="min-w-[80px] min-h-[80px] flex items-center justify-center rounded-full hover:bg-stone transition-colors">
+<span class="material-symbols-outlined">zoom_out</span>
+</button>
+</div>
+</div>
+<!-- Image Container -->
+<div class="flex-1 overflow-auto pt-touch-target relative bg-[#e6e2d7]/30">
+<div class="w-full h-full min-h-[100%] flex items-center justify-center p-4">
+<img alt="Annihilation of Caste Draft Scan" class="w-full max-h-full object-contain shadow-md border border-stone/50 bg-white" data-alt="A high-resolution, top-down digital scan of a historical manuscript page from 1936. The paper is aged, yellowish parchment with slight fraying at the edges, indicative of physical preservation. Typed text in a vintage typewriter font fills the page, featuring handwritten editorial marks and corrections in faded blue ink. The lighting is flat, archival, and even, ensuring perfect legibility without harsh shadows, emphasizing a museum-quality documentary aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvbPio4YhdU2INA1fj4D0jISqVH6cXvPsmKBU9Z5gwhe1tC3ho8F2nzEB9EqxMVvXQ1-Q6DCslBFGtDyrCOiunOskAuo05iKygZTttaYqqiXFz4tT9pxR8Y_R1nozsvhaYI9JNUsvMo1lMMARqFDSl8YiugJ27xnLGU-ZMSq6r5e-TCDelTR-viBDYboYOcfJMz8P5GOT1krYBRtHaIibLCjVje3wSZ2vIoveGbmYFZUoaZ1itNinz">
+</div>
+</div>
+</section>
+<!-- Reading & Context Pane (Right) -->
+<section class="w-full md:w-1/2 h-[50vh] md:h-full flex flex-col bg-parchment-base pb-[100px] md:pb-0">
+<!-- Quick Action Tabs -->
+<div class="flex px-gutter border-b border-stone bg-parchment-bright sticky top-0 z-10 justify-between overflow-x-auto">
+<button class="min-h-[80px] min-w-[80px] px-6 font-label-xl text-label-xl text-on-surface-variant border-b-2 border-transparent hover:bg-surface-container-low transition-colors whitespace-nowrap">Original</button>
+<button class="min-h-[80px] min-w-[80px] px-6 font-label-xl text-label-xl text-brass-patina border-b-2 border-brass-patina bg-surface-container-low transition-colors whitespace-nowrap">Transcript</button>
+<button class="min-h-[80px] min-w-[80px] px-6 font-label-xl text-label-xl text-on-surface-variant border-b-2 border-transparent hover:bg-surface-container-low transition-colors whitespace-nowrap">Translation (म)</button>
+</div>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto p-gutter lg:p-margin-kiosk">
+<!-- Metadata Header -->
+<header class="mb-8">
+<div class="flex gap-2 mb-4">
+<span class="px-3 py-1 bg-stone rounded-sm font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Document</span>
+<span class="px-3 py-1 bg-verified-green/10 text-verified-green rounded-sm font-label-md text-label-md uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">verified</span> Verified Archive
+                        </span>
+</div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-ink mb-2">Annihilation of Caste (Draft)</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex flex-wrap gap-x-6 gap-y-2">
+<span><strong>Date:</strong> 1936</span>
+<span><strong>Archive ID:</strong> ADH-TXT-36-001</span>
+<span><strong>Provenance:</strong> Rajgruha Collection</span>
+</p>
+</header>
+<!-- Audio Control -->
+<div class="bg-parchment-bright border border-stone p-4 flex items-center gap-6 mb-8 shadow-sm">
+<button class="w-[80px] h-[80px] rounded-full bg-ink text-parchment-base flex items-center justify-center hover:bg-brass-patina hover:text-ink transition-colors outline outline-0 focus:outline-[3px] focus:outline-brass-light flex-shrink-0 min-h-[80px] min-w-[80px]">
+<span class="material-symbols-outlined" style="font-size: 40px; font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex-1">
+<h3 class="font-label-lg text-label-lg text-ink mb-1">Play Narrated Transcript</h3>
+<div class="w-full h-2 bg-stone rounded-full mt-3 relative">
+<div class="absolute left-0 top-0 h-full w-[0%] bg-brass-patina rounded-full"></div>
+</div>
+<div class="flex justify-between mt-2 font-label-md text-label-md text-on-surface-variant">
+<span>0:00</span>
+<span>4:23</span>
+</div>
+</div>
+</div>
+<!-- Transcript Text -->
+<article class="prose max-w-none font-body-lg text-body-lg text-ink leading-relaxed font-semibold">
+<p class="mb-6">
+                        If you wish to bring about a breach in the system then you have got to apply the dynamite to the Vedas and the Shastras, which deny any part to reason, to Vedas and Shastras, which deny any part to morality.
+                    </p>
+<p class="mb-6">
+                        You must destroy the Religion of the Smritis. Nothing else will avail. This is my considered view of the matter.
+                    </p>
+<p class="mb-6">
+                        Whether you do it or not, it is for you to consider.
+                    </p>
+</article>
+</div>
+</section>
+</main>
+<div class="fixed bottom-0 left-0 w-full h-[2in] bg-parchment-base z-[-1]"></div>
+</body></html>
