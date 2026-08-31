@@ -1,5 +1,47 @@
-/* Tailwind handles all styling via index.html config.
-   Only global resets that Tailwind doesn't cover live here. */
 *, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
 button, input { font-family: inherit; }
-button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+button, a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button { cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 3px solid #cea72c;
+  outline-offset: 3px;
+}
+
+img { user-select: none; -webkit-user-drag: none; }
+
+.archive-grid {
+  background-image: radial-gradient(rgba(117, 91, 0, .105) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+@media (pointer: coarse) {
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+}
+
+@media (max-width: 767px) {
+  .archive-grid { background-size: 18px 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
