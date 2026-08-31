@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fdf9ee" />
+  <title>Ambedkar Digital Heritage — Kiosk</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#fdf9ee",
+            "surface-bright": "#fdf9ee",
+            "surface-dim": "#dddacf",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f7f3e8",
+            "surface-container": "#f1eee2",
+            "surface-container-high": "#ebe8dd",
+            "surface-container-highest": "#e6e2d7",
+            "surface-variant": "#e6e2d7",
+            "on-surface": "#1c1c15",
+            "on-surface-variant": "#45464b",
+            "on-background": "#1c1c15",
+            "background": "#fdf9ee",
+            "primary": "#02050d",
+            "primary-container": "#1a1e28",
+            "primary-fixed": "#dfe2f0",
+            "primary-fixed-dim": "#c3c6d4",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#828692",
+            "on-primary-fixed": "#171b25",
+            "on-primary-fixed-variant": "#434752",
+            "secondary": "#615e57",
+            "secondary-container": "#e7e2d8",
+            "secondary-fixed": "#e7e2d8",
+            "secondary-fixed-dim": "#cac6bd",
+            "on-secondary": "#ffffff",
+            "on-secondary-container": "#67645c",
+            "on-secondary-fixed": "#1d1c16",
+            "on-secondary-fixed-variant": "#494740",
+            "tertiary": "#755b00",
+            "tertiary-container": "#cea72c",
+            "tertiary-fixed": "#ffe08e",
+            "tertiary-fixed-dim": "#ecc246",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-container": "#503d00",
+            "on-tertiary-fixed": "#241a00",
+            "on-tertiary-fixed-variant": "#584400",
+            "outline": "#76777c",
+            "outline-variant": "#c6c6cc",
+            "inverse-surface": "#313129",
+            "inverse-on-surface": "#f4f1e5",
+            "inverse-primary": "#c3c6d4",
+            "surface-tint": "#5a5e6a",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "on-error-container": "#93000a",
+            "ink-pressed": "#0D0F14",
+            "parchment-bright": "#FAF9F6",
+            "verified-green": "#2D5A27",
+            "ai-assisted-blue": "#2E5077",
+            "brass-patina": "#9D8454",
+            "stone": "#e6e2d7",
+            "ink": "#02050d",
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "2xl": "1rem",
+            "full": "9999px",
+          },
+          spacing: {
+            "touch-min": "64px",
+            "touch-lg": "80px",
+            "gutter": "32px",
+            "stack-section": "80px",
+            "rail-width": "120px",
+            "margin-kiosk": "64px",
+          },
+          fontFamily: {
+            "display-lg": ['"Source Serif 4"', "serif"],
+            "headline-lg": ['"Source Serif 4"', "serif"],
+            "headline-md": ['"Source Serif 4"', "serif"],
+            "body-lg": ['"Source Serif 4"', "serif"],
+            "body-md": ['"Source Serif 4"', "serif"],
+            "label-lg": ["Inter", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"],
+          },
+          fontSize: {
+            "display-lg": ["72px", { lineHeight: "84px", letterSpacing: "-0.01em", fontWeight: "700" }],
+            "headline-lg": ["48px", { lineHeight: "56px", fontWeight: "600" }],
+            "headline-md": ["32px", { lineHeight: "40px", fontWeight: "600" }],
+            "body-lg": ["24px", { lineHeight: "36px", fontWeight: "400" }],
+            "body-md": ["20px", { lineHeight: "32px", fontWeight: "400" }],
+            "label-lg": ["18px", { lineHeight: "24px", letterSpacing: "0.05em", fontWeight: "600" }],
+            "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "500" }],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Source Serif 4', serif; background-color: #fdf9ee; color: #1c1c15; overscroll-behavior: none; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; user-select: none; }
+    .icon-filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cac6bd; border-radius: 4px; }
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .page-enter { animation: fadeSlideIn 0.28s cubic-bezier(.16,1,.3,1) both; }
+    @keyframes idleBar { from { width: 100%; } to { width: 0%; } }
+    .idle-bar { animation: idleBar 90s linear forwards; }
+    @keyframes blink { 50% { opacity: .2; transform: translateY(-4px); } }
+    .dot-blink { animation: blink 1s infinite; }
+    .dot-blink:nth-child(2) { animation-delay: .15s; }
+    .dot-blink:nth-child(3) { animation-delay: .3s; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+/* Tailwind handles all styling via index.html config.
+   Only global resets that Tailwind doesn't cover live here. */
+*, *::before, *::after { box-sizing: border-box; }
+button, input { font-family: inherit; }
+button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
