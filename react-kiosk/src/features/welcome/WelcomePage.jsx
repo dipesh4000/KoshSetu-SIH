@@ -1,8 +1,21 @@
+import { useEffect, useState } from 'react';
 import Icon from '../../components/ui/Icon';
 import { copy } from '../../data/archiveData';
 
+const slides = [
+  { image: '/assets/ambedkar-portrait-demo.png', position: 'center', quote: 'Cultivation of mind should be the ultimate aim of human existence.', label: 'Portrait archive' },
+  { image: '/assets/constituent-assembly-demo.png', position: 'center', quote: 'Constitutional morality is not a natural sentiment. It has to be cultivated.', label: 'Constituent Assembly' },
+  { image: '/assets/manuscript-demo.png', position: 'center 28%', quote: 'History shows that where ethics and economics come in conflict, victory is always with economics.', label: 'Manuscript collection' },
+];
+
 export default function WelcomePage({ language, onLanguage, onEnter }) {
   const text = copy[language];
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setActiveSlide(value => (value + 1) % slides.length), 4800);
+    return () => window.clearInterval(timer);
+  }, []);
   return (
     <div className="relative min-h-screen overflow-hidden bg-surface text-primary">
       <div className="absolute inset-0 archive-grid opacity-50" />
@@ -37,13 +50,32 @@ export default function WelcomePage({ language, onLanguage, onEnter }) {
           </div>
         </section>
 
-        <section className="relative hidden overflow-hidden bg-primary lg:block">
-          <img src="/assets/ambedkar-portrait-demo.png" alt="Dr. B. R. Ambedkar" className="absolute inset-0 h-full w-full object-cover object-center grayscale" />
+        <section
+          className="relative hidden cursor-pointer overflow-hidden bg-primary lg:block"
+          aria-label="Enter kiosk from featured archive slideshow"
+          role="button"
+          tabIndex={0}
+          onClick={onEnter}
+          onKeyDown={event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              onEnter();
+            }
+          }}
+        >
+          {slides.map((slide, index) => (
+            <img key={slide.image} src={slide.image} alt="" className={`absolute inset-0 h-full w-full object-cover grayscale transition-all duration-1000 ${index === activeSlide ? 'scale-100 opacity-100' : 'scale-105 opacity-0'}`} style={{ objectPosition: slide.position }} />
+          ))}
           <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/5 to-primary/15" />
           <div className="absolute bottom-0 left-0 right-0 p-12 text-white">
             <div className="mb-5 h-px w-24 bg-tertiary-fixed" />
-            <blockquote className="max-w-lg font-headline-md text-[26px] leading-snug">“Cultivation of mind should be the ultimate aim of human existence.”</blockquote>
-            <p className="mt-4 font-label-md text-[12px] uppercase tracking-widest text-white/60">Dr. B. R. Ambedkar</p>
+            <blockquote key={activeSlide} className="slide-copy max-w-lg font-headline-md text-[26px] leading-snug">“{slides[activeSlide].quote}”</blockquote>
+            <div className="mt-5 flex items-center justify-between gap-4">
+              <p className="font-label-md text-[11px] uppercase tracking-widest text-white/60">{slides[activeSlide].label} · Dr. B. R. Ambedkar</p>
+              <div className="flex gap-2">
+                {slides.map((slide, index) => <button key={slide.image} onClick={event => { event.stopPropagation(); setActiveSlide(index); }} className={`h-2.5 rounded-full transition-all ${index === activeSlide ? 'w-8 bg-tertiary-fixed' : 'w-2.5 bg-white/45'}`} aria-label={`Show slide ${index + 1}`} />)}
+              </div>
+            </div>
           </div>
         </section>
       </div>
