@@ -30,7 +30,7 @@ function score(record, rawQuery) {
 export default function SearchPage({ language, onOpen }) {
   const [query, setQuery] = useState('');
   const [kind, setKind] = useState('All');
-  const kinds = ['All', 'Document', 'Book', 'Audio'];
+  const kinds = ['All', 'Document', 'Book', 'Audio', 'Video'];
   const searching = query.trim().length > 0;
   const trending = trendingIds.map(id => records.find(record => record.id === id));
   const results = useMemo(() => records

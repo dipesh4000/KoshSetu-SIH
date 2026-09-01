@@ -63,6 +63,22 @@ export const records = [
     aiInsight: 'Mahad translated an abstract claim to equality into direct collective action around an everyday public resource: water.',
   },
   {
+    id: 'A-006', title: 'Babasaheb Ambedkar', type: 'Documentary', mediaKind: 'Video', year: '1981',
+    description: 'A documentary portrait tracing Ambedkar’s public life, constitutional work and continuing democratic legacy.',
+    tags: ['Documentary', 'Biography', 'Legacy'], imageUrl: assembly, verified: true, duration: '15:19',
+    viewerText: [
+      'This archival documentary follows Bhimrao Ramji Ambedkar from his early education to his work as a jurist, social reformer and principal architect of the Constitution of India.',
+      'Its visual record connects the struggle against caste with Ambedkar’s wider arguments for representation, education and constitutional democracy.',
+      'The closing sequence considers how liberty, equality and fraternity remain active responsibilities for every generation.',
+    ],
+    translation: [
+      'यह अभिलेखीय वृत्तचित्र भीमराव रामजी अम्बेडकर की प्रारंभिक शिक्षा से लेकर विधिवेत्ता, समाज सुधारक और भारतीय संविधान के प्रमुख शिल्पकार के रूप में उनके कार्य तक की यात्रा दिखाता है।',
+      'इसका दृश्य अभिलेख जाति-विरोधी संघर्ष को प्रतिनिधित्व, शिक्षा और संवैधानिक लोकतंत्र के उनके व्यापक विचारों से जोड़ता है।',
+      'अंतिम भाग बताता है कि स्वतंत्रता, समानता और बंधुत्व हर पीढ़ी की सक्रिय जिम्मेदारी हैं।',
+    ],
+    aiInsight: 'The documentary works as a visual gateway into Ambedkar’s linked roles as scholar, organiser and constitutional thinker. Its claims can be followed into the primary records in this kiosk.',
+  },
+  {
     id: 'A-007', title: 'States and Minorities', type: 'Memorandum', mediaKind: 'Document', year: '1947',
     description: 'A memorandum proposing constitutional safeguards and economic democracy for minorities.',
     tags: ['Minorities', 'Economy', 'Safeguards'], imageUrl: manuscript, verified: true,

@@ -19,7 +19,7 @@ export default function BrowsePage({ language, onOpen, onNavigate }) {
 
       <section className="px-8 py-9 md:px-16">
         <div className="mb-6 flex items-center justify-between">
-          <p className="font-label-md text-[12px] uppercase tracking-widest text-secondary">8 records · 1891—1957</p>
+          <p className="font-label-md text-[12px] uppercase tracking-widest text-secondary">{records.length} records · 1891—1981</p>
           <div className="flex items-center gap-2 text-verified-green"><Icon name="verified" size={17} filled /><span className="font-label-md text-[11px] font-semibold uppercase tracking-wider">Curated demo archive</span></div>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
