@@ -18,7 +18,17 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.v1.routers import audit, auth, dashboards, fdrs, notifications, releases, uploads, verification
+from app.api.v1.routers import (
+    audit,
+    auth,
+    dashboards,
+    fdrs,
+    notifications,
+    ops,
+    releases,
+    uploads,
+    verification,
+)
 from app.core.config import settings
 from app.db.base import Base
 from app.db.session import engine
@@ -34,11 +44,16 @@ API_PREFIX = "/api/v1"
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    # The demo creates its schema directly; the brief's deployment path is
-    # reviewed Alembic revisions.
-    Base.metadata.create_all(bind=engine)
+    # Locally the schema is created directly; the brief's deployment path is
+    # reviewed Alembic revisions. A hosted deployment leaves this off and calls
+    # the guarded bootstrap route once, so a cold start does no DDL.
+    if settings.auto_create_schema:
+        Base.metadata.create_all(bind=engine)
     logger.info(
-        "startup environment=%s mock_bank=%s", settings.environment, settings.mock_bank_enabled
+        "startup environment=%s mock_bank=%s storage=%s",
+        settings.environment,
+        settings.mock_bank_enabled,
+        settings.storage_backend,
     )
     yield
 
@@ -169,7 +184,10 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 
 
 @app.get("/health", tags=["meta"])
+@app.get(f"{API_PREFIX}/health", tags=["meta"])
 def health():
+    """Liveness. Also exposed under the API prefix, because a static host may
+    route only `/api/*` to this application."""
     return {"status": "ok", "environment": settings.environment}
 
 
@@ -200,5 +218,6 @@ for router in (
     dashboards.router,
     notifications.router,
     audit.router,
+    ops.router,
 ):
     app.include_router(router, prefix=API_PREFIX)

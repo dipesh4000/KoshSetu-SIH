@@ -17,6 +17,7 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     Integer,
+    LargeBinary,
     Numeric,
     String,
     Text,
@@ -387,3 +388,21 @@ class CommandReceipt(Base, IdMixin, TimestampMixin):
     idempotency_key: Mapped[str] = mapped_column(String(120))
     command: Mapped[str] = mapped_column(String(64))
     response_json: Mapped[str] = mapped_column(Text)
+
+
+class ObjectBlob(Base, IdMixin, TimestampMixin):
+    """Document bytes, when the database-backed object store is in use.
+
+    A serverless deployment has no durable filesystem, so the private
+    quarantine/clean namespaces live in this table instead. The trade-off is
+    the database inflation the architecture brief warns about; it is bounded
+    here by the upload size limit and the prototype's scale, and an S3-backed
+    adapter remains the deployment path.
+    """
+
+    __tablename__ = "object_blobs"
+
+    object_key: Mapped[str] = mapped_column(String(255), unique=True, index=True)
+    content_type: Mapped[str] = mapped_column(String(120), default="application/pdf")
+    size_bytes: Mapped[int] = mapped_column(Integer)
+    payload: Mapped[bytes] = mapped_column(LargeBinary)

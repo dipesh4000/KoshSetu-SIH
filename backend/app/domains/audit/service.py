@@ -62,7 +62,7 @@ def record_audit(
             actor.user_id if actor else "system",
             old_summary,
             new_summary,
-            occurred_at.isoformat(),
+            as_utc(occurred_at).isoformat(),
         ]
     )
     event = AuditEvent(

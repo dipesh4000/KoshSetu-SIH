@@ -28,7 +28,7 @@ from app.domains.documents import extraction as extraction_engine
 from app.domains.documents.scanner import scan
 from app.domains.fdr import service
 from app.domains.risk.engine import sync_findings
-from app.infrastructure.storage import local_store
+from app.infrastructure import storage as object_store
 
 router = APIRouter(tags=["documents"])
 
@@ -75,7 +75,7 @@ def create_upload_session(
         id=new_id(),
         fdr_id=fdr.id,
         created_by=principal.user_id,
-        object_key=local_store.build_quarantine_key(fdr.institution_id),
+        object_key=object_store.build_quarantine_key(fdr.institution_id),
         declared_content_type=payload.content_type,
         declared_size_bytes=payload.size_bytes,
         status="PENDING_UPLOAD",
@@ -139,7 +139,7 @@ async def upload_content(
             detail={"code": "FILE_TOO_LARGE", "message": "The file exceeds the allowed size."},
         )
 
-    local_store.put_object(session_row.object_key, payload)
+    object_store.put_object(session_row.object_key, payload, session=db)
     session_row.status = "UPLOADED"
     db.commit()
     return {
@@ -175,10 +175,10 @@ def finalize_upload(
 
     if session_row.status != "UPLOADED":
         raise conflict("No uploaded object is associated with this session.")
-    if not local_store.object_exists(session_row.object_key):
+    if not object_store.object_exists(session_row.object_key, session=db):
         raise conflict("The object was not found in storage. Upload it again.")
 
-    payload = local_store.read_object(session_row.object_key)
+    payload = object_store.read_object(session_row.object_key, session=db)
     checksum = sha256_bytes(payload)
     version = (
         db.scalar(
@@ -210,8 +210,8 @@ def finalize_upload(
     db.flush()
 
     if result.status == "CLEAN":
-        document.object_key = local_store.promote(
-            session_row.object_key, to_prefix=local_store.CLEAN_PREFIX
+        document.object_key = object_store.promote(
+            session_row.object_key, to_prefix=object_store.CLEAN_PREFIX, session=db
         )
         document.processing_status = "EXTRACTING"
         extraction_result = extraction_engine.extract(payload)
@@ -233,8 +233,8 @@ def finalize_upload(
         if fdr.submission_status == "DRAFT":
             fdr.submission_status = "UPLOADED"
     else:
-        document.object_key = local_store.promote(
-            session_row.object_key, to_prefix=local_store.REJECTED_PREFIX
+        document.object_key = object_store.promote(
+            session_row.object_key, to_prefix=object_store.REJECTED_PREFIX, session=db
         )
         document.processing_status = "BLOCKED"
         fdr.document_processing_status = (
@@ -299,7 +299,7 @@ def reparse_document(
     if document.scan_status != "CLEAN":
         raise conflict("Only a document that passed scanning can be parsed.")
 
-    payload = local_store.read_object(document.object_key)
+    payload = object_store.read_object(document.object_key, session=db)
     if sha256_bytes(payload) != document.sha256:
         raise conflict("The stored object no longer matches its recorded checksum.")
 
@@ -412,7 +412,7 @@ def download_document(ticket: str, db: DbSession):
     if document is None or document.fdr_id != fdr.id or document.scan_status != "CLEAN":
         raise not_found()
 
-    payload = local_store.read_object(document.object_key)
+    payload = object_store.read_object(document.object_key, session=db)
     return StreamingResponse(
         iter([payload]),
         media_type=document.content_type,

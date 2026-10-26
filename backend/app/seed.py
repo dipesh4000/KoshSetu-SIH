@@ -50,7 +50,7 @@ from app.domains.documents.scanner import scan
 from app.domains.notifications.scheduler import run_maturity_scan
 from app.domains.release.policy import load_policy
 from app.domains.risk.engine import load_catalog, sync_findings
-from app.infrastructure.storage import local_store
+from app.infrastructure import storage as object_store
 
 DEMO_PASSWORD = "Demo@12345"  # documented demo credential; local use only
 TODAY = date.today()
@@ -162,10 +162,12 @@ def _make_instrument(
         lien_beneficiary=lien_beneficiary,
     )
 
-    quarantine_key = local_store.build_quarantine_key(institution.id)
-    local_store.put_object(quarantine_key, payload)
+    quarantine_key = object_store.build_quarantine_key(institution.id)
+    object_store.put_object(quarantine_key, payload, session=db)
     verdict = scan(payload, declared_content_type="application/pdf")
-    clean_key = local_store.promote(quarantine_key, to_prefix=local_store.CLEAN_PREFIX)
+    clean_key = object_store.promote(
+        quarantine_key, to_prefix=object_store.CLEAN_PREFIX, session=db
+    )
 
     document = FdrDocument(
         id=new_id(),

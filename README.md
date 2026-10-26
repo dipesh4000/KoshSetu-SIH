@@ -259,8 +259,12 @@ KoshSetu-SIH/
 │       ├── lib/                   # API client, DTOs, query hooks, session,
 │       │                          # formatting and status vocabulary
 │       └── pages/                 # Institution, official and admin workspaces
+├── api/index.py                   # Serverless entrypoint (exposes the ASGI app)
+├── vercel.json                    # Build, routing, headers and the daily cron
+├── requirements.txt               # Function dependencies (adds psycopg)
 ├── docs/
 │   ├── ARCHITECTURE.md            # What is implemented, and where it stops
+│   ├── DEPLOYMENT.md              # Hosting guide and troubleshooting
 │   ├── DEMO_SCRIPT.md             # Seven-step walkthrough of the seeded data
 │   ├── API.md                     # Route catalogue and error taxonomy
 │   └── assets/                    # Brand and interface previews
@@ -355,6 +359,53 @@ KOSHSETU_MAX_UPLOAD_BYTES=10485760
 > [!WARNING]
 > This setup is for **local demonstration**, not government production hosting. Do not expose it
 > publicly, and do not import real institutional financial documents into it.
+
+---
+
+## Deploying
+
+One Vercel project serves both halves — the built bundle as static files and the
+FastAPI application as a function under `/api` — so the session cookie stays
+first-party, with no CORS allowlist and no API base URL to configure.
+
+```
+https://<project>.vercel.app/            →  frontend/dist   (static)
+https://<project>.vercel.app/api/v1/…    →  api/index.py    (FastAPI)
+                                              └─ Postgres: schema and documents
+```
+
+`vercel.json`, `api/index.py`, the function `requirements.txt` and
+`.vercelignore` are committed, so importing the repository needs no build
+settings typed by hand. What you supply is a Postgres database and six
+environment variables:
+
+| Name | Value |
+| --- | --- |
+| `KOSHSETU_ENVIRONMENT` | `demo` |
+| `KOSHSETU_STORAGE_BACKEND` | `database` |
+| `KOSHSETU_JWT_SECRET` | `openssl rand -hex 32` |
+| `KOSHSETU_FDR_HMAC_KEY` | a different `openssl rand -hex 32` |
+| `KOSHSETU_BOOTSTRAP_SECRET` / `CRON_SECRET` | a third secret, same value for both |
+| `KOSHSETU_EXPOSE_DOCS` | `false` |
+
+Then create the schema and load the synthetic dataset once — the call is
+idempotent:
+
+```bash
+curl -X POST https://<project>.vercel.app/api/v1/ops/bootstrap \
+  -H "Authorization: Bearer $KOSHSETU_BOOTSTRAP_SECRET"
+```
+
+Because a serverless runtime has no durable disk, documents are stored in
+Postgres behind the same object-store facade as the local filesystem backend —
+generated keys, a separate quarantine namespace and nothing readable before
+scanning clears it, exactly as before. The settings gate **refuses to start**
+if that runtime is configured with filesystem storage or SQLite, rather than
+losing uploads quietly. The maturity scan and outbox dispatch run from a
+scheduled, secret-guarded route in place of a Celery beat worker.
+
+Full walkthrough, the serverless trade-offs and a troubleshooting table:
+[`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
 ---
 
@@ -499,7 +550,10 @@ KoshSetu uses **[GIGW 3.0](https://guidelines.india.gov.in/)**, **[OWASP ASVS](h
 
 ```bash
 # Backend: domain invariants, the P0 security matrix and end-to-end scenarios
-cd backend && ./.venv/bin/python -m pytest        # 47 tests
+cd backend && ./.venv/bin/python -m pytest                              # 61 tests
+
+# The same suite against the database-backed object store the deployment uses
+cd backend && KOSHSETU_STORAGE_BACKEND=database ./.venv/bin/python -m pytest
 
 # Frontend: strict type check and production build
 cd frontend && npx tsc -b && npm run build
@@ -558,6 +612,7 @@ The brand mark represents a protected document and a circular, accountable workf
 | Reference | Link |
 | --- | --- |
 | Architecture notes — what is implemented, and where it stops | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
+| Deployment guide — Vercel, Postgres and the serverless trade-offs | [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) |
 | Demonstration script over the seeded data | [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) |
 | API route catalogue and error taxonomy | [`docs/API.md`](docs/API.md) |
 | SIH 2026 problem statements | [sih.gov.in/sih2026PS](https://www.sih.gov.in/sih2026PS) |

@@ -35,11 +35,14 @@ class IdMixin:
 
 
 def as_utc(value: datetime | None) -> datetime | None:
-    """Treat a stored naive timestamp as UTC.
+    """Normalise a stored timestamp to an aware UTC value.
 
-    SQLite drops the offset on round-trip, so comparisons against an aware
-    "now" need the stored value normalised first.
+    SQLite drops the offset on round-trip, and a timestamptz column comes back
+    in the database session's timezone. Both are converted here so comparisons
+    and the audit digest do not depend on which database is behind them.
     """
     if value is None:
         return None
-    return value if value.tzinfo is not None else value.replace(tzinfo=timezone.utc)
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc)

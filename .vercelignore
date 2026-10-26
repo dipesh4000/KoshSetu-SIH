@@ -1,0 +1,10 @@
+# Keep the deployment bundle to what the function and the site need.
+backend/.venv/
+backend/data/
+backend/tests/
+backend/.env
+**/__pycache__/
+**/*.pyc
+.pytest_cache/
+docs/assets/
+*.docx

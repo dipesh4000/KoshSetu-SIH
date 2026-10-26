@@ -5,16 +5,28 @@ from collections.abc import Iterator
 from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.pool import NullPool
 
 from app.core.config import settings
 
-_connect_args = {"check_same_thread": False} if settings.database_url.startswith("sqlite") else {}
+_engine_kwargs: dict[str, object] = {"pool_pre_ping": True, "future": True}
 
-engine: Engine = create_engine(
-    settings.database_url, pool_pre_ping=True, connect_args=_connect_args, future=True
-)
+if settings.is_sqlite:
+    _engine_kwargs["connect_args"] = {"check_same_thread": False}
+elif settings.is_serverless:
+    # A serverless invocation may be frozen between requests, so a pooled
+    # connection cannot be trusted to still be open. Each request opens and
+    # closes its own; use the provider's pooled endpoint for the fan-out.
+    _engine_kwargs["poolclass"] = NullPool
+    _engine_kwargs["connect_args"] = {"connect_timeout": 10}
+else:
+    _engine_kwargs["pool_size"] = 5
+    _engine_kwargs["max_overflow"] = 5
+    _engine_kwargs["pool_recycle"] = 300
 
-if settings.database_url.startswith("sqlite"):
+engine: Engine = create_engine(settings.database_url, **_engine_kwargs)
+
+if settings.is_sqlite:
 
     @event.listens_for(engine, "connect")
     def _enable_sqlite_constraints(dbapi_connection, _record) -> None:  # pragma: no cover

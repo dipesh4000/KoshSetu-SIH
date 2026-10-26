@@ -145,3 +145,44 @@ def test_repeated_maturity_scan_creates_no_duplicate_reminder(db):
     second = run_maturity_scan(db)
     assert second["created"] == 0
     assert second["skipped_duplicates"] >= first["skipped_duplicates"]
+
+
+def test_managed_database_urls_are_normalised():
+    from app.core.config import normalise_database_url
+
+    assert normalise_database_url("postgres://u:p@host/db") == (
+        "postgresql+psycopg://u:p@host/db?sslmode=require"
+    )
+    assert normalise_database_url("postgresql://u:p@host/db?sslmode=require") == (
+        "postgresql+psycopg://u:p@host/db?sslmode=require"
+    )
+    # A local SQLite URL is left exactly as it is.
+    assert normalise_database_url("sqlite:///./data/x.db") == "sqlite:///./data/x.db"
+
+
+def test_serverless_runtime_refuses_a_disappearing_store(monkeypatch):
+    """The settings gate must fail loudly rather than lose uploads."""
+    from app.core.config import Settings, get_settings
+
+    monkeypatch.setenv("VERCEL", "1")
+    monkeypatch.setenv("KOSHSETU_STORAGE_BACKEND", "filesystem")
+    get_settings.cache_clear()
+    try:
+        with pytest.raises(RuntimeError, match="no durable filesystem"):
+            get_settings()
+    finally:
+        get_settings.cache_clear()
+    assert Settings  # imported for the symbol check above
+
+
+def test_hosted_environment_refuses_development_secrets(monkeypatch):
+    from app.core.config import get_settings
+
+    monkeypatch.setenv("KOSHSETU_ENVIRONMENT", "demo")
+    monkeypatch.setenv("KOSHSETU_JWT_SECRET", "insecure-local-development-secret")
+    get_settings.cache_clear()
+    try:
+        with pytest.raises(RuntimeError, match="before deploying"):
+            get_settings()
+    finally:
+        get_settings.cache_clear()
