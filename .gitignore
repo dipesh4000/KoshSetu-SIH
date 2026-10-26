@@ -18,8 +18,10 @@ dist-ssr/
 .env.local
 .env.*.local
 
-# Local runtime data (synthetic demo database and stored objects)
+# Local runtime data (synthetic demo database and stored objects). The path
+# is relative to wherever the process ran, so ignore it at any depth.
 backend/data/
+data/
 *.db
 *.sqlite3
 
