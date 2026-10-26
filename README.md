@@ -16,7 +16,10 @@
 </div>
 
 > [!IMPORTANT]
-> **Independent SIH prototype.** KoshSetu was developed around **Smart India Hackathon 2026 problem statement SIH26265**, issued by the **AICTE Regulation Bureau**: **“Streamline of security deposit/ FDR portal.”** It is **not** an official AICTE or bank website. Every bank-verification response in the demo is synthetic (`MOCK_BANK`) and **does not authenticate any real FDR, confirm a real lien, or authorize a financial release**.
+> **Independent SIH Prototype & Repository Phase.** KoshSetu was developed around **Smart India Hackathon 2026 problem statement SIH26265**, issued by the **AICTE Regulation Bureau**: **“Streamline of security deposit/ FDR portal.”**
+> - **Current Repository State:** This repository houses the complete architectural specification, design tokens, responsive screenshots, and engineering contracts. Core backend and frontend code modules (`apps/api`, `apps/web`) are maintained alongside this specification.
+> - **Bank Integration Disclaimer:** It is **not** an official AICTE or bank website. Every bank-verification response in the demo is synthetic (`MOCK_BANK`) and **does not authenticate any real FDR, confirm a real lien, or authorize a financial release**.
+> - **Full Specifications:** Read the [Backend Architecture & Security Specification](docs/backend-specification.md) and [Frontend Product & UI/UX Specification](docs/frontend-specification.md) directly in GitHub.
 
 ---
 
@@ -122,6 +125,13 @@ KoshSetu reduces repetitive data entry while keeping the human reviewer in contr
 
 **OCR is data extraction, not issuer authentication.** Missing or low-confidence fields remain unresolved until reviewed.
 
+#### Indian Banking Document Realities & Engineering Controls
+Physical FDR receipts from Indian public and private sector banks (SBI, PNB, Canara Bank, HDFC, etc.) introduce practical extraction challenges:
+- **Ink Rubber Stamps over Text:** Bank branch seals and revenue stamps often overlap FDR numbers or principal amounts. KoshSetu uses OpenCV color thresholding (HSV space) and morphological filtering to segment darker printed typography from colored stamp ink before OCR.
+- **Bilingual Receipts (Hindi / English):** Tesseract OCR pipeline is configured with combined language traineddata (`eng+hin`) to parse bilingual tabular fields accurately without dropping Hindi headers or labels.
+- **Dot-Matrix Printing & Degradation:** Low-resolution carbon copies and dot-matrix receipts undergo adaptive Gaussian thresholding and deskew correction.
+- **Confidence Threshold & Human-in-the-Loop:** Any extracted field with confidence `< 0.85` triggers a mandatory visual flag in the split-screen evidence review workbench, requiring explicit human reviewer attestation.
+
 ### 4. Explainable Integrity & Action Engine
 
 Rather than presenting a speculative AI “fraud score,” the system generates reviewable findings from versioned rules.
@@ -151,6 +161,13 @@ The bank adapter supports deterministic scenarios for testing and demonstrating 
 - `VERIFICATION_UNAVAILABLE`
 
 Every response carries `source_kind: "MOCK_BANK"`, `is_simulated: true`, a scenario identifier, timestamp and correlation ID. **A successful simulated response does not mark an FDR as genuinely bank-authenticated** and never bypasses regulatory review.
+
+#### Production Roadmap: Bank Connectivity Pathways
+While the SIH prototype enforces strict mock simulation isolation, a government production deployment has viable institutional pathways to bridge to real banking networks:
+1. **NeSL (National E-Governance Services Ltd):** Integration with India’s Information Utility for digital recording of security deposits, electronic lien markings, and debt/collateral registration under the Insolvency and Bankruptcy Code (IBC).
+2. **SFMS (Structured Financial Messaging System):** Interfacing via IDRBT / RBI-authorized SFMS gateways (ISO 20022 / MT messages) for secure inter-bank and regulator-to-bank lien advisory messaging.
+3. **Account Aggregator (AA) Ecosystem:** Leveraging RBI-licensed NBFC Account Aggregators (Sahamati framework) to fetch consented, digitally signed deposit balances and tenure certificates directly from Financial Information Providers (FIPs).
+4. **DigiLocker / NeGD:** Direct ingestion of digitally signed institutional deposit receipts issued by member banks.
 
 ### 6. Maturity, renewal and release
 
@@ -316,21 +333,21 @@ exception is needed.
 
 Every account uses the password `Demo@12345` — local demonstration only, never reused elsewhere.
 
-| Email | Role |
-| --- | --- |
-| `submitter@coastal.demo` | Institution submitter — Coastal Institute of Technology |
-| `approver@coastal.demo` | Institution approver — Coastal Institute of Technology |
-| `submitter@highland.demo` | Institution submitter — Highland School of Management |
-| `submitter@sunrise.demo` | Institution submitter — Sunrise College of Engineering |
-| `submitter@riverine.demo` | Institution submitter — Riverine Polytechnic |
-| `scrutiny@aicte.demo` | AICTE scrutiny officer (South & West) |
-| `scrutiny2@aicte.demo` | Second scrutiny officer |
-| `supervisor@aicte.demo` | Competent authority / release approver |
-| `pgrc@aicte.demo` | PGRC clearance officer |
-| `vigilance@aicte.demo` | Vigilance clearance officer |
-| `finance@aicte.demo` | Finance Bureau clearance officer |
-| `auditor@aicte.demo` | Read-only auditor |
-| `admin@aicte.demo` | Security administrator |
+| Email | Role / Organization | Scope / Key Test Scenario |
+| :--- | :--- | :--- |
+| `submitter@coastal.demo` | Institution Submitter — Coastal Institute of Tech | Draft FDR, upload PDF receipt, attest & submit |
+| `approver@coastal.demo` | Institution Approver — Coastal Institute of Tech | Institutional attestation and release signoff |
+| `submitter@highland.demo` | Institution Submitter — Highland School of Mgmt | Discrepancy & clarification workflow |
+| `submitter@sunrise.demo` | Institution Submitter — Sunrise College of Engg | Maturity alerts & successor instrument replacement |
+| `submitter@riverine.demo` | Institution Submitter — Riverine Polytechnic | Scoped institution registry & activity history |
+| `scrutiny@aicte.demo` | AICTE Scrutiny Officer (Southern & Western RO) | Side-by-side OCR review, field discrepancy flags |
+| `scrutiny2@aicte.demo` | AICTE Scrutiny Officer (Northern & Central RO) | Multi-tenant regional FDR scrutiny queue |
+| `supervisor@aicte.demo` | Competent Authority / Approver (Director Reg.) | Maker-checker dual-control release final approval |
+| `finance@aicte.demo` | Finance Bureau Clearance Officer | Bureau prerequisite signoff (`CLEARANCE_FINANCE_BUREAU`) |
+| `pgrc@aicte.demo` | Public Grievance / Legal Cell Officer | Litigation & encumbrance clearance (`CLEARANCE_LEGAL_CELL`) |
+| `vigilance@aicte.demo` | Vigilance / Approval Bureau Officer | Institutional compliance signoff (`CLEARANCE_APPROVAL_BUREAU`) |
+| `auditor@aicte.demo` | Oversight Auditor (Read-only) | Inspect append-only digest-chained audit trail |
+| `admin@aicte.demo` | Security Administrator | System health, rule catalogue & integrity engine |
 
 ### Core environment configuration
 
@@ -376,15 +393,17 @@ flowchart LR
     K --> L[Record authorized decision and audit]
 ```
 
-Important distinctions are enforced in data and UI:
+Important distinctions are enforced across 7 independent dimensions in data, API and UI:
 
-| Independent dimension | Examples | Why it matters |
-| --- | --- | --- |
-| **Instrument lifecycle** | `DRAFT`, `SUBMITTED`, `ACTIVE`, `MATURED`, `RELEASED` | Business state of the instrument record |
-| **Document processing** | `SCANNING`, `EXTRACTING`, `READY_FOR_CONFIRMATION`, `FAILED` | A file-processing job is not an officer decision |
-| **Verification provenance** | `NOT_CHECKED`, `MOCK_MATCH`, `MOCK_MISMATCH`, `UNAVAILABLE` | A simulation cannot masquerade as bank authentication |
-| **Officer scrutiny** | `PENDING`, `CLARIFICATION_REQUESTED`, `ACCEPTED`, `REJECTED` | Administrative judgment remains explicit |
-| **Release request** | `SUBMITTED`, `CLEARANCE_PENDING`, `ON_HOLD`, `APPROVED`, `REJECTED` | Release approval is not proof of money movement |
+| Independent dimension | Canonical states | Controlled by | Why it matters |
+| :--- | :--- | :--- | :--- |
+| **`submission_status`** | `DRAFT`, `UPLOADED`, `SUBMITTED`, `CORRECTION_REQUESTED`, `WITHDRAWN` | Institution + Scrutiny | Tracks document submission progress without altering legal instrument state |
+| **`instrument_status`** | `REGISTERED`, `ACTIVE`, `SUPERSEDED`, `MATURED`, `RELEASE_RECORDED`, `ARCHIVED` | Domain Engine / Policy | Authoritative lifecycle of the underlying financial guarantee |
+| **`document_processing_status`** | `QUARANTINED`, `CLEAN`, `EXTRACTING`, `READY`, `FAILED` | Security & Parser Workers | File scanning and OCR pipeline jobs are not administrative decisions |
+| **`bank_verification_status`** | `NOT_REQUESTED`, `PENDING`, `MOCK_MATCH`, `MOCK_MISMATCH`, `MOCK_ERROR`, `AUTHENTICATED_EXTERNAL`, `EXTERNAL_UNAVAILABLE` | Bank Adapter Policy | Explicit provenance: simulations can never masquerade as bank authentication |
+| **`review_status`** | `QUEUED`, `IN_REVIEW`, `CLARIFICATION_REQUIRED`, `ACCEPTED`, `REJECTED` | Scrutiny Officers | Administrative scrutiny judgment remains accountable and uncoupled from parsing |
+| **`lien_status`** | `UNKNOWN`, `CLAIMED`, `CONFIRMED`, `DISPUTED`, `RELEASED` | Authorized Bank Record | Legal encumbrance status confirmed by issuing bank |
+| **`release_status`** | `NOT_REQUESTED`, `REQUESTED`, `DOCUMENTS_PENDING`, `CLEARANCES_PENDING`, `ON_HOLD`, `READY_FOR_DECISION`, `APPROVED`, `REJECTED`, `CLOSED` | Clearance / Approver | Release approval is strictly administrative and distinct from fund movement |
 
 A maturing FDR does not automatically become releasable. Policies determine prerequisites; each material transition is authorized, version-checked and audited.
 
@@ -396,22 +415,31 @@ All domain endpoints live under **`/api/v1`**. JSON responses use a consistent `
 
 | Area | Endpoint | Purpose |
 | --- | --- | --- |
-| Identity | `GET /api/v1/me` | Current identity, scope and permissions |
-| Registry | `GET /api/v1/fdrs` | Authorized, paginated instrument list |
+| Identity | `GET /api/v1/me` | Current identity, effective roles, scope and session constraints |
+| Identity | `GET /api/v1/institutions/me` | Authenticated institution profile and accreditation metadata |
+| Registry | `GET /api/v1/fdrs` | Authorized, paginated instrument register (scoped by role/region) |
+| Registry | `GET /api/v1/fdrs/{id}` | Full FDR case detail, version history and permitted evidence summary |
 | Draft | `POST /api/v1/fdrs/drafts` | Create institution-scoped FDR draft |
-| Upload | `POST /api/v1/upload-sessions` | Initiate restricted document transfer |
-| Upload | `POST /api/v1/upload-sessions/{id}/finalize` | Validate uploaded object and queue scanning |
-| Submit | `POST /api/v1/fdrs/{id}/submit` | Attest and submit for scrutiny |
-| Scrutiny | `POST /api/v1/fdrs/{id}/scrutiny` | Record authorized officer decision |
-| Simulation | `POST /api/v1/fdrs/{id}/mock-bank-check` | Run explicitly simulated bank scenario |
-| Evidence | `GET /api/v1/fdrs/{id}/verification-checks` | Retrieve source-aware check history |
-| Maturity | `GET /api/v1/maturities` | Deadline windows and open actions |
-| Integrity | `GET /api/v1/exceptions` | Evidence-backed policy findings |
-| Release | `POST /api/v1/release-requests` | Initiate administrative release request |
-| Clearance | `POST /api/v1/release-requests/{id}/clearances/{code}/decide` | Record clearance decision |
-| Approval | `POST /api/v1/release-requests/{id}/approve` | Enforce prerequisites and maker–checker rules |
-| Audit | `GET /api/v1/audit-events` | Scoped audit chronology |
-| Reports | `POST /api/v1/reports/exports` | Authorized, audited report export |
+| Draft | `PATCH /api/v1/fdrs/{id}/draft` | Edit draft claims (disabled once submitted) |
+| Upload | `POST /api/v1/upload-sessions` | Initiate restricted document transfer and obtain presigned POST policy |
+| Upload | `POST /api/v1/upload-sessions/{id}/finalize` | Validate uploaded object existence, size/hash, and enqueue scanner |
+| Jobs | `GET /api/v1/jobs/{id}` | Poll asynchronous extraction/scan job status (opaque IDs) |
+| Documents | `GET /api/v1/fdrs/{id}/documents/{docId}/download` | Issue scoped, short-lived signed document download URL |
+| Submit | `POST /api/v1/fdrs/{id}/submit` | Attest and submit FDR for regulatory scrutiny (idempotent) |
+| Scrutiny | `POST /api/v1/fdrs/{id}/scrutiny` | Record authorized officer decision (`QUEUED`, `ACCEPTED`, `REJECTED`, etc.) |
+| Simulation | `POST /api/v1/fdrs/{id}/mock-bank-check` | Run explicitly simulated bank scenario with strict `MOCK_BANK` provenance |
+| Evidence | `GET /api/v1/fdrs/{id}/verification-checks` | Retrieve source-aware verification check history |
+| Replacement | `POST /api/v1/fdrs/{id}/replacements` | Create and link successor FDR instrument (preserving predecessor lineage) |
+| Maturity | `GET /api/v1/maturities` | Server-derived deadline windows (30/60/90 days) and open actions |
+| Integrity | `GET /api/v1/exceptions` | Evidence-backed policy engine findings with rule IDs |
+| Release | `POST /api/v1/release-requests` | Initiate administrative release request for an eligible instrument |
+| Release | `GET /api/v1/release-requests/{id}` | Checklist, current version, recorded clearances and signoffs |
+| Clearance | `POST /api/v1/release-requests/{id}/clearances/{code}/decide` | Record bureau-specific clearance decision with evidence |
+| Approval | `POST /api/v1/release-requests/{id}/approve` | Dual-control maker-checker final approval (atomic transaction) |
+| Audit | `GET /api/v1/audit-events` | Scoped, append-only chronological audit trail with correlation IDs |
+| Reports | `POST /api/v1/reports/exports` | Schedule authorized, audited report export with cryptographic receipt |
+| Notices | `GET /api/v1/notifications` | Paginated in-app notices and deadline alerts |
+| Notices | `POST /api/v1/notifications/{id}/ack` | Idempotent notification acknowledgement |
 
 <details>
 <summary><strong>Example — structured FDR response</strong></summary>
@@ -489,6 +517,29 @@ The design prioritizes **confidentiality, integrity, access control, reliable re
 
 Broken object-level authorization (BOLA/IDOR), cross-institution access, CSRF, repeated approval requests, stale-record modifications, malicious PDF uploads, unsafe file retrieval, notification retries, privilege escalation, forged client-side roles and tampering with audit evidence.
 
+### AICTE Administrative Hierarchy & Bureau Clearances
+
+To ensure alignment with actual regulatory operations, KoshSetu maps its multi-tenant authorization to AICTE's organizational structure:
+- **Regional Jurisdictions:** Scrutiny officers operate under scoped regional jurisdiction filters:
+  - Northern Regional Office (NRO, Kanpur)
+  - Western Regional Office (WRO, Mumbai)
+  - Southern Regional Office (SRO, Chennai)
+  - South-Western Regional Office (SWRO, Bangalore)
+  - Central Regional Office (CRO, Bhopal)
+  - Eastern Regional Office (ERO, Kolkata)
+  - North-Western Regional Office (NWRO, Chandigarh)
+- **Functional Bureau Roles:**
+  - **Regulation Bureau (Problem Sponsor):** Manages policy configurations, deposit mandates, and regulatory compliance.
+  - **Approval Bureau:** Validates institutional eligibility, intake quotas, and program approvals.
+  - **Finance & Accounts Bureau:** Verifies refund eligibility, statutory dues, and penalty clearance.
+  - **Legal Cell:** Verifies absence of court attachments or judicial holds on pledged deposits.
+- **Enforceable Release Clearances (`clearance_code`):**
+  A release request cannot transition to `READY_FOR_DECISION` until the following preconditions are affirmatively resolved by authorized bureau representatives:
+  1. `CLEARANCE_APPROVAL_BUREAU`: Institution program status verified.
+  2. `CLEARANCE_FINANCE_BUREAU`: No outstanding financial encumbrances.
+  3. `CLEARANCE_LEGAL_CELL`: No active litigation or regulatory freeze.
+  4. `MAKER_CHECKER_SEPARATION`: Final approver (`OFFICIAL_APPROVER`) must strictly differ from the clearance preparer (`checker_id != prepared_by`).
+
 ### Government and production boundary
 
 KoshSetu uses **[GIGW 3.0](https://guidelines.india.gov.in/)**, **[OWASP ASVS](https://asvs.owasp.org/)** and accessibility standards as engineering references. These are **targets and design inputs, not certifications**. A real government deployment requires its owner to approve policy rules, hosting/data-residency obligations, identity integration, retention, security assessment, accessibility conformance and any bank API contracts.
@@ -553,24 +604,25 @@ The brand mark represents a protected document and a circular, accountable workf
 
 ---
 
-## Documentation and references
+## Documentation and specifications
 
-| Reference | Link |
-| --- | --- |
-| Architecture notes — what is implemented, and where it stops | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
-| Demonstration script over the seeded data | [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) |
-| API route catalogue and error taxonomy | [`docs/API.md`](docs/API.md) |
-| SIH 2026 problem statements | [sih.gov.in/sih2026PS](https://www.sih.gov.in/sih2026PS) |
-| FastAPI | [fastapi.tiangolo.com](https://fastapi.tiangolo.com/) |
-| Next.js App Router | [nextjs.org/docs/app](https://nextjs.org/docs/app) |
-| SQLAlchemy 2 | [docs.sqlalchemy.org/en/20](https://docs.sqlalchemy.org/en/20/) |
-| Alembic | [alembic.sqlalchemy.org](https://alembic.sqlalchemy.org/en/latest/) |
-| Celery | [docs.celeryq.dev](https://docs.celeryq.dev/en/stable/) |
-| PostgreSQL | [postgresql.org/docs/current](https://www.postgresql.org/docs/current/) |
-| OWASP ASVS | [asvs.owasp.org](https://asvs.owasp.org/) |
-| OWASP API Security | [owasp.org/API-Security](https://owasp.org/API-Security/) |
-| Government of India GIGW | [guidelines.india.gov.in](https://guidelines.india.gov.in/) |
-| WCAG 2.2 | [w3.org/TR/WCAG22](https://www.w3.org/TR/WCAG22/) |
+| Resource | Path / Link | Scope |
+| --- | --- | --- |
+| **Backend Specification** | [`docs/backend-specification.md`](docs/backend-specification.md) | Architecture, security, state machines, API contracts & implementation patterns |
+| **Frontend Specification** | [`docs/frontend-specification.md`](docs/frontend-specification.md) | UI/UX design system, screen catalog, interaction flows & brand identity |
+| Architecture Notes | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Implemented architecture, domain models and runtime details |
+| Demonstration Script | [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) | 9-step evaluator walkthrough across synthetic test institutions |
+| API Route Catalogue | [`docs/API.md`](docs/API.md) | Complete endpoints, error taxonomy and concurrency contracts |
+| SIH 2026 Problem Statements | [sih.gov.in/sih2026PS](https://www.sih.gov.in/sih2026PS) | Problem Statement SIH26265 issued by AICTE Regulation Bureau |
+| FastAPI | [fastapi.tiangolo.com](https://fastapi.tiangolo.com/) | Typed Python REST API framework |
+| Vite / React | [vitejs.dev](https://vitejs.dev/) | Client build system with TypeScript and Tailwind CSS |
+| SQLAlchemy 2 | [docs.sqlalchemy.org/en/20](https://docs.sqlalchemy.org/en/20/) | Typed Python ORM with SQLite and async PostgreSQL support |
+| Alembic | [alembic.sqlalchemy.org](https://alembic.sqlalchemy.org/en/latest/) | Transactional database schema migrations |
+| PostgreSQL | [postgresql.org/docs/current](https://www.postgresql.org/docs/current/) | Relational database engine (production source of truth) |
+| OWASP ASVS 5.0 | [asvs.owasp.org](https://asvs.owasp.org/) | Application Security Verification Standard |
+| OWASP API Security | [owasp.org/API-Security](https://owasp.org/API-Security/) | Top 10 API Security Risks mitigation baseline |
+| Government of India GIGW 3.0 | [guidelines.india.gov.in](https://guidelines.india.gov.in/) | Guidelines for Indian Government Websites and Apps |
+| WCAG 2.2 | [w3.org/TR/WCAG22](https://www.w3.org/TR/WCAG22/) | Web Content Accessibility Guidelines (Target: AA) |
 
 ### Contributing
 
