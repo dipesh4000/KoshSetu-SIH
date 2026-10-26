@@ -121,7 +121,16 @@ rather than losing uploads quietly.
 
 **No long-lived process.** Connections use `NullPool`, because an invocation can
 be frozen between requests and a pooled connection cannot be assumed open. Point
-`DATABASE_URL` at the provider's pooled endpoint.
+`DATABASE_URL` at the provider's pooled endpoint. `pool_pre_ping` is off on this
+path: the connection was opened by the request about to use it, so revalidating
+it only buys a round trip.
+
+**Put the function in the database's region.** `vercel.json` pins `regions` to
+`sin1` because the Neon instance is in Singapore. This matters more than it
+looks: a dashboard request issues dozens of queries, each paying the round trip
+separately. Measured on this deployment, warm reads went from 4–7 seconds to
+under 0.6 once the two were co-located, while a route touching no database was
+0.3 seconds either way. **If you move the database, move this setting with it.**
 
 **No background worker.** The maturity scan and outbox dispatch run from
 `/api/v1/ops/cron/maturity-scan`, which `vercel.json` schedules daily at 02:00
@@ -156,6 +165,8 @@ URL is shared:
 | Sign-in succeeds, the next request is 401 | The site is being served over plain HTTP; a `demo` session cookie is `Secure`. |
 | `/api/v1/ops/*` returns 503 | No bootstrap secret is configured. |
 | Deep links 404 on refresh | The SPA fallback rewrite is missing. |
+| Pages load but feel slow | The function and the database are in different regions. Check `regions` in `vercel.json` against where the database actually lives. |
+| First request after a quiet spell takes ~10s | A free Postgres instance suspends when idle and the function cold-starts. Open the site a minute before a demo to warm both. |
 
 ## Running the same shape locally
 
