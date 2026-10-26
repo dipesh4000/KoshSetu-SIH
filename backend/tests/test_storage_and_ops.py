@@ -104,7 +104,53 @@ def test_bootstrap_is_idempotent(client, monkeypatch):
     assert body["counts"]["institutions"] == 4
 
     second = client.post("/api/v1/ops/bootstrap", headers=headers)
-    assert second.json()["counts"] == body["counts"]
+    # The dataset itself must not grow on a repeat run. Audit events do, because
+    # each run records the scheduler pass it performed.
+    for key in ("institutions", "users", "instruments"):
+        assert second.json()["counts"][key] == body["counts"][key]
+    assert second.json()["reminders"]["created"] == 0
+
+
+def test_bootstrap_stages_are_separately_addressable(client, monkeypatch):
+    """A runtime that caps request duration can run the load one stage at a time."""
+    monkeypatch.setattr(settings, "bootstrap_secret", "correct-secret")
+    headers = {"Authorization": "Bearer correct-secret"}
+
+    schema = client.post("/api/v1/ops/bootstrap", params={"step": "schema"}, headers=headers)
+    assert schema.status_code == 200
+    assert schema.json()["schema"] == "ready"
+    assert "seed" not in schema.json()
+
+    findings = client.post(
+        "/api/v1/ops/bootstrap", params={"step": "findings", "batch": 2}, headers=headers
+    )
+    assert findings.status_code == 200
+    body = findings.json()["findings"]
+    # A slice is evaluated and the caller is told where to resume.
+    assert body["evaluated"] == 2
+    assert body["next_offset"] == 2
+    assert body["remaining"] == body["total"] - 2
+
+    reminders = client.post("/api/v1/ops/bootstrap", params={"step": "reminders"}, headers=headers)
+    assert reminders.status_code == 200
+    assert reminders.json()["reminders"]["created"] == 0
+
+
+def test_findings_rebuild_is_resumable(db):
+    """A run that is cut short resumes from where it stopped."""
+    from app.seed import rebuild_findings
+
+    first = rebuild_findings(db, limit=3)
+    assert first["evaluated"] == 3
+    assert first["next_offset"] == 3
+    assert first["remaining"] == first["total"] - 3
+
+    second = rebuild_findings(db, offset=first["next_offset"])
+    assert second["evaluated"] == first["remaining"]
+    assert second["remaining"] == 0
+
+    # Past the end there is nothing left to do, and asking again is harmless.
+    assert rebuild_findings(db, offset=second["next_offset"])["evaluated"] == 0
 
 
 def test_scheduled_scan_runs_and_stays_idempotent(client, monkeypatch):

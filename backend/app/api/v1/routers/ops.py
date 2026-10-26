@@ -56,23 +56,49 @@ def bootstrap(
     db: DbSession,
     authorization: SecretHeader = None,
     x_bootstrap_secret: AltSecretHeader = None,
-    seed_data: bool = Query(default=True, alias="seed"),
+    step: str = Query(
+        default="all",
+        pattern="^(all|schema|seed|findings|reminders)$",
+        description="Run one stage at a time where the runtime caps request duration.",
+    ),
+    batch: int = Query(default=25, ge=1, le=200),
+    offset: int = Query(default=0, ge=0, description="Resume point for the findings stage."),
 ):
-    """Create the schema and load the synthetic dataset. Safe to call twice."""
+    """Create the schema and load the synthetic dataset.
+
+    Every stage is idempotent and the stages are separately addressable,
+    because a serverless runtime caps how long one request may take and the
+    whole load does not always fit. Re-running a stage is always safe:
+    `seed` skips a populated database, and `findings` only evaluates
+    instruments that have none yet.
+    """
     _require_secret(authorization, x_bootstrap_secret)
 
-    Base.metadata.create_all(bind=engine)
+    from app.seed import rebuild_findings, seed
 
-    already_seeded = db.scalar(select(func.count(User.id))) or 0
-    seeded = {"status": "skipped", "reason": "database already seeded"}
-    if seed_data and already_seeded == 0:
-        from app.seed import seed
+    result: dict[str, object] = {"step": step}
 
-        seeded = seed(reset=False)
+    if step in {"all", "schema"}:
+        Base.metadata.create_all(bind=engine)
+        result["schema"] = "ready"
+
+    if step in {"all", "seed"}:
+        already_seeded = db.scalar(select(func.count(User.id))) or 0
+        result["seed"] = (
+            {"status": "skipped", "reason": "database already seeded"}
+            if already_seeded
+            else seed(reset=False, include_derived=(step == "all"))
+        )
+
+    if step in {"all", "findings"}:
+        result["findings"] = rebuild_findings(db, offset=offset, limit=batch)
+
+    if step in {"all", "reminders"}:
+        result["reminders"] = run_maturity_scan(db)
+        result["outbox"] = dispatch_outbox(db)
 
     return {
-        "schema": "ready",
-        "seed": seeded,
+        **result,
         "environment": settings.environment,
         "storage_backend": storage.backend_name(),
         "counts": {

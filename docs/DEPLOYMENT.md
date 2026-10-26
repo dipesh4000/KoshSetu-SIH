@@ -76,6 +76,26 @@ It is idempotent: a second call reports `"seed": {"status": "skipped"}` and
 leaves the data alone. The response carries the row counts, so a successful run
 is visible immediately.
 
+**If it returns 504.** A function has a hard duration cap, and loading the whole
+dataset over a network connection to the database can exceed it. The stages are
+separately addressable for exactly this reason — run them one at a time:
+
+```bash
+BASE=https://<project>.vercel.app/api/v1/ops/bootstrap
+AUTH="Authorization: Bearer $KOSHSETU_BOOTSTRAP_SECRET"
+
+curl -X POST "$BASE?step=schema"               -H "$AUTH"
+curl -X POST "$BASE?step=seed"                 -H "$AUTH"
+curl -X POST "$BASE?step=findings&batch=3"     -H "$AUTH"   # repeat, advancing
+curl -X POST "$BASE?step=findings&batch=3&offset=3" -H "$AUTH"
+curl -X POST "$BASE?step=reminders"            -H "$AUTH"
+```
+
+The `findings` stage reports `next_offset` and `remaining`; keep calling with
+the returned offset until `remaining` is zero. Each instrument commits on its
+own, so a stage cut short keeps what it finished, and re-running a slice is
+harmless because evaluation is idempotent.
+
 ### 5. Check it
 
 ```bash

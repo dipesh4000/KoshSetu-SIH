@@ -14,7 +14,7 @@ import sys
 from datetime import date, timedelta
 from decimal import Decimal
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.security import (
@@ -33,6 +33,7 @@ from app.db.models import (
     FdrExtraction,
     FdrLink,
     FdrSubmission,
+    Finding,
     Institution,
     PolicyVersion,
     ReleaseDocument,
@@ -312,7 +313,7 @@ def _mock_check(db: Session, fdr: Fdr, officer: User, scenario: str) -> None:
     fdr.version += 1
 
 
-def seed(reset: bool = False) -> dict[str, str]:
+def seed(reset: bool = False, *, include_derived: bool = True) -> dict[str, str]:
     if reset:
         Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
@@ -698,20 +699,60 @@ def seed(reset: bool = False) -> dict[str, str]:
         )
         db.commit()
 
-        for fdr in db.scalars(select(Fdr)):
-            sync_findings(db, fdr)
-        db.commit()
+        if not include_derived:
+            # The caller will evaluate findings and reminders separately. On a
+            # constrained runtime each of those is its own request.
+            return {
+                "status": "seeded",
+                "institutions": "4",
+                "users": "13",
+                "derived": "pending",
+                "password": DEMO_PASSWORD,
+            }
 
+        findings = rebuild_findings(db)
         scan_result = run_maturity_scan(db)
         return {
             "status": "seeded",
             "institutions": "4",
             "users": "13",
+            "findings_evaluated": str(findings["evaluated"]),
             "reminders_created": str(scan_result["created"]),
             "password": DEMO_PASSWORD,
         }
     finally:
         db.close()
+
+
+def rebuild_findings(
+    db: Session, *, offset: int = 0, limit: int | None = None
+) -> dict[str, int]:
+    """Evaluate the rule engine over a slice of the register.
+
+    Progress is tracked by position, not by whether an instrument has findings:
+    a clean instrument produces none, and would otherwise look forever
+    unevaluated. Evaluation is idempotent, so re-running a slice is harmless,
+    and each instrument is committed on its own so a run that is cut short
+    keeps what it finished.
+    """
+    total = int(db.scalar(select(func.count(Fdr.id))) or 0)
+    statement = select(Fdr).order_by(Fdr.created_at, Fdr.id).offset(offset)
+    if limit is not None:
+        statement = statement.limit(limit)
+
+    evaluated = 0
+    for fdr in db.scalars(statement):
+        sync_findings(db, fdr)
+        db.commit()
+        evaluated += 1
+
+    next_offset = offset + evaluated
+    return {
+        "evaluated": evaluated,
+        "total": total,
+        "next_offset": next_offset,
+        "remaining": max(0, total - next_offset),
+    }
 
 
 if __name__ == "__main__":

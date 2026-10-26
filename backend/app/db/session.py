@@ -19,6 +19,10 @@ elif settings.is_serverless:
     # closes its own; use the provider's pooled endpoint for the fan-out.
     _engine_kwargs["poolclass"] = NullPool
     _engine_kwargs["connect_args"] = {"connect_timeout": 10}
+    # Nothing to revalidate: the connection was opened by this request. The
+    # liveness check would only add a round trip, and these run far from the
+    # database.
+    _engine_kwargs["pool_pre_ping"] = False
 else:
     _engine_kwargs["pool_size"] = 5
     _engine_kwargs["max_overflow"] = 5
