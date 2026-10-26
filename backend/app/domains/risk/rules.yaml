@@ -1,0 +1,89 @@
+# Integrity & Action-Needed rule catalogue.
+# Versioned in source control; its sha256 is recorded against every finding so
+# a historical decision can be replayed against the rules that applied then.
+ruleset_name: fdr-integrity
+version: "1.0.0"
+effective_from: "2026-10-01"
+thresholds:
+  maturity_warning_days: 30
+  maturity_critical_days: 7
+  stale_verification_hours: 24
+rules:
+  - id: DATA-001
+    category: DATA_DISCREPANCY
+    severity: HIGH
+    authority: OPERATIONAL
+    title: Declared principal differs from the document
+    recommended_action: Ask the institution to correct the entry or supply a corrected document.
+  - id: DATA-002
+    category: DATA_DISCREPANCY
+    severity: MEDIUM
+    authority: OPERATIONAL
+    title: Date could not be read reliably from the document
+    recommended_action: Review the document manually and confirm the date.
+  - id: DATA-003
+    category: DATA_DISCREPANCY
+    severity: MEDIUM
+    authority: OPERATIONAL
+    title: Declared maturity date differs from the document
+    recommended_action: Compare the highlighted page and request clarification.
+  - id: VERIFY-001
+    category: VERIFICATION_REQUIRED
+    severity: HIGH
+    authority: POLICY
+    title: No bank-source verification recorded
+    recommended_action: Initiate the permitted verification for this instrument.
+  - id: VERIFY-002
+    category: VERIFICATION_REQUIRED
+    severity: CRITICAL
+    authority: POLICY
+    title: Bank-source lien claim contradicts the declared lien
+    recommended_action: Escalate to the responsible official before any release step.
+  - id: VERIFY-003
+    category: VERIFICATION_REQUIRED
+    severity: MEDIUM
+    authority: OPERATIONAL
+    title: Latest verification evidence has expired
+    recommended_action: Re-run the permitted verification before taking a decision.
+  - id: MAT-001
+    category: DEADLINE_RISK
+    severity: HIGH
+    authority: OPERATIONAL
+    title: Maturity within the warning window and action unresolved
+    recommended_action: Assign a maturity owner and record the intended action.
+  - id: MAT-002
+    category: DEADLINE_RISK
+    severity: CRITICAL
+    authority: OPERATIONAL
+    title: Maturity date passed with no resolved action
+    recommended_action: Escalate according to the applicable grace and policy rules.
+  - id: DOC-001
+    category: MISSING_EVIDENCE
+    severity: HIGH
+    authority: POLICY
+    title: No clean document on record for a submitted instrument
+    recommended_action: Request the instrument document from the institution.
+  - id: DOC-002
+    category: MISSING_EVIDENCE
+    severity: MEDIUM
+    authority: OPERATIONAL
+    title: Document is awaiting security scanning or extraction
+    recommended_action: Wait for processing to finish before reviewing evidence.
+  - id: CASE-001
+    category: POLICY_HOLD
+    severity: BLOCKER
+    authority: POLICY
+    title: Release request lacks a required clearance
+    recommended_action: Obtain the pending clearance; final approval stays blocked.
+  - id: DUP-001
+    category: DUPLICATE_CANDIDATE
+    severity: MEDIUM
+    authority: INDICATIVE
+    title: Possible duplicate instrument reference
+    recommended_action: Investigate manually; a matching token is a candidate, not proof.
+  - id: POLICY-001
+    category: POLICY_HOLD
+    severity: BLOCKER
+    authority: POLICY
+    title: Instrument not accepted by scrutiny but a release is requested
+    recommended_action: Complete scrutiny before the release case can proceed.

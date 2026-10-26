@@ -1,0 +1,38 @@
+# Release checklist configuration.
+# The bureaus and documents below are CONFIGURABLE WORKFLOW STEPS modelled on
+# publicly described AICTE release practice. They are not a statement of the
+# currently effective policy: the applicable Approval Process Handbook year and
+# case type must be confirmed by the AICTE policy owner before any pilot.
+checklist_name: fdr-release
+version: "1.0.0"
+effective_from: "2026-10-01"
+bases:
+  INSTITUTION_CLOSURE:
+    label: Closure of institution
+    required_documents: [APPLICATION_LETTER, AFFIDAVIT, FDR_COPY, LOA_EOA_COPY]
+    clearances: [PGRC, VIGILANCE, FINANCE_BUREAU]
+  COURSE_WITHDRAWAL:
+    label: Withdrawal of course or programme
+    required_documents: [APPLICATION_LETTER, AFFIDAVIT, FDR_COPY]
+    clearances: [PGRC, FINANCE_BUREAU]
+  DEPOSIT_REPLACEMENT:
+    label: Replacement by a fresh instrument
+    required_documents: [APPLICATION_LETTER, FDR_COPY]
+    clearances: [FINANCE_BUREAU]
+  MATURITY_REFUND:
+    label: Refund after maturity
+    required_documents: [APPLICATION_LETTER, AFFIDAVIT, FDR_COPY, BANK_MATURITY_ADVICE]
+    clearances: [PGRC, VIGILANCE, FINANCE_BUREAU]
+bureaus:
+  PGRC:
+    name: Public Grievance Redressal Committee
+  VIGILANCE:
+    name: Vigilance Bureau
+  FINANCE_BUREAU:
+    name: Finance Bureau
+documents:
+  APPLICATION_LETTER: Signed application letter from the institution
+  AFFIDAVIT: Affidavit on the prescribed format
+  FDR_COPY: Copy of the instrument
+  LOA_EOA_COPY: Relevant LoA / EoA
+  BANK_MATURITY_ADVICE: Bank maturity or redemption advice

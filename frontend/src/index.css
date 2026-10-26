@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+/* Design tokens from the frontend specification, section 5.2. Contrast was
+   checked for text on its own surface; re-verify any new pairing. */
+@theme {
+  --color-canvas: #f6f8fb;
+  --color-surface: #ffffff;
+  --color-subtle: #f0f3f8;
+  --color-sidebar: #0f172a;
+  --color-sidebar-active: #233454;
+  --color-ink: #101828;
+  --color-ink-muted: #475467;
+  --color-brand: #2455c5;
+  --color-brand-dark: #1d47a6;
+  --color-success: #067647;
+  --color-success-soft: #ecfdf3;
+  --color-warning: #b54708;
+  --color-warning-soft: #fffaeb;
+  --color-danger: #b42318;
+  --color-danger-soft: #fef3f2;
+  --color-line: #d8dee8;
+  --radius-card: 12px;
+  --shadow-card: 0 1px 3px rgb(16 24 40 / 0.08);
+  --font-sans: "Inter", ui-sans-serif, system-ui, "Segoe UI", Roboto,
+    "Noto Sans Devanagari", sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* Financial figures and dates align and compare correctly. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  .skip-link {
+    position: absolute;
+    left: -999px;
+    top: 0;
+    z-index: 100;
+    background: var(--color-surface);
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--color-brand);
+  }
+
+  .skip-link:focus {
+    left: 0.5rem;
+    top: 0.5rem;
+  }
+}

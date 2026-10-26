@@ -1,9 +1,14 @@
 # Dependencies
 node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
 
 # Build output
 dist/
 dist-ssr/
+*.egg-info/
 
 # Vite cache
 .vite/
@@ -13,11 +18,24 @@ dist-ssr/
 .env.local
 .env.*.local
 
+# Local runtime data (synthetic demo database and stored objects)
+backend/data/
+*.db
+*.sqlite3
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+*.log
+
+# Test and tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+coverage/
+.coverage
 
 # Editor
 .vscode/
