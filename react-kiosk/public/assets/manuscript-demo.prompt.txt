@@ -1,9 +1,0 @@
-Use case: historical-scene
-Asset type: digitized archival document page for a museum reader
-Primary request: a realistic preserved 1930s typescript page inspired by a public-address manuscript, with dense typewritten English text that is intentionally too small to read, a restrained title area, pencil edits and archivist marks
-Scene/backdrop: flatbed archival scan, full page visible on neutral black
-Style/medium: museum-quality high resolution documentary scan, aged cream paper, authentic fibers and edge wear
-Composition/framing: portrait page, straight-on, generous safe margins, no perspective
-Lighting/mood: even conservation photography
-Color palette: warm cream, carbon black, faded graphite and one subtle blue pencil mark
-Constraints: no legible quotations, no exact copyrighted page reproduction, no logos, no watermark, no fake institutional stamps

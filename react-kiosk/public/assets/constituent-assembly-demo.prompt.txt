@@ -1,9 +1,0 @@
-Use case: historical-scene
-Asset type: wide museum kiosk media and timeline background
-Primary request: a historically plausible 1949 Indian Constituent Assembly chamber during a formal session, Dr. B. R. Ambedkar speaking at a lectern with assembly members seated beyond
-Scene/backdrop: Constitution Hall, New Delhi, late 1940s
-Style/medium: restored monochrome newsreel frame, documentary realism, gentle film grain and projector falloff
-Composition/framing: cinematic 16:9 wide frame, speaker in left third, chamber depth and listeners visible, crop-safe center
-Lighting/mood: high-contrast available light, solemn civic importance
-Color palette: monochrome warm black and silver
-Constraints: historically respectful clothing and setting; no text, no logos, no watermark; no modern objects; no invented banners

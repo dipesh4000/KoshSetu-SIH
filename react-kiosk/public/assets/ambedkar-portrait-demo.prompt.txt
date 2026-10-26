@@ -1,9 +1,0 @@
-Use case: historical-scene
-Asset type: wide museum kiosk hero image
-Primary request: a dignified archival-style documentary portrait of Dr. B. R. Ambedkar seated at a desk, facing slightly toward camera
-Scene/backdrop: dark 1940s study with shelves and papers, understated
-Style/medium: historically respectful black-and-white documentary photography, subtle aged film texture, realistic
-Composition/framing: vertical three-quarter portrait, subject centered slightly right, enough dark negative space around him for responsive cropping
-Lighting/mood: directional soft projection light, scholarly, resolute, institutional
-Color palette: monochrome charcoal and warm silver gelatin tones
-Constraints: historically recognizable round glasses, suit and tie; no text, no logos, no watermark; no modern objects; do not imitate a specific copyrighted photograph
