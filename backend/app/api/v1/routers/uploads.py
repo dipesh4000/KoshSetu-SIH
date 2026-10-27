@@ -33,6 +33,53 @@ from app.infrastructure import storage as object_store
 router = APIRouter(tags=["documents"])
 
 UPLOAD_SESSION_TTL_MINUTES = 15
+
+
+@router.post("/fdrs/{fdr_id}/documents/{document_id}/signature-check")
+def check_document_signature(
+    fdr_id: str,
+    document_id: str,
+    principal: CurrentPrincipal,
+    db: DbSession,
+    request: Request,
+):
+    from app.domains.documents.signatures import inspect_signatures
+
+    principal.require("document:read")
+    load_scoped_fdr(db, principal, fdr_id)
+    document = db.get(FdrDocument, document_id)
+    if document is None or document.fdr_id != fdr_id:
+        raise not_found()
+    if document.scan_status != "CLEAN":
+        raise conflict("Only documents that passed scanning can be inspected.")
+    payload = object_store.read_object(document.object_key, session=db)
+    if sha256_bytes(payload) != document.sha256:
+        raise conflict("The stored document checksum changed.")
+    try:
+        result = inspect_signatures(payload)
+    except ImportError as exc:
+        raise HTTPException(
+            503,
+            detail={
+                "code": "DEPENDENCY_UNAVAILABLE",
+                "message": "PDF signature verification is not installed.",
+            },
+        ) from exc
+    except Exception as exc:
+        raise invalid("The PDF signature structure could not be validated.") from exc
+    record_audit(
+        db,
+        aggregate_type="fdr_document",
+        aggregate_id=document.id,
+        action="document.signature_checked",
+        actor=principal,
+        new_state={"status": result["status"], "signatures": len(result["signatures"])},
+        request_id=request_id_of(request),
+    )
+    db.commit()
+    return result
+
+
 DOWNLOAD_TICKET_TTL_SECONDS = 120
 
 
@@ -107,7 +154,9 @@ def create_upload_session(
     )
 
 
-@router.put("/upload-sessions/{session_id}/content", status_code=status.HTTP_202_ACCEPTED)
+@router.put(
+    "/upload-sessions/{session_id}/content", status_code=status.HTTP_202_ACCEPTED
+)
 async def upload_content(
     session_id: str,
     file: UploadFile,
@@ -136,7 +185,10 @@ async def upload_content(
     if len(payload) > settings.max_upload_bytes:
         raise HTTPException(
             status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            detail={"code": "FILE_TOO_LARGE", "message": "The file exceeds the allowed size."},
+            detail={
+                "code": "FILE_TOO_LARGE",
+                "message": "The file exceeds the allowed size.",
+            },
         )
 
     object_store.put_object(session_row.object_key, payload, session=db)
@@ -150,7 +202,9 @@ async def upload_content(
     }
 
 
-@router.post("/upload-sessions/{session_id}/finalize", response_model=schemas.UploadFinalizeOut)
+@router.post(
+    "/upload-sessions/{session_id}/finalize", response_model=schemas.UploadFinalizeOut
+)
 def finalize_upload(
     session_id: str,
     principal: CurrentPrincipal,
@@ -180,13 +234,11 @@ def finalize_upload(
 
     payload = object_store.read_object(session_row.object_key, session=db)
     checksum = sha256_bytes(payload)
-    version = (
-        db.scalar(
-            select(FdrDocument)
-            .where(FdrDocument.fdr_id == fdr.id)
-            .order_by(FdrDocument.version.desc())
-            .limit(1)
-        )
+    version = db.scalar(
+        select(FdrDocument)
+        .where(FdrDocument.fdr_id == fdr.id)
+        .order_by(FdrDocument.version.desc())
+        .limit(1)
     )
     next_version = (version.version + 1) if version else 1
 
@@ -214,7 +266,19 @@ def finalize_upload(
             session_row.object_key, to_prefix=object_store.CLEAN_PREFIX, session=db
         )
         document.processing_status = "EXTRACTING"
-        extraction_result = extraction_engine.extract(payload)
+        extraction_result = extraction_engine.compare_claims(
+            extraction_engine.extract(
+                payload,
+                ocr_enabled=settings.ocr_enabled,
+                ocr_languages=settings.ocr_languages,
+            ),
+            {
+                "principal_amount": fdr.principal_amount,
+                "issuer_bank": fdr.issuer_bank,
+                "issue_date": fdr.issue_date,
+                "maturity_date": fdr.maturity_date,
+            },
+        )
         db.add(
             FdrExtraction(
                 id=new_id(),
@@ -223,7 +287,9 @@ def finalize_upload(
                 engine_version=extraction_engine.ENGINE_VERSION,
                 status=extraction_result.status,
                 extracted_json=json.dumps(extraction_result.extracted, sort_keys=True),
-                confidence_json=json.dumps(extraction_result.confidences, sort_keys=True),
+                confidence_json=json.dumps(
+                    extraction_result.confidences, sort_keys=True
+                ),
                 bbox_json=json.dumps(extraction_result.provenance, sort_keys=True),
                 finished_at=utcnow(),
             )
@@ -282,7 +348,10 @@ def _finalize_response(db, principal, fdr, document) -> schemas.UploadFinalizeOu
     )
 
 
-@router.post("/fdrs/{fdr_id}/documents/{document_id}/reparse", response_model=schemas.UploadFinalizeOut)
+@router.post(
+    "/fdrs/{fdr_id}/documents/{document_id}/reparse",
+    response_model=schemas.UploadFinalizeOut,
+)
 def reparse_document(
     fdr_id: str,
     document_id: str,
@@ -303,7 +372,19 @@ def reparse_document(
     if sha256_bytes(payload) != document.sha256:
         raise conflict("The stored object no longer matches its recorded checksum.")
 
-    result = extraction_engine.extract(payload)
+    result = extraction_engine.compare_claims(
+        extraction_engine.extract(
+            payload,
+            ocr_enabled=settings.ocr_enabled,
+            ocr_languages=settings.ocr_languages,
+        ),
+        {
+            "principal_amount": fdr.principal_amount,
+            "issuer_bank": fdr.issuer_bank,
+            "issue_date": fdr.issue_date,
+            "maturity_date": fdr.maturity_date,
+        },
+    )
     db.add(
         FdrExtraction(
             id=new_id(),
@@ -350,7 +431,9 @@ def issue_download_ticket(
     if document.scan_status != "CLEAN":
         raise conflict("A document that has not passed scanning cannot be opened.")
 
-    expires = datetime.now(timezone.utc) + timedelta(seconds=DOWNLOAD_TICKET_TTL_SECONDS)
+    expires = datetime.now(timezone.utc) + timedelta(
+        seconds=DOWNLOAD_TICKET_TTL_SECONDS
+    )
     ticket = jwt.encode(
         {
             "sub": principal.user_id,
@@ -392,7 +475,10 @@ def download_document(ticket: str, db: DbSession):
     except jwt.PyJWTError:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail={"code": "INVALID_TICKET", "message": "This document link is no longer valid."},
+            detail={
+                "code": "INVALID_TICKET",
+                "message": "This document link is no longer valid.",
+            },
         ) from None
     if claims.get("purpose") != "document-read":
         raise invalid("Unexpected ticket purpose")
@@ -404,7 +490,10 @@ def download_document(ticket: str, db: DbSession):
     if user is None or not user.active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail={"code": "INSUFFICIENT_SCOPE", "message": "Access has been withdrawn."},
+            detail={
+                "code": "INSUFFICIENT_SCOPE",
+                "message": "Access has been withdrawn.",
+            },
         )
     principal = build_principal(db, user)
     fdr = load_scoped_fdr(db, principal, claims["fdr"])

@@ -406,3 +406,45 @@ class ObjectBlob(Base, IdMixin, TimestampMixin):
     content_type: Mapped[str] = mapped_column(String(120), default="application/pdf")
     size_bytes: Mapped[int] = mapped_column(Integer)
     payload: Mapped[bytes] = mapped_column(LargeBinary)
+
+
+class RevokedSession(Base):
+    __tablename__ = "revoked_sessions"
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+
+
+class LoginBucket(Base):
+    __tablename__ = "login_buckets"
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    attempts: Mapped[int] = mapped_column(Integer, default=0)
+    reset_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+
+
+class BankResponseReceipt(Base):
+    __tablename__ = "bank_response_receipts"
+    id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    received_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class AuditFormat(Base):
+    """Identify the complete canonical digest format without rewriting old events."""
+    __tablename__ = "audit_formats"
+    id: Mapped[str] = mapped_column(ForeignKey("audit_events.id"), primary_key=True)
+    version: Mapped[int] = mapped_column(Integer, default=2)
+
+
+class TransactionLock(Base):
+    __tablename__ = "transaction_locks"
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    value: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class ImportBatch(Base, IdMixin, TimestampMixin):
+    __tablename__ = "import_batches"
+    actor_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
+    institution_id: Mapped[str] = mapped_column(ForeignKey("institutions.id"))
+    encrypted_rows: Mapped[str] = mapped_column(Text)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    status: Mapped[str] = mapped_column(String(24), default="PREVIEW")
+    result_json: Mapped[str | None] = mapped_column(Text, default=None)

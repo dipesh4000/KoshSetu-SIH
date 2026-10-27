@@ -26,7 +26,7 @@ def build_quarantine_key(institution_id: str, extension: str = "pdf") -> str:
 
 def _absolute(key: str) -> Path:
     path = (settings.storage_root / key).resolve()
-    if not str(path).startswith(str(settings.storage_root)):
+    if not path.is_relative_to(settings.storage_root.resolve()):
         raise ValueError("object key escapes the storage root")
     return path
 

@@ -18,8 +18,10 @@ import {
   TextInput,
 } from "../../components/ui/primitives";
 import { useAuditEvents, useAuditIntegrity } from "../../lib/api/hooks";
+import { useSession } from "../../lib/auth/session";
 
 export function AuditExplorerPage() {
+  const { can } = useSession();
   const [params, setParams] = useSearchParams();
   const [checkIntegrity, setCheckIntegrity] = useState(false);
 
@@ -51,9 +53,12 @@ export function AuditExplorerPage() {
         title="Audit explorer"
         description="Append-only record of what was done, by whom, when and why. Credentials, full instrument numbers and document contents are redacted before an event is written."
         actions={
-          <Button variant="secondary" onClick={() => setCheckIntegrity(true)} loading={integrity.isFetching}>
+          <div className="flex items-center gap-3">
+          {can("report:export") && <a className="text-sm text-brand underline" href="/api/v1/audit-events/export" download>Export audit with integrity result</a>}
+          <Button variant="secondary" onClick={() => { setCheckIntegrity(true); if (checkIntegrity) void integrity.refetch(); }} loading={integrity.isFetching}>
             Verify the digest chain
           </Button>
+          </div>
         }
       />
 

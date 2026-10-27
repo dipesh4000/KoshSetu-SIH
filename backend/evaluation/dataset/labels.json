@@ -1,0 +1,632 @@
+[
+  {
+    "id": "A-clean-native",
+    "template": "A",
+    "split": "development",
+    "condition": "native",
+    "scenario": "clean",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "A-clean-raster",
+    "template": "A",
+    "split": "development",
+    "condition": "raster",
+    "scenario": "clean",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "A-clean-degraded",
+    "template": "A",
+    "split": "development",
+    "condition": "degraded",
+    "scenario": "clean",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "A-maturity_first-native",
+    "template": "A",
+    "split": "development",
+    "condition": "native",
+    "scenario": "maturity_first",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "A-maturity_first-raster",
+    "template": "A",
+    "split": "development",
+    "condition": "raster",
+    "scenario": "maturity_first",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "A-maturity_first-degraded",
+    "template": "A",
+    "split": "development",
+    "condition": "degraded",
+    "scenario": "maturity_first",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "A-missing_principal-native",
+    "template": "A",
+    "split": "development",
+    "condition": "native",
+    "scenario": "missing_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": null,
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "A-missing_principal-raster",
+    "template": "A",
+    "split": "development",
+    "condition": "raster",
+    "scenario": "missing_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": null,
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "A-missing_principal-degraded",
+    "template": "A",
+    "split": "development",
+    "condition": "degraded",
+    "scenario": "missing_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": null,
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "A-conflicting_principal-native",
+    "template": "A",
+    "split": "development",
+    "condition": "native",
+    "scenario": "conflicting_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "A-conflicting_principal-raster",
+    "template": "A",
+    "split": "development",
+    "condition": "raster",
+    "scenario": "conflicting_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "A-conflicting_principal-degraded",
+    "template": "A",
+    "split": "development",
+    "condition": "degraded",
+    "scenario": "conflicting_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "A-invalid_dates-native",
+    "template": "A",
+    "split": "development",
+    "condition": "native",
+    "scenario": "invalid_dates",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2023-01-01"
+    }
+  },
+  {
+    "id": "A-invalid_dates-raster",
+    "template": "A",
+    "split": "development",
+    "condition": "raster",
+    "scenario": "invalid_dates",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2023-01-01"
+    }
+  },
+  {
+    "id": "A-invalid_dates-degraded",
+    "template": "A",
+    "split": "development",
+    "condition": "degraded",
+    "scenario": "invalid_dates",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "State Bank of India",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2023-01-01"
+    }
+  },
+  {
+    "id": "B-clean-native",
+    "template": "B",
+    "split": "development",
+    "condition": "native",
+    "scenario": "clean",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "B-clean-raster",
+    "template": "B",
+    "split": "development",
+    "condition": "raster",
+    "scenario": "clean",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "B-clean-degraded",
+    "template": "B",
+    "split": "development",
+    "condition": "degraded",
+    "scenario": "clean",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "B-maturity_first-native",
+    "template": "B",
+    "split": "development",
+    "condition": "native",
+    "scenario": "maturity_first",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "B-maturity_first-raster",
+    "template": "B",
+    "split": "development",
+    "condition": "raster",
+    "scenario": "maturity_first",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "B-maturity_first-degraded",
+    "template": "B",
+    "split": "development",
+    "condition": "degraded",
+    "scenario": "maturity_first",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "B-missing_principal-native",
+    "template": "B",
+    "split": "development",
+    "condition": "native",
+    "scenario": "missing_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": null,
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "B-missing_principal-raster",
+    "template": "B",
+    "split": "development",
+    "condition": "raster",
+    "scenario": "missing_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": null,
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "B-missing_principal-degraded",
+    "template": "B",
+    "split": "development",
+    "condition": "degraded",
+    "scenario": "missing_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": null,
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "B-conflicting_principal-native",
+    "template": "B",
+    "split": "development",
+    "condition": "native",
+    "scenario": "conflicting_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "B-conflicting_principal-raster",
+    "template": "B",
+    "split": "development",
+    "condition": "raster",
+    "scenario": "conflicting_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "B-conflicting_principal-degraded",
+    "template": "B",
+    "split": "development",
+    "condition": "degraded",
+    "scenario": "conflicting_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "B-invalid_dates-native",
+    "template": "B",
+    "split": "development",
+    "condition": "native",
+    "scenario": "invalid_dates",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2023-01-01"
+    }
+  },
+  {
+    "id": "B-invalid_dates-raster",
+    "template": "B",
+    "split": "development",
+    "condition": "raster",
+    "scenario": "invalid_dates",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2023-01-01"
+    }
+  },
+  {
+    "id": "B-invalid_dates-degraded",
+    "template": "B",
+    "split": "development",
+    "condition": "degraded",
+    "scenario": "invalid_dates",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "Canara Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2023-01-01"
+    }
+  },
+  {
+    "id": "C-clean-native",
+    "template": "C",
+    "split": "held-out",
+    "condition": "native",
+    "scenario": "clean",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "C-clean-raster",
+    "template": "C",
+    "split": "held-out",
+    "condition": "raster",
+    "scenario": "clean",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "C-clean-degraded",
+    "template": "C",
+    "split": "held-out",
+    "condition": "degraded",
+    "scenario": "clean",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "C-maturity_first-native",
+    "template": "C",
+    "split": "held-out",
+    "condition": "native",
+    "scenario": "maturity_first",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "C-maturity_first-raster",
+    "template": "C",
+    "split": "held-out",
+    "condition": "raster",
+    "scenario": "maturity_first",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "C-maturity_first-degraded",
+    "template": "C",
+    "split": "held-out",
+    "condition": "degraded",
+    "scenario": "maturity_first",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "C-missing_principal-native",
+    "template": "C",
+    "split": "held-out",
+    "condition": "native",
+    "scenario": "missing_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": null,
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "C-missing_principal-raster",
+    "template": "C",
+    "split": "held-out",
+    "condition": "raster",
+    "scenario": "missing_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": null,
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "C-missing_principal-degraded",
+    "template": "C",
+    "split": "held-out",
+    "condition": "degraded",
+    "scenario": "missing_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": null,
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "C-conflicting_principal-native",
+    "template": "C",
+    "split": "held-out",
+    "condition": "native",
+    "scenario": "conflicting_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "C-conflicting_principal-raster",
+    "template": "C",
+    "split": "held-out",
+    "condition": "raster",
+    "scenario": "conflicting_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "C-conflicting_principal-degraded",
+    "template": "C",
+    "split": "held-out",
+    "condition": "degraded",
+    "scenario": "conflicting_principal",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2026-01-01"
+    }
+  },
+  {
+    "id": "C-invalid_dates-native",
+    "template": "C",
+    "split": "held-out",
+    "condition": "native",
+    "scenario": "invalid_dates",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2023-01-01"
+    }
+  },
+  {
+    "id": "C-invalid_dates-raster",
+    "template": "C",
+    "split": "held-out",
+    "condition": "raster",
+    "scenario": "invalid_dates",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2023-01-01"
+    }
+  },
+  {
+    "id": "C-invalid_dates-degraded",
+    "template": "C",
+    "split": "held-out",
+    "condition": "degraded",
+    "scenario": "invalid_dates",
+    "labels": {
+      "fdr_number": "5010022334455",
+      "principal_amount": "2500000.00",
+      "issuer_bank": "HDFC Bank",
+      "issue_date": "2024-01-01",
+      "maturity_date": "2023-01-01"
+    }
+  }
+]

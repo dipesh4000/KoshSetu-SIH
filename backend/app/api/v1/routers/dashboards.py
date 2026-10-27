@@ -482,6 +482,8 @@ def _report_rows(db, principal, report_key: str) -> tuple[list[list[str]], list[
             request_row = db.get(ReleaseRequest, requirement.request_id)
             if request_row is None:
                 continue
+            if db.scalar(scoped.where(Fdr.id == request_row.fdr_id)) is None:
+                continue
             if principal.is_institution_user and request_row.institution_id not in principal.institution_ids:
                 continue
             institution = db.get(Institution, request_row.institution_id)

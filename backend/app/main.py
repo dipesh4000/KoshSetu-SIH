@@ -28,6 +28,8 @@ from app.api.v1.routers import (
     releases,
     uploads,
     verification,
+    imports,
+    analytics,
 )
 from app.core.config import settings
 from app.db.base import Base
@@ -132,13 +134,15 @@ def _error_response(
 async def http_exception_handler(request: Request, exc: HTTPException):
     detail = exc.detail
     if isinstance(detail, dict):
-        return _error_response(
+        response = _error_response(
             request,
             exc.status_code,
             detail.get("code", "ERROR"),
             detail.get("message", "The request could not be completed."),
             detail.get("field_errors"),
         )
+        response.headers.update(exc.headers or {})
+        return response
     default_codes = {
         400: "INVALID_INPUT",
         401: "AUTHENTICATION_REQUIRED",
@@ -201,6 +205,8 @@ def meta():
         "problem_statement_id": "SIH26265",
         "problem_statement_title": "Streamline of security deposit / FDR portal",
         "issuer": "All India Council for Technical Education (AICTE), Regulation Bureau",
+        "mfa_enforced": False,
+        "authentication_note": "Demo password authentication only. MFA and government SSO are not implemented.",
         "disclaimer": (
             "Demonstration prototype. All institutions, instruments, clearances and bank "
             "responses are synthetic. The portal is not connected to any bank or AICTE "
@@ -219,5 +225,7 @@ for router in (
     notifications.router,
     audit.router,
     ops.router,
+    imports.router,
+    analytics.router,
 ):
     app.include_router(router, prefix=API_PREFIX)

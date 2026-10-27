@@ -306,7 +306,6 @@ def test_s5_s6_release_requires_clearances_then_maker_checker(db, as_user):
     request_id = request_row.id
 
     finance = as_user("finance@aicte.demo")
-    current = finance.get(f"/api/v1/release-requests/{request_id}").json()
     cleared = finance.post(
         f"/api/v1/release-requests/{request_id}/clearances/FINANCE_BUREAU/decide",
         json={"outcome": "CLEARED", "reason": "Deposit reconciled against the finance register."},

@@ -15,6 +15,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 
 import jwt
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 from app.core.config import settings
 
@@ -40,7 +41,9 @@ def verify_password(password: str, stored: str) -> bool:
     return hmac.compare_digest(candidate, base64.b64decode(digest_b64))
 
 
-def create_access_token(subject: str, *, extra_claims: dict[str, Any] | None = None) -> str:
+def create_access_token(
+    subject: str, *, extra_claims: dict[str, Any] | None = None
+) -> str:
     now = datetime.now(timezone.utc)
     payload: dict[str, Any] = {
         "sub": subject,
@@ -82,7 +85,9 @@ def lookup_hash(issuer_bank: str, fdr_number: str) -> str:
     A collision is a candidate for manual review, never proof of duplication.
     """
     canonical = canonical_instrument_reference(issuer_bank, fdr_number)
-    return hmac.new(settings.fdr_hmac_key.encode(), canonical.encode(), hashlib.sha256).hexdigest()
+    return hmac.new(
+        settings.fdr_hmac_key.encode(), canonical.encode(), hashlib.sha256
+    ).hexdigest()
 
 
 def mask_fdr_number(fdr_number: str) -> str:
@@ -93,23 +98,35 @@ def mask_fdr_number(fdr_number: str) -> str:
 
 
 def obfuscate_store(value: str) -> str:
-    """Reversible envelope stand-in for application-layer encryption.
-
-    A real deployment stores ciphertext from an approved KMS; this keeps the
-    data model honest (ciphertext column exists, raw number is never stored in
-    plaintext columns, audit text or logs) without pretending to be KMS.
-    """
-    key = hashlib.sha256(settings.fdr_hmac_key.encode()).digest()
-    raw = value.encode()
-    stream = b""
-    counter = 0
-    while len(stream) < len(raw):
-        stream += hashlib.sha256(key + counter.to_bytes(4, "big")).digest()
-        counter += 1
-    return base64.b64encode(bytes(a ^ b for a, b in zip(raw, stream))).decode()
+    """Versioned authenticated encryption; each write uses a unique nonce."""
+    key = hashlib.sha256(
+        (settings.encryption_key or settings.fdr_hmac_key).encode()
+    ).digest()
+    nonce = os.urandom(12)
+    key_id = settings.encryption_key_id
+    encrypted = AESGCM(key).encrypt(
+        nonce, value.encode(), f"koshsetu:fdr:v2:{key_id}".encode()
+    )
+    return f"v2:{key_id}:" + base64.b64encode(nonce + encrypted).decode()
 
 
 def deobfuscate_store(value: str) -> str:
+    if value.startswith("v2:"):
+        parts = value.split(":")
+        material = settings.encryption_key or settings.fdr_hmac_key
+        aad = b"koshsetu:fdr:v2"
+        if len(parts) == 3:
+            key_id = parts[1]
+            if key_id != settings.encryption_key_id:
+                material = settings.encryption_previous_keys.get(key_id)
+                if not material:
+                    raise ValueError("Encryption key version is unavailable")
+            aad = f"koshsetu:fdr:v2:{key_id}".encode()
+        key = hashlib.sha256(material.encode()).digest()
+        raw = base64.b64decode(parts[-1], validate=True)
+        return AESGCM(key).decrypt(raw[:12], raw[12:], aad).decode()
+    # Read compatibility for the existing local demo. The upgrade command
+    # rewrites these legacy records without changing their masked identifiers.
     key = hashlib.sha256(settings.fdr_hmac_key.encode()).digest()
     raw = base64.b64decode(value)
     stream = b""
@@ -120,10 +137,25 @@ def deobfuscate_store(value: str) -> str:
     return bytes(a ^ b for a, b in zip(raw, stream)).decode()
 
 
+def session_fingerprint(user, assignments) -> str:
+    import json
+
+    payload = [
+        user.password_hash,
+        user.active,
+        sorted((a.role, a.scope_type, a.scope_id or "", a.active) for a in assignments),
+    ]
+    return hmac.new(
+        settings.jwt_secret.encode(), json.dumps(payload).encode(), hashlib.sha256
+    ).hexdigest()
+
+
 def sha256_bytes(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
 def sign_payload(payload: str) -> str:
     """HMAC used by the mock bank simulator to authenticate *itself* only."""
-    return hmac.new(settings.fdr_hmac_key.encode(), payload.encode(), hashlib.sha256).hexdigest()
+    return hmac.new(
+        settings.fdr_hmac_key.encode(), payload.encode(), hashlib.sha256
+    ).hexdigest()

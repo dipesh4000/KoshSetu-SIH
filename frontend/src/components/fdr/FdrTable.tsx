@@ -129,6 +129,14 @@ export function FdrTable({
       emptyTitle="No deposits match this view"
       emptyDescription="Adjust or reset the filters to widen the search."
       footer={footer}
+      renderExpanded={(row) => (
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-xs lg:grid-cols-4">
+          <div><dt className="text-ink-muted">Institution</dt><dd className="mt-1 font-medium">{row.institution_name} · {row.aicte_id}</dd></div>
+          <div><dt className="text-ink-muted">Document processing</dt><dd className="mt-1"><StatusBadge dimension="document" value={row.status.document_processing_status} /></dd></div>
+          <div><dt className="text-ink-muted">Instrument lifecycle</dt><dd className="mt-1"><StatusBadge dimension="instrument" value={row.status.instrument_status} /></dd></div>
+          <div><dt className="text-ink-muted">Next step</dt><dd className="mt-1"><Link className="font-semibold text-brand underline" to={`${basePath}/${row.id}`}>Open evidence and actions</Link></dd></div>
+        </dl>
+      )}
     />
   );
 }

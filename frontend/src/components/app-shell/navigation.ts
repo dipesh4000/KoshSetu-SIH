@@ -41,6 +41,7 @@ export const INSTITUTION_NAV: NavSection[] = [
     items: [
       { to: "/institution/overview", label: "Overview", icon: LayoutDashboard },
       { to: "/institution/fdrs", label: "My deposits", icon: Landmark, capability: "fdr:read" },
+      { to: "/institution/import", label: "Bulk import", icon: FileStack, capability: "fdr:draft" },
       {
         to: "/institution/fdrs/new",
         label: "New submission",
@@ -99,6 +100,7 @@ export const OFFICIAL_NAV: NavSection[] = [
     heading: "Oversight",
     items: [
       { to: "/official/reports", label: "Reports", icon: FileSearch, capability: "report:read" },
+      { to: "/official/analytics", label: "Analytics", icon: Gauge, capability: "report:read" },
       { to: "/official/audit", label: "Audit explorer", icon: ScrollText, capability: "audit:read" },
       {
         to: "/official/notifications",

@@ -13,12 +13,14 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.db.base import new_id
+from app.db.locking import transaction_lock
 from app.db.models import Fdr, Institution, NotificationEvent
 from app.domains.audit.service import enqueue_outbox, record_audit
 
 RULE_VERSION = "maturity-thresholds-1.0.0"
 
 THRESHOLDS: tuple[tuple[str, int, str], ...] = (
+    ("MATURITY_90_DAYS", 90, "INFORMATION"),
     ("MATURITY_60_DAYS", 60, "INFORMATION"),
     ("MATURITY_30_DAYS", 30, "DEADLINE"),
     ("MATURITY_15_DAYS", 15, "DEADLINE"),
@@ -35,6 +37,7 @@ def _dedupe_key(fdr: Fdr, event_type: str) -> str:
 
 def run_maturity_scan(db: Session, *, today: date | None = None) -> dict[str, int]:
     """Insert due reminders. Safe to run repeatedly on the same day."""
+    transaction_lock(db, "maturity-scan")
     today = today or datetime.now(timezone.utc).date()
     created = 0
     skipped = 0
@@ -135,6 +138,7 @@ def notify_user(
         status="QUEUED",
     )
     db.add(event)
+    enqueue_outbox(db, event_type="notification.queued", aggregate_type="notification_event", aggregate_id=event.id)
     return event
 
 

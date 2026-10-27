@@ -108,6 +108,7 @@ export function LoginPage() {
             <p className="mt-1 text-sm text-ink-muted">
               Local demonstration sign-in. A deployment would use an AICTE-approved identity
               provider with multi-factor authentication for officials.
+              MFA and government SSO are not implemented in this demo.
             </p>
 
             <form className="mt-5 space-y-4" onSubmit={onSubmit}>

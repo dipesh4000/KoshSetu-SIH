@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import {
   forwardRef,
+  useId,
   type ButtonHTMLAttributes,
   type InputHTMLAttributes,
   type ReactNode,
@@ -54,7 +55,7 @@ export function Badge({
   return (
     <span
       title={title}
-      className={`inline-flex max-w-full items-center gap-1.5 rounded-md border px-2 py-0.5 text-[13px] font-medium ${TONE_CLASSES[tone]} ${className}`}
+      className={`inline-flex max-w-full items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${TONE_CLASSES[tone]} ${className}`}
     >
       <Icon aria-hidden="true" className="size-3.5 shrink-0" />
       <span className="min-w-0">{children}</span>
@@ -261,7 +262,6 @@ export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () =>
   );
 }
 
-let fieldCounter = 0;
 
 export function Field({
   label,
@@ -276,7 +276,7 @@ export function Field({
   required?: boolean;
   children: (props: { id: string; "aria-describedby": string | undefined; "aria-invalid": boolean }) => ReactNode;
 }) {
-  const id = `field-${(fieldCounter += 1)}`;
+  const id = useId();
   const hintId = hint ? `${id}-hint` : undefined;
   const errorId = error ? `${id}-error` : undefined;
   const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;

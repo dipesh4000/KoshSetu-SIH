@@ -11,7 +11,8 @@ import pytest
 
 _TEMP_ROOT = tempfile.mkdtemp(prefix="koshsetu-tests-")
 os.environ["KOSHSETU_ENVIRONMENT"] = "local"
-os.environ["KOSHSETU_DATABASE_URL"] = f"sqlite:///{_TEMP_ROOT}/test.db"
+os.environ["KOSHSETU_DATABASE_URL"] = os.environ.get("KOSHSETU_TEST_DATABASE_URL", f"sqlite:///{_TEMP_ROOT}/test.db")
+os.environ["KOSHSETU_LOGIN_IP_LIMIT"] = "1000"
 os.environ["KOSHSETU_STORAGE_ROOT"] = f"{_TEMP_ROOT}/objects"
 os.environ["KOSHSETU_JWT_SECRET"] = "test-secret-not-for-deployment"
 os.environ["KOSHSETU_FDR_HMAC_KEY"] = "test-hmac-not-for-deployment"

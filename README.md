@@ -78,19 +78,6 @@ These are **illustrative interface previews using synthetic records**, not evide
   </tr>
 </table>
 
-<details>
-<summary><strong>More screens — explainable findings and audit history</strong></summary>
-
-<br />
-
-| Integrity & Action Engine | Audit explorer |
-| --- | --- |
-| ![Evidence-backed case findings](docs/assets/screenshots/06_integrity_queue.png) | ![Append-only decision timeline](docs/assets/screenshots/07_audit_timeline.png) |
-
-</details>
-
-> **Brand note:** Some illustrative screen concepts retain the early “AICTE / FDR” working header; **KoshSetu** is the product brand. None of the images represents an official AICTE interface.
-
 ---
 
 ## Features
@@ -108,7 +95,7 @@ These are **illustrative interface previews using synthetic records**, not evide
 
 - **Portfolio dashboard:** aggregate views restricted to the officer's assigned jurisdiction and permissions.
 - **Case work queue:** filter by institution, bank, date, exception type, assignment or urgency.
-- **Evidence workbench:** PDF preview, source-page highlighting, entered-versus-extracted field comparison and recorded observations.
+- **Evidence workbench:** PDF preview, source-page navigation, entered-versus-extracted field comparison and recorded observations.
 - **Scrutiny decisions:** request clarification, accept a submitted case, reject with reasons or escalate under defined policy.
 - **Release & clearance center:** required evidence, bureau-specific clearances, holds and dual-control approval.
 - **Reports and audit explorer:** scoped exports and searchable activity histories with correlation identifiers.
@@ -120,14 +107,14 @@ KoshSetu reduces repetitive data entry while keeping the human reviewer in contr
 1. Quarantine uploaded documents and validate file type, size and content.
 2. Extract native PDF text using **PyMuPDF**; apply OCR to scanned pages where necessary.
 3. Structure candidate fields such as FDR number, issuer bank, principal, issue date, maturity date and lien information.
-4. Preserve confidence, extraction method, page references and evidence regions.
+4. Preserve uncalibrated parser scores, extraction method, source text and page references. Exact evidence regions are not yet available.
 5. Compare the institution's claims with parsed values and request confirmation or correction.
 
 **OCR is data extraction, not issuer authentication.** Missing or low-confidence fields remain unresolved until reviewed.
 
 #### Indian Banking Document Realities & Engineering Controls
 
-**Implemented today.** This build extracts text natively from the PDF and records, for every field, its page, source text, normalised value and confidence. A field below `0.85` confidence, or one the parser cannot find, is reported as such and flagged in the split-screen evidence workbench for explicit human confirmation — it is never guessed. A page with no extractable text is escalated for manual review rather than rejected.
+**Implemented today.** This build uses pypdf for native PDF text extraction; OCR is not implemented. Parser scores are uncalibrated heuristics, not measured probabilities of correctness. No exact highlight coordinates are returned. This build extracts text natively from the PDF and records, for every field, its page, source text, normalised value and confidence. A field below `0.85` confidence, or one the parser cannot find, is reported as such and flagged in the split-screen evidence workbench for explicit human confirmation — it is never guessed. A page with no extractable text is escalated for manual review rather than rejected.
 
 **Planned for scanned receipts.** Physical FDR receipts from Indian public and private sector banks (SBI, PNB, Canara Bank, HDFC and others) introduce challenges that a native-text parser cannot answer, and the OCR stage is specified for them:
 - **Ink rubber stamps over text:** branch seals and revenue stamps overlap FDR numbers and amounts; colour thresholding in HSV space with morphological filtering would segment printed typography from stamp ink before OCR.
@@ -155,14 +142,14 @@ A finding contains its **rule ID, severity, evidence, timestamp, case version, o
 
 The bank adapter supports deterministic scenarios for testing and demonstrating the complete workflow:
 
-- `MATCH_AND_LIEN_CONFIRMED`
+- `MATCH_WITH_ACTIVE_LIEN`
 - `AMOUNT_MISMATCH`
-- `REFERENCE_NOT_FOUND`
-- `LIEN_NOT_CONFIRMED`
-- `BANK_TIMEOUT`
-- `MALFORMED_RESPONSE`
-- `RATE_LIMITED`
-- `VERIFICATION_UNAVAILABLE`
+- `INSTRUMENT_NOT_FOUND`
+- `LIEN_MISSING`
+- `PROVIDER_TIMEOUT`
+- `MATURITY_MISMATCH`
+- `INVALID_SIGNATURE`
+- `REPLAYED_RESPONSE`
 
 Every response carries `source_kind: "MOCK_BANK"`, `is_simulated: true`, a scenario identifier, timestamp and correlation ID. **A successful simulated response does not mark an FDR as genuinely bank-authenticated** and never bypasses regulatory review.
 
@@ -225,7 +212,7 @@ flowchart TB
 
 **Data integrity rule:** PostgreSQL is authoritative for instrument state, deadlines, approval history and notification records. Redis is used for queue transport and cache-like responsibilities—not as the sole store for maturity reminders or financial decisions.
 
-### Technology stack
+### Target technology stack (not all implemented)
 
 | Layer | Technologies | Responsibility |
 | --- | --- | --- |
@@ -351,9 +338,9 @@ Every account uses the password `Demo@12345` — local demonstration only, never
 | `scrutiny@aicte.demo` | AICTE Scrutiny Officer (Southern & Western RO) | Side-by-side OCR review, field discrepancy flags |
 | `scrutiny2@aicte.demo` | AICTE Scrutiny Officer (Northern & Central RO) | Multi-tenant regional FDR scrutiny queue |
 | `supervisor@aicte.demo` | Competent Authority / Approver (Director Reg.) | Maker-checker dual-control release final approval |
-| `finance@aicte.demo` | Finance Bureau Clearance Officer | Bureau prerequisite signoff (`CLEARANCE_FINANCE_BUREAU`) |
-| `pgrc@aicte.demo` | Public Grievance / Legal Cell Officer | Litigation & encumbrance clearance (`CLEARANCE_LEGAL_CELL`) |
-| `vigilance@aicte.demo` | Vigilance / Approval Bureau Officer | Institutional compliance signoff (`CLEARANCE_APPROVAL_BUREAU`) |
+| `finance@aicte.demo` | Finance Bureau Clearance Officer | Bureau prerequisite signoff (`FINANCE_BUREAU`) |
+| `pgrc@aicte.demo` | Public Grievance Redressal Committee Officer | Litigation & encumbrance clearance (`PGRC`) |
+| `vigilance@aicte.demo` | Vigilance Bureau Officer | Institutional compliance signoff (`VIGILANCE`) |
 | `auditor@aicte.demo` | Oversight Auditor (Read-only) | Inspect append-only digest-chained audit trail |
 | `admin@aicte.demo` | Security Administrator | System health, rule catalogue & integrity engine |
 
@@ -509,7 +496,7 @@ All domain endpoints live under **`/api/v1`**. JSON responses use a consistent `
       "status": "MOCK_MATCH",
       "source_kind": "MOCK_BANK",
       "is_simulated": true,
-      "scenario_id": "MATCH_AND_LIEN_CONFIRMED",
+      "scenario_id": "MATCH_WITH_ACTIVE_LIEN",
       "verified_at": "2026-10-26T10:00:00Z"
     },
     "document_extraction": {
@@ -590,9 +577,9 @@ To ensure alignment with actual regulatory operations, KoshSetu maps its multi-t
   - **Legal Cell:** Verifies absence of court attachments or judicial holds on pledged deposits.
 - **Enforceable Release Clearances (`clearance_code`):**
   A release request cannot transition to `READY_FOR_DECISION` until the following preconditions are affirmatively resolved by authorized bureau representatives:
-  1. `CLEARANCE_APPROVAL_BUREAU`: Institution program status verified.
-  2. `CLEARANCE_FINANCE_BUREAU`: No outstanding financial encumbrances.
-  3. `CLEARANCE_LEGAL_CELL`: No active litigation or regulatory freeze.
+  1. `VIGILANCE`: Institution program status verified.
+  2. `FINANCE_BUREAU`: No outstanding financial encumbrances.
+  3. `PGRC`: No active litigation or regulatory freeze.
   4. `MAKER_CHECKER_SEPARATION`: Final approver (`OFFICIAL_APPROVER`) must strictly differ from the clearance preparer (`checker_id != prepared_by`).
 
 ### Government and production boundary
@@ -637,7 +624,7 @@ A single walkthrough shows the platform's value without hiding negative cases:
 1. **Dashboard:** inspect active deposits, near-term maturities and outstanding review work.
 2. **Submission:** an institution uploads a synthetic FDR; scanning and field extraction complete.
 3. **Discrepancy:** deliberately submit an amount that differs from the PDF; show exact evidence and review action.
-4. **Bank simulation:** run `MATCH_AND_LIEN_CONFIRMED`; inspect explicit `MOCK_BANK` provenance rather than claiming real verification.
+4. **Bank simulation:** run `MATCH_WITH_ACTIVE_LIEN`; inspect explicit `MOCK_BANK` provenance rather than claiming real verification.
 5. **Officer scrutiny:** request clarification or record the appropriate authorized case decision.
 6. **Maturity:** open an FDR nearing its due date and see its assigned reminder and next action.
 7. **Renewal/replacement:** link the successor instrument while preserving its predecessor and attachments.

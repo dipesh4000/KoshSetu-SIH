@@ -92,6 +92,14 @@ Extraction provenance for the number field is masked before it is returned, whic
 4. Finalising twice returns the same document rather than creating a second one.
 5. Reading requires a two-minute ticket, re-checked against the reader's *current* scope on use.
 
+Parser version 2 reads fields within individual lines. Principal amounts require an explicit
+principal/deposit-amount label and valid numeric grouping; maturity and interest amounts are not
+principal candidates. Missing critical fields, conflicting principal amounts, or maturity dates
+on or before issue dates require manual review. Scores remain uncalibrated parser heuristics,
+not measured accuracy. The parser records source text and page numbers but returns no bounding
+boxes: precise highlighting and OCR are not implemented. READY means these parsing checks passed;
+it does not establish correctness, agreement with institution claims, or authenticity.
+
 Each version is immutable; a replacement document is a new version beside the old one.
 
 ## 6. Bank simulation

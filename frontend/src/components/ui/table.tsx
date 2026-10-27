@@ -3,8 +3,8 @@
 // Sticky header and first column, right-aligned money, sortable headers that
 // work from the keyboard, and an explicit reset when a filter hides everything.
 
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
-import { useMemo, useState, type ReactNode } from "react";
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronRight } from "lucide-react";
+import { Fragment, useId, useMemo, useState, type ReactNode } from "react";
 
 import { EmptyState } from "./primitives";
 
@@ -28,6 +28,7 @@ export function DataTable<T>({
   emptyDescription,
   onResetFilters,
   footer,
+  renderExpanded,
 }: {
   columns: Column<T>[];
   rows: T[];
@@ -37,7 +38,10 @@ export function DataTable<T>({
   emptyDescription?: string;
   onResetFilters?: () => void;
   footer?: ReactNode;
+  renderExpanded?: (row: T) => ReactNode;
 }) {
+  const tableId = useId();
+  const [expanded, setExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<{ key: string; direction: "asc" | "desc" } | null>(null);
 
   const sorted = useMemo(() => {
@@ -75,10 +79,11 @@ export function DataTable<T>({
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[720px] border-collapse text-sm">
+      <table className="w-full min-w-[720px] border-collapse text-[13px]">
         <caption className="sr-only">{caption}</caption>
         <thead>
           <tr className="border-b border-line bg-subtle/70">
+            {renderExpanded && <th scope="col" className="w-9"><span className="sr-only">Details</span></th>}
             {columns.map((column) => {
               const isSorted = sort?.key === column.key;
               const Icon = !isSorted ? ArrowUpDown : sort?.direction === "asc" ? ArrowUp : ArrowDown;
@@ -117,18 +122,26 @@ export function DataTable<T>({
         </thead>
         <tbody>
           {sorted.map((row) => (
-            <tr key={rowKey(row)} className="border-b border-line/70 last:border-0 hover:bg-subtle/50">
+            <Fragment key={rowKey(row)}>
+            <tr className="group border-b border-line/70 last:border-0 hover:bg-subtle/50">
+              {renderExpanded && <td className="px-2">
+                <button type="button" aria-label={`Details for ${rowKey(row)}`} aria-expanded={expanded === rowKey(row)} aria-controls={`${tableId}-${rowKey(row)}`} onClick={() => setExpanded(expanded === rowKey(row) ? null : rowKey(row))} className="rounded p-1.5 text-ink-muted hover:bg-subtle">
+                  <ChevronRight aria-hidden="true" className={`size-4 transition-transform ${expanded === rowKey(row) ? "rotate-90" : ""}`} />
+                </button>
+              </td>}
               {columns.map((column) => (
                 <td
                   key={column.key}
-                  className={`${column.sticky ? "sticky left-0 z-10 bg-surface" : ""} ${
+                  className={`${column.sticky ? "sticky left-0 z-10 bg-surface group-hover:bg-subtle" : ""} ${
                     column.align === "right" ? "text-right tabular" : "text-left"
-                  } px-3 py-3 align-middle text-ink`}
+                  } px-3 py-2.5 align-middle text-ink`}
                 >
                   {column.render(row)}
                 </td>
               ))}
             </tr>
+            {renderExpanded && expanded === rowKey(row) && <tr id={`${tableId}-${rowKey(row)}`} className="border-b border-line bg-brand/5"><td colSpan={columns.length + 1} className="border-l-2 border-brand p-4">{renderExpanded(row)}</td></tr>}
+            </Fragment>
           ))}
         </tbody>
       </table>

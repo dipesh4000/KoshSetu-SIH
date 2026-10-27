@@ -1,0 +1,2184 @@
+{
+  "generated_at": "2026-10-27T12:18:01.755253+00:00",
+  "hardware": "Windows-11-10.0.26300-SP0",
+  "documents": 45,
+  "templates": 3,
+  "held_out_template": "C",
+  "ocr_enabled": false,
+  "ready_documents": 6,
+  "silent_errors_in_ready": 0,
+  "silent_error_interval_95": [
+    0.0,
+    0.3903
+  ],
+  "metrics": [
+    {
+      "split": "development",
+      "condition": "degraded",
+      "field": "fdr_number",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 10,
+      "documents": 10,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "development",
+      "condition": "degraded",
+      "field": "issue_date",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 10,
+      "documents": 10,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "development",
+      "condition": "degraded",
+      "field": "issuer_bank",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 10,
+      "documents": 10,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "development",
+      "condition": "degraded",
+      "field": "maturity_date",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 10,
+      "documents": 10,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "development",
+      "condition": "degraded",
+      "field": "principal_amount",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 8,
+      "documents": 10,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "development",
+      "condition": "native",
+      "field": "fdr_number",
+      "correct": 10,
+      "predicted": 10,
+      "expected": 10,
+      "documents": 10,
+      "precision": 1.0,
+      "coverage": 1.0,
+      "precision_interval_95": [
+        0.7225,
+        1.0
+      ]
+    },
+    {
+      "split": "development",
+      "condition": "native",
+      "field": "issue_date",
+      "correct": 10,
+      "predicted": 10,
+      "expected": 10,
+      "documents": 10,
+      "precision": 1.0,
+      "coverage": 1.0,
+      "precision_interval_95": [
+        0.7225,
+        1.0
+      ]
+    },
+    {
+      "split": "development",
+      "condition": "native",
+      "field": "issuer_bank",
+      "correct": 10,
+      "predicted": 10,
+      "expected": 10,
+      "documents": 10,
+      "precision": 1.0,
+      "coverage": 1.0,
+      "precision_interval_95": [
+        0.7225,
+        1.0
+      ]
+    },
+    {
+      "split": "development",
+      "condition": "native",
+      "field": "maturity_date",
+      "correct": 10,
+      "predicted": 10,
+      "expected": 10,
+      "documents": 10,
+      "precision": 1.0,
+      "coverage": 1.0,
+      "precision_interval_95": [
+        0.7225,
+        1.0
+      ]
+    },
+    {
+      "split": "development",
+      "condition": "native",
+      "field": "principal_amount",
+      "correct": 8,
+      "predicted": 8,
+      "expected": 8,
+      "documents": 10,
+      "precision": 1.0,
+      "coverage": 1.0,
+      "precision_interval_95": [
+        0.6756,
+        1.0
+      ]
+    },
+    {
+      "split": "development",
+      "condition": "raster",
+      "field": "fdr_number",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 10,
+      "documents": 10,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "development",
+      "condition": "raster",
+      "field": "issue_date",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 10,
+      "documents": 10,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "development",
+      "condition": "raster",
+      "field": "issuer_bank",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 10,
+      "documents": 10,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "development",
+      "condition": "raster",
+      "field": "maturity_date",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 10,
+      "documents": 10,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "development",
+      "condition": "raster",
+      "field": "principal_amount",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 8,
+      "documents": 10,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "held-out",
+      "condition": "degraded",
+      "field": "fdr_number",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 5,
+      "documents": 5,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "held-out",
+      "condition": "degraded",
+      "field": "issue_date",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 5,
+      "documents": 5,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "held-out",
+      "condition": "degraded",
+      "field": "issuer_bank",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 5,
+      "documents": 5,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "held-out",
+      "condition": "degraded",
+      "field": "maturity_date",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 5,
+      "documents": 5,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "held-out",
+      "condition": "degraded",
+      "field": "principal_amount",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 4,
+      "documents": 5,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "held-out",
+      "condition": "native",
+      "field": "fdr_number",
+      "correct": 5,
+      "predicted": 5,
+      "expected": 5,
+      "documents": 5,
+      "precision": 1.0,
+      "coverage": 1.0,
+      "precision_interval_95": [
+        0.5655,
+        1.0
+      ]
+    },
+    {
+      "split": "held-out",
+      "condition": "native",
+      "field": "issue_date",
+      "correct": 5,
+      "predicted": 5,
+      "expected": 5,
+      "documents": 5,
+      "precision": 1.0,
+      "coverage": 1.0,
+      "precision_interval_95": [
+        0.5655,
+        1.0
+      ]
+    },
+    {
+      "split": "held-out",
+      "condition": "native",
+      "field": "issuer_bank",
+      "correct": 5,
+      "predicted": 5,
+      "expected": 5,
+      "documents": 5,
+      "precision": 1.0,
+      "coverage": 1.0,
+      "precision_interval_95": [
+        0.5655,
+        1.0
+      ]
+    },
+    {
+      "split": "held-out",
+      "condition": "native",
+      "field": "maturity_date",
+      "correct": 5,
+      "predicted": 5,
+      "expected": 5,
+      "documents": 5,
+      "precision": 1.0,
+      "coverage": 1.0,
+      "precision_interval_95": [
+        0.5655,
+        1.0
+      ]
+    },
+    {
+      "split": "held-out",
+      "condition": "native",
+      "field": "principal_amount",
+      "correct": 4,
+      "predicted": 4,
+      "expected": 4,
+      "documents": 5,
+      "precision": 1.0,
+      "coverage": 1.0,
+      "precision_interval_95": [
+        0.5101,
+        1.0
+      ]
+    },
+    {
+      "split": "held-out",
+      "condition": "raster",
+      "field": "fdr_number",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 5,
+      "documents": 5,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "held-out",
+      "condition": "raster",
+      "field": "issue_date",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 5,
+      "documents": 5,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "held-out",
+      "condition": "raster",
+      "field": "issuer_bank",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 5,
+      "documents": 5,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "held-out",
+      "condition": "raster",
+      "field": "maturity_date",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 5,
+      "documents": 5,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    },
+    {
+      "split": "held-out",
+      "condition": "raster",
+      "field": "principal_amount",
+      "correct": 0,
+      "predicted": 0,
+      "expected": 4,
+      "documents": 5,
+      "precision": null,
+      "coverage": 0.0,
+      "precision_interval_95": null
+    }
+  ],
+  "reliability": [
+    {
+      "score_bin": 0.0,
+      "count": 9,
+      "correct": 9,
+      "observed_accuracy": 1.0
+    },
+    {
+      "score_bin": 0.9,
+      "count": 63,
+      "correct": 63,
+      "observed_accuracy": 1.0
+    }
+  ],
+  "limitations": [
+    "Synthetic receipts only; small template set; no field accuracy claim for real receipts.",
+    "The baseline reproduces original principal/bank regex behavior only; no claim to a complete historic application replay.",
+    "Scores are not calibrated. Reliability bins describe this synthetic set only.",
+    "Raster/degraded pages require configured Tesseract for OCR coverage; without it they require manual review.",
+    "Human review speed, SUS, automation bias, OCR CER and production latency require separate studies; none are invented."
+  ],
+  "results": [
+    {
+      "id": "A-clean-native",
+      "template": "A",
+      "split": "development",
+      "condition": "native",
+      "scenario": "clean",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "READY",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01",
+        "issuer_bank": "State Bank of India",
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.9,
+        "issue_date": 0.9,
+        "maturity_date": 0.9,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nState Bank of India"
+      }
+    },
+    {
+      "id": "A-clean-raster",
+      "template": "A",
+      "split": "development",
+      "condition": "raster",
+      "scenario": "clean",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "A-clean-degraded",
+      "template": "A",
+      "split": "development",
+      "condition": "degraded",
+      "scenario": "clean",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "A-maturity_first-native",
+      "template": "A",
+      "split": "development",
+      "condition": "native",
+      "scenario": "maturity_first",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "READY",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01",
+        "issuer_bank": "State Bank of India",
+        "lien_beneficiary": null,
+        "maturity_amount": "3000000.00",
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.9,
+        "issue_date": 0.9,
+        "maturity_date": 0.9,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.9,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nState Bank of India"
+      }
+    },
+    {
+      "id": "A-maturity_first-raster",
+      "template": "A",
+      "split": "development",
+      "condition": "raster",
+      "scenario": "maturity_first",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "A-maturity_first-degraded",
+      "template": "A",
+      "split": "development",
+      "condition": "degraded",
+      "scenario": "maturity_first",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "A-missing_principal-native",
+      "template": "A",
+      "split": "development",
+      "condition": "native",
+      "scenario": "missing_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": null,
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": null,
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01",
+        "issuer_bank": "State Bank of India",
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.0,
+        "issue_date": 0.9,
+        "maturity_date": 0.9,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nState Bank of India"
+      }
+    },
+    {
+      "id": "A-missing_principal-raster",
+      "template": "A",
+      "split": "development",
+      "condition": "raster",
+      "scenario": "missing_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": null,
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "A-missing_principal-degraded",
+      "template": "A",
+      "split": "development",
+      "condition": "degraded",
+      "scenario": "missing_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": null,
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "A-conflicting_principal-native",
+      "template": "A",
+      "split": "development",
+      "condition": "native",
+      "scenario": "conflicting_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01",
+        "issuer_bank": "State Bank of India",
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.0,
+        "issue_date": 0.9,
+        "maturity_date": 0.9,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nState Bank of India"
+      }
+    },
+    {
+      "id": "A-conflicting_principal-raster",
+      "template": "A",
+      "split": "development",
+      "condition": "raster",
+      "scenario": "conflicting_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "A-conflicting_principal-degraded",
+      "template": "A",
+      "split": "development",
+      "condition": "degraded",
+      "scenario": "conflicting_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "A-invalid_dates-native",
+      "template": "A",
+      "split": "development",
+      "condition": "native",
+      "scenario": "invalid_dates",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2023-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2023-01-01",
+        "issuer_bank": "State Bank of India",
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.9,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nState Bank of India"
+      }
+    },
+    {
+      "id": "A-invalid_dates-raster",
+      "template": "A",
+      "split": "development",
+      "condition": "raster",
+      "scenario": "invalid_dates",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2023-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "A-invalid_dates-degraded",
+      "template": "A",
+      "split": "development",
+      "condition": "degraded",
+      "scenario": "invalid_dates",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "State Bank of India",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2023-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "B-clean-native",
+      "template": "B",
+      "split": "development",
+      "condition": "native",
+      "scenario": "clean",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "READY",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01",
+        "issuer_bank": "Canara Bank",
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.9,
+        "issue_date": 0.9,
+        "maturity_date": 0.9,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nCanara Bank"
+      }
+    },
+    {
+      "id": "B-clean-raster",
+      "template": "B",
+      "split": "development",
+      "condition": "raster",
+      "scenario": "clean",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "B-clean-degraded",
+      "template": "B",
+      "split": "development",
+      "condition": "degraded",
+      "scenario": "clean",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "B-maturity_first-native",
+      "template": "B",
+      "split": "development",
+      "condition": "native",
+      "scenario": "maturity_first",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "READY",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01",
+        "issuer_bank": "Canara Bank",
+        "lien_beneficiary": null,
+        "maturity_amount": "3000000.00",
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.9,
+        "issue_date": 0.9,
+        "maturity_date": 0.9,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.9,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nCanara Bank"
+      }
+    },
+    {
+      "id": "B-maturity_first-raster",
+      "template": "B",
+      "split": "development",
+      "condition": "raster",
+      "scenario": "maturity_first",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "B-maturity_first-degraded",
+      "template": "B",
+      "split": "development",
+      "condition": "degraded",
+      "scenario": "maturity_first",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "B-missing_principal-native",
+      "template": "B",
+      "split": "development",
+      "condition": "native",
+      "scenario": "missing_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": null,
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": null,
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01",
+        "issuer_bank": "Canara Bank",
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.0,
+        "issue_date": 0.9,
+        "maturity_date": 0.9,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nCanara Bank"
+      }
+    },
+    {
+      "id": "B-missing_principal-raster",
+      "template": "B",
+      "split": "development",
+      "condition": "raster",
+      "scenario": "missing_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": null,
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "B-missing_principal-degraded",
+      "template": "B",
+      "split": "development",
+      "condition": "degraded",
+      "scenario": "missing_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": null,
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "B-conflicting_principal-native",
+      "template": "B",
+      "split": "development",
+      "condition": "native",
+      "scenario": "conflicting_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01",
+        "issuer_bank": "Canara Bank",
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.0,
+        "issue_date": 0.9,
+        "maturity_date": 0.9,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nCanara Bank"
+      }
+    },
+    {
+      "id": "B-conflicting_principal-raster",
+      "template": "B",
+      "split": "development",
+      "condition": "raster",
+      "scenario": "conflicting_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "B-conflicting_principal-degraded",
+      "template": "B",
+      "split": "development",
+      "condition": "degraded",
+      "scenario": "conflicting_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "B-invalid_dates-native",
+      "template": "B",
+      "split": "development",
+      "condition": "native",
+      "scenario": "invalid_dates",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2023-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2023-01-01",
+        "issuer_bank": "Canara Bank",
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.9,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nCanara Bank"
+      }
+    },
+    {
+      "id": "B-invalid_dates-raster",
+      "template": "B",
+      "split": "development",
+      "condition": "raster",
+      "scenario": "invalid_dates",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2023-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "B-invalid_dates-degraded",
+      "template": "B",
+      "split": "development",
+      "condition": "degraded",
+      "scenario": "invalid_dates",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "Canara Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2023-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "C-clean-native",
+      "template": "C",
+      "split": "held-out",
+      "condition": "native",
+      "scenario": "clean",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "READY",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01",
+        "issuer_bank": "HDFC Bank",
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.9,
+        "issue_date": 0.9,
+        "maturity_date": 0.9,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nHDFC Bank"
+      }
+    },
+    {
+      "id": "C-clean-raster",
+      "template": "C",
+      "split": "held-out",
+      "condition": "raster",
+      "scenario": "clean",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "C-clean-degraded",
+      "template": "C",
+      "split": "held-out",
+      "condition": "degraded",
+      "scenario": "clean",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "C-maturity_first-native",
+      "template": "C",
+      "split": "held-out",
+      "condition": "native",
+      "scenario": "maturity_first",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "READY",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01",
+        "issuer_bank": "HDFC Bank",
+        "lien_beneficiary": null,
+        "maturity_amount": "3000000.00",
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.9,
+        "issue_date": 0.9,
+        "maturity_date": 0.9,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.9,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nHDFC Bank"
+      }
+    },
+    {
+      "id": "C-maturity_first-raster",
+      "template": "C",
+      "split": "held-out",
+      "condition": "raster",
+      "scenario": "maturity_first",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "C-maturity_first-degraded",
+      "template": "C",
+      "split": "held-out",
+      "condition": "degraded",
+      "scenario": "maturity_first",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "C-missing_principal-native",
+      "template": "C",
+      "split": "held-out",
+      "condition": "native",
+      "scenario": "missing_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": null,
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": null,
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01",
+        "issuer_bank": "HDFC Bank",
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.0,
+        "issue_date": 0.9,
+        "maturity_date": 0.9,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nHDFC Bank"
+      }
+    },
+    {
+      "id": "C-missing_principal-raster",
+      "template": "C",
+      "split": "held-out",
+      "condition": "raster",
+      "scenario": "missing_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": null,
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "C-missing_principal-degraded",
+      "template": "C",
+      "split": "held-out",
+      "condition": "degraded",
+      "scenario": "missing_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": null,
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "C-conflicting_principal-native",
+      "template": "C",
+      "split": "held-out",
+      "condition": "native",
+      "scenario": "conflicting_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01",
+        "issuer_bank": "HDFC Bank",
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.0,
+        "issue_date": 0.9,
+        "maturity_date": 0.9,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nHDFC Bank"
+      }
+    },
+    {
+      "id": "C-conflicting_principal-raster",
+      "template": "C",
+      "split": "held-out",
+      "condition": "raster",
+      "scenario": "conflicting_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "C-conflicting_principal-degraded",
+      "template": "C",
+      "split": "held-out",
+      "condition": "degraded",
+      "scenario": "conflicting_principal",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2026-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "C-invalid_dates-native",
+      "template": "C",
+      "split": "held-out",
+      "condition": "native",
+      "scenario": "invalid_dates",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2023-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2023-01-01",
+        "issuer_bank": "HDFC Bank",
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.9,
+        "principal_amount": 0.9,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.9,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": "5010022334455.00",
+        "issuer_bank": "Fixed Deposit Receipt\nHDFC Bank"
+      }
+    },
+    {
+      "id": "C-invalid_dates-raster",
+      "template": "C",
+      "split": "held-out",
+      "condition": "raster",
+      "scenario": "invalid_dates",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2023-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    },
+    {
+      "id": "C-invalid_dates-degraded",
+      "template": "C",
+      "split": "held-out",
+      "condition": "degraded",
+      "scenario": "invalid_dates",
+      "labels": {
+        "fdr_number": "5010022334455",
+        "principal_amount": "2500000.00",
+        "issuer_bank": "HDFC Bank",
+        "issue_date": "2024-01-01",
+        "maturity_date": "2023-01-01"
+      },
+      "status": "MANUAL_REVIEW_REQUIRED",
+      "predictions": {
+        "fdr_number": null,
+        "principal_amount": null,
+        "issue_date": null,
+        "maturity_date": null,
+        "issuer_bank": null,
+        "lien_beneficiary": null,
+        "maturity_amount": null,
+        "interest_rate": null
+      },
+      "scores": {
+        "fdr_number": 0.0,
+        "principal_amount": 0.0,
+        "issue_date": 0.0,
+        "maturity_date": 0.0,
+        "issuer_bank": 0.0,
+        "lien_beneficiary": 0.0,
+        "maturity_amount": 0.0,
+        "interest_rate": 0.0
+      },
+      "original_v1_targeted_baseline": {
+        "principal_amount": null,
+        "issuer_bank": null
+      }
+    }
+  ]
+}

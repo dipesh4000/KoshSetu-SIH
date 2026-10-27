@@ -1,3 +1,4 @@
+import { Freshness } from "../../components/ui/Freshness";
 // The institution's own register. Scope comes from the session, so there is no
 // institution filter to choose here.
 
@@ -94,7 +95,9 @@ export function InstitutionFdrListPage() {
       </Card>
 
       <Card className="mt-5" bodyClassName="">
-        {query.isLoading ? (
+        <Freshness updatedAt={query.dataUpdatedAt} refreshing={query.isFetching} onRefresh={() => void query.refetch()} />
+
+      {query.isLoading ? (
           <div className="p-5">
             <LoadingBlock label="Loading your deposits" />
           </div>

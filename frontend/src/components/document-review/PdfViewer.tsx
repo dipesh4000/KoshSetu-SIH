@@ -6,11 +6,11 @@
 // a region is missing, manual page navigation still works.
 
 import { ChevronLeft, ChevronRight, Download, Loader2, ZoomIn, ZoomOut } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as pdfjs from "pdfjs-dist";
 import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 
-import { fetchDocumentBlob } from "../../lib/api/client";
+import { apiFetch, fetchDocumentBlob } from "../../lib/api/client";
 import { Alert, Button } from "../ui/primitives";
 
 pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
@@ -45,13 +45,18 @@ export function PdfViewer({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState("");
+  const [signatureResult, setSignatureResult] = useState<string | null>(null);
+  const [checkingSignature, setCheckingSignature] = useState(false);
 
   // Load the document whenever the authorized document changes.
   useEffect(() => {
     if (!documentId || !isViewable) return;
     let cancelled = false;
+    let loadingTask: pdfjs.PDFDocumentLoadingTask | null = null;
     setLoading(true);
+    setPageCount(0);
     setError(null);
+    setSignatureResult(null);
 
     (async () => {
       try {
@@ -61,8 +66,9 @@ export function PdfViewer({
           return;
         }
         blobUrlRef.current = url;
-        const loaded = await pdfjs.getDocument({ url, isEvalSupported: false }).promise;
-        if (cancelled) return;
+        loadingTask = pdfjs.getDocument({ url, isEvalSupported: false });
+        const loaded = await loadingTask.promise;
+        if (cancelled) { void loaded.destroy(); return; }
         documentRef.current = loaded;
         setPageCount(loaded.numPages);
         setPage(1);
@@ -75,7 +81,7 @@ export function PdfViewer({
 
     return () => {
       cancelled = true;
-      documentRef.current?.destroy();
+      void loadingTask?.destroy();
       documentRef.current = null;
       if (blobUrlRef.current) {
         URL.revokeObjectURL(blobUrlRef.current);
@@ -84,12 +90,15 @@ export function PdfViewer({
     };
   }, [fdrId, documentId, isViewable]);
 
-  const renderPage = useCallback(
-    async (pageNumber: number) => {
+  useEffect(() => {
+    let cancelled = false;
+    let renderTask: pdfjs.RenderTask | null = null;
+    async function renderPage() {
       const pdf = documentRef.current;
       const canvas = canvasRef.current;
-      if (!pdf || !canvas) return;
-      const pdfPage = await pdf.getPage(pageNumber);
+      if (!pdf || !canvas || loading || pageCount === 0) return;
+      const pdfPage = await pdf.getPage(page);
+      if (cancelled) return;
       const viewport = pdfPage.getViewport({ scale: zoom });
       const context = canvas.getContext("2d");
       if (!context) return;
@@ -99,14 +108,16 @@ export function PdfViewer({
       canvas.style.width = `${Math.floor(viewport.width)}px`;
       canvas.style.height = `${Math.floor(viewport.height)}px`;
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      await pdfPage.render({ canvasContext: context, viewport }).promise;
-    },
-    [zoom],
-  );
-
-  useEffect(() => {
-    if (pageCount > 0) void renderPage(page);
-  }, [page, pageCount, renderPage]);
+      renderTask = pdfPage.render({ canvasContext: context, viewport });
+      await renderTask.promise;
+    }
+    void renderPage().catch((cause: unknown) => {
+      if (!cancelled && !(cause instanceof Error && cause.name === "RenderingCancelledException")) {
+        setError("This page could not be rendered. Try reopening the document.");
+      }
+    });
+    return () => { cancelled = true; renderTask?.cancel(); };
+  }, [page, pageCount, zoom, loading]);
 
   // Jump to the page a selected field came from.
   useEffect(() => {
@@ -143,6 +154,17 @@ export function PdfViewer({
 
   return (
     <div className="flex h-full min-h-[480px] flex-col">
+      <div className="border-b border-line px-3 py-2">
+        <Button variant="ghost" loading={checkingSignature} onClick={async () => {
+          setCheckingSignature(true);
+          try {
+            const result = await apiFetch<{ status: string; signatures: {cryptographically_valid: boolean; intact: boolean; trusted: boolean}[]; note: string }>(`/fdrs/${fdrId}/documents/${documentId}/signature-check`, {method: "POST"});
+            setSignatureResult(`${result.status === "UNSIGNED" ? "No embedded digital signature." : `${result.signatures.length} signature(s); ${result.signatures.filter(s => s.intact && s.cryptographically_valid).length} cryptographically valid and intact; ${result.signatures.filter(s => s.trusted).length} trusted.`} ${result.note}`);
+          } catch { setSignatureResult("Signature inspection could not be completed."); }
+          finally { setCheckingSignature(false); }
+        }}>Inspect digital signatures</Button>
+        {signatureResult && <p className="mt-2 text-xs text-ink-muted" role="status">{signatureResult}</p>}
+      </div>
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-3 py-2">
         <div className="flex items-center gap-1.5">
           <Button

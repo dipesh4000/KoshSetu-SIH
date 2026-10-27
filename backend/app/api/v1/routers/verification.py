@@ -15,7 +15,7 @@ from fastapi import APIRouter, HTTPException, Request, status
 from app.api import schemas
 from app.api.deps import CurrentPrincipal, DbSession, load_scoped_fdr, request_id_of
 from app.core.config import settings
-from app.db.base import new_id, utcnow
+from app.db.base import new_id
 from app.db.models import VerificationCheck
 from app.domains.audit.service import enqueue_outbox, record_audit
 from app.domains.bank.mock_adapter import SCENARIOS, MockBankUnavailable, get_verifier
@@ -48,13 +48,19 @@ def list_scenarios(principal: CurrentPrincipal):
             "independent bank authentication."
         ),
         "scenarios": [
-            {"id": key, "expected_outcome": value["outcome"], "description": value["message"]}
+            {
+                "id": key,
+                "expected_outcome": value["outcome"],
+                "description": value["message"],
+            }
             for key, value in SCENARIOS.items()
         ],
     }
 
 
-@router.post("/fdrs/{fdr_id}/mock-bank-check", response_model=schemas.VerificationCheckOut)
+@router.post(
+    "/fdrs/{fdr_id}/mock-bank-check", response_model=schemas.VerificationCheckOut
+)
 def run_mock_bank_check(
     fdr_id: str,
     payload: schemas.MockBankIn,
@@ -67,7 +73,9 @@ def run_mock_bank_check(
     if fdr.submission_status != "SUBMITTED":
         from app.core.authorization import conflict
 
-        raise conflict("Run verification only after the institution has submitted the instrument.")
+        raise conflict(
+            "Run verification only after the institution has submitted the instrument."
+        )
 
     correlation_id = f"corr-{uuid4()}"
     claim = InstrumentClaim(
@@ -108,9 +116,21 @@ def run_mock_bank_check(
 
         raise invalid(str(exc)) from exc
 
+    from app.db.models import BankResponseReceipt
+    from app.db.locking import transaction_lock
+
+    transaction_lock(db, "bank-response-replay")
     rejected_reason = result.detail.get("rejected_reason")
+    if db.get(BankResponseReceipt, result.response_id):
+        rejected_reason = "RESPONSE_REPLAYED"
+    elif not rejected_reason:
+        db.add(
+            BankResponseReceipt(id=result.response_id, received_at=result.checked_at)
+        )
     stored_result = (
-        "REJECTED_BY_PORTAL" if rejected_reason else OUTCOME_TO_STATUS[result.verification_status]
+        "REJECTED_BY_PORTAL"
+        if rejected_reason
+        else OUTCOME_TO_STATUS[result.verification_status]
     )
     detail = {
         "message": result.message,

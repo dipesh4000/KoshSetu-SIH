@@ -1,0 +1,63 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 670 >>
+stream
+BT
+/F1 16 Tf
+60 780 Td
+(Fixed Deposit Receipt \(SYNTHETIC\)) Tj
+/F1 11 Tf
+0 -22 Td
+(Indian Bank - Mylapore) Tj
+0 -22 Td
+(IFSC: IDIB000M123) Tj
+0 -22 Td
+() Tj
+0 -22 Td
+(FDR Number: IDIB/FD/2026/551907) Tj
+0 -22 Td
+(Depositor: Coastal Institute of Technology) Tj
+0 -22 Td
+(Principal Amount: INR 1,285,000.00) Tj
+0 -22 Td
+(Rate of Interest: 7.05 percent per annum) Tj
+0 -22 Td
+(Date of Deposit: 02 Sep 2026) Tj
+0 -22 Td
+(Maturity Date: 02 Sep 2027) Tj
+0 -22 Td
+(Lien marked in favour of AICTE, New Delhi) Tj
+0 -22 Td
+() Tj
+0 -22 Td
+(SYNTHETIC DOCUMENT - generated for the SIH26265 prototype.) Tj
+0 -22 Td
+(Not issued by any bank. Not valid for any financial purpose.) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000962 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1032
+%%EOF

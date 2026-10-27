@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 // Routes.
 //
 // A protected route renders nothing until the session check has answered, so
@@ -9,29 +10,31 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { AppShell } from "./components/app-shell/AppShell";
 import { Alert, LoadingBlock } from "./components/ui/primitives";
 import { useSession } from "./lib/auth/session";
-import { HelpPage } from "./pages/HelpPage";
-import { LoginPage } from "./pages/LoginPage";
-import { NotFoundPage } from "./pages/NotFoundPage";
-import { AdminOverviewPage } from "./pages/admin/AdminOverviewPage";
-import { RuleVersionsPage } from "./pages/admin/RuleVersionsPage";
-import { InstitutionActivityPage } from "./pages/institution/ActivityPage";
-import { InstitutionDocumentsPage } from "./pages/institution/DocumentsPage";
-import { InstitutionFdrListPage } from "./pages/institution/FdrListPage";
-import { InstitutionOverviewPage } from "./pages/institution/OverviewPage";
-import { InstitutionReleasesPage } from "./pages/institution/ReleasesPage";
-import { RenewalsPage } from "./pages/institution/RenewalsPage";
-import { SubmissionWizardPage } from "./pages/institution/SubmissionWizardPage";
-import { AuditExplorerPage } from "./pages/official/AuditExplorerPage";
-import { ExceptionsPage } from "./pages/official/ExceptionsPage";
-import { FdrDetailPage } from "./pages/official/FdrDetailPage";
-import { MaturityCentrePage } from "./pages/official/MaturityCentrePage";
-import { OfficialFdrListPage } from "./pages/official/FdrListPage";
-import { OfficialOverviewPage } from "./pages/official/OverviewPage";
-import { NotificationsPage } from "./pages/NotificationsPage";
-import { ReleaseCasePage } from "./pages/official/ReleaseCasePage";
-import { ReleaseCentrePage } from "./pages/official/ReleaseCentrePage";
-import { ReportsPage } from "./pages/official/ReportsPage";
-import { WorkQueuePage } from "./pages/official/WorkQueuePage";
+const HelpPage = lazy(() => import("./pages/HelpPage").then(module => ({ default: module.HelpPage })));
+const LoginPage = lazy(() => import("./pages/LoginPage").then(module => ({ default: module.LoginPage })));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage").then(module => ({ default: module.NotFoundPage })));
+const AdminOverviewPage = lazy(() => import("./pages/admin/AdminOverviewPage").then(module => ({ default: module.AdminOverviewPage })));
+const RuleVersionsPage = lazy(() => import("./pages/admin/RuleVersionsPage").then(module => ({ default: module.RuleVersionsPage })));
+const InstitutionActivityPage = lazy(() => import("./pages/institution/ActivityPage").then(module => ({ default: module.InstitutionActivityPage })));
+const InstitutionDocumentsPage = lazy(() => import("./pages/institution/DocumentsPage").then(module => ({ default: module.InstitutionDocumentsPage })));
+const InstitutionFdrListPage = lazy(() => import("./pages/institution/FdrListPage").then(module => ({ default: module.InstitutionFdrListPage })));
+const InstitutionOverviewPage = lazy(() => import("./pages/institution/OverviewPage").then(module => ({ default: module.InstitutionOverviewPage })));
+const InstitutionReleasesPage = lazy(() => import("./pages/institution/ReleasesPage").then(module => ({ default: module.InstitutionReleasesPage })));
+const RenewalsPage = lazy(() => import("./pages/institution/RenewalsPage").then(module => ({ default: module.RenewalsPage })));
+const SubmissionWizardPage = lazy(() => import("./pages/institution/SubmissionWizardPage").then(module => ({ default: module.SubmissionWizardPage })));
+const BulkImportPage = lazy(() => import("./pages/institution/BulkImportPage").then(module => ({ default: module.BulkImportPage })));
+const AuditExplorerPage = lazy(() => import("./pages/official/AuditExplorerPage").then(module => ({ default: module.AuditExplorerPage })));
+const ExceptionsPage = lazy(() => import("./pages/official/ExceptionsPage").then(module => ({ default: module.ExceptionsPage })));
+const FdrDetailPage = lazy(() => import("./pages/official/FdrDetailPage").then(module => ({ default: module.FdrDetailPage })));
+const MaturityCentrePage = lazy(() => import("./pages/official/MaturityCentrePage").then(module => ({ default: module.MaturityCentrePage })));
+const OfficialFdrListPage = lazy(() => import("./pages/official/FdrListPage").then(module => ({ default: module.OfficialFdrListPage })));
+const OfficialOverviewPage = lazy(() => import("./pages/official/OverviewPage").then(module => ({ default: module.OfficialOverviewPage })));
+const NotificationsPage = lazy(() => import("./pages/NotificationsPage").then(module => ({ default: module.NotificationsPage })));
+const ReleaseCasePage = lazy(() => import("./pages/official/ReleaseCasePage").then(module => ({ default: module.ReleaseCasePage })));
+const ReleaseCentrePage = lazy(() => import("./pages/official/ReleaseCentrePage").then(module => ({ default: module.ReleaseCentrePage })));
+const ReportsPage = lazy(() => import("./pages/official/ReportsPage").then(module => ({ default: module.ReportsPage })));
+const AnalyticsPage = lazy(() => import("./pages/official/AnalyticsPage").then(module => ({ default: module.AnalyticsPage })));
+const WorkQueuePage = lazy(() => import("./pages/official/WorkQueuePage").then(module => ({ default: module.WorkQueuePage })));
 
 function Protected({
   children,
@@ -94,6 +97,7 @@ function HomeRedirect() {
 
 export function App() {
   return (
+    <Suspense fallback={<div className="p-6"><LoadingBlock label="Loading workspace" /></div>}>
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/" element={<HomeRedirect />} />
@@ -130,6 +134,7 @@ export function App() {
           </Protected>
         }
       />
+      <Route path="/institution/import" element={<Protected capability="fdr:draft" workspace="institution"><BulkImportPage /></Protected>} />
       <Route
         path="/institution/renewals"
         element={
@@ -271,7 +276,7 @@ export function App() {
       <Route
         path="/admin/overview"
         element={
-          <Protected>
+          <Protected capability="admin:manage">
             <AdminOverviewPage />
           </Protected>
         }
@@ -294,6 +299,8 @@ export function App() {
         }
       />
       <Route path="*" element={<NotFoundPage />} />
+      <Route path="/official/analytics" element={<Protected capability="report:read" workspace="official"><AnalyticsPage /></Protected>} />
     </Routes>
+    </Suspense>
   );
 }

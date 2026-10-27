@@ -83,7 +83,7 @@ export function EvidencePanel({
               <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-muted">
                 {field.confidence > 0 && (
                   <span>
-                    Extraction confidence {percent(field.confidence)}
+                    Parser heuristic {percent(field.confidence)} (uncalibrated)
                     {field.confidence < 0.85 ? " — confirm manually" : ""}
                   </span>
                 )}

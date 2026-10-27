@@ -31,8 +31,8 @@ file is uploaded. Security scanning is still running. Do not submit until the fi
 
 The split view shows the document on the left, four separate readings on the right. Principal
 amount: submitted ₹25,00,000.00, extracted ₹20,00,000.00, marked **Value differs** with its page,
-confidence and source text. Click **Show in document** — the viewer jumps to the page and
-highlights the region, and announces it for screen readers.
+uncalibrated parser heuristic and source text. Click **Show in document** — the viewer jumps to
+the source page and announces it for screen readers. Exact text-region highlighting is not available.
 
 Say the quiet part out loud: the finding reads *“This is an inconsistency to resolve, not evidence
 of forgery.”* There is no fraud score anywhere in this product.

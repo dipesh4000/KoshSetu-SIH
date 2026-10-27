@@ -43,7 +43,7 @@ export function MaturityCentrePage() {
         title="Maturity centre"
         description="Deposits approaching or past maturity, with the action each one needs and who owns it."
         actions={
-          session?.capabilities.includes("audit:read") ? (
+          session?.capabilities.includes("admin:manage") ? (
             <Button
               variant="secondary"
               loading={scan.isPending}

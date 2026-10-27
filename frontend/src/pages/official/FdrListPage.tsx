@@ -1,3 +1,4 @@
+import { Freshness } from "../../components/ui/Freshness";
 // Master register. Filters live in the URL so a view can be shared or
 // bookmarked, and the server re-checks scope on every request.
 
@@ -206,7 +207,9 @@ export function OfficialFdrListPage() {
       </Card>
 
       <Card className="mt-5" bodyClassName="">
-        {query.isLoading ? (
+        <Freshness updatedAt={query.dataUpdatedAt} refreshing={query.isFetching} onRefresh={() => void query.refetch()} />
+
+      {query.isLoading ? (
           <div className="p-5">
             <LoadingBlock label="Loading the register" />
           </div>

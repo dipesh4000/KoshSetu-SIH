@@ -3,24 +3,24 @@
 /* Design tokens from the frontend specification, section 5.2. Contrast was
    checked for text on its own surface; re-verify any new pairing. */
 @theme {
-  --color-canvas: #f6f8fb;
+  --color-canvas: #f7f9fa;
   --color-surface: #ffffff;
-  --color-subtle: #f0f3f8;
+  --color-subtle: #f0f2f4;
   --color-sidebar: #0f172a;
   --color-sidebar-active: #233454;
-  --color-ink: #101828;
-  --color-ink-muted: #475467;
-  --color-brand: #2455c5;
-  --color-brand-dark: #1d47a6;
+  --color-ink: #252c32;
+  --color-ink-muted: #59636d;
+  --color-brand: #167c9d;
+  --color-brand-dark: #10617c;
   --color-success: #067647;
-  --color-success-soft: #ecfdf3;
+  --color-success-soft: #d5f5df;
   --color-warning: #b54708;
-  --color-warning-soft: #fffaeb;
+  --color-warning-soft: #fff1b8;
   --color-danger: #b42318;
-  --color-danger-soft: #fef3f2;
-  --color-line: #d8dee8;
-  --radius-card: 12px;
-  --shadow-card: 0 1px 3px rgb(16 24 40 / 0.08);
+  --color-danger-soft: #fce0ed;
+  --color-line: #e4e8eb;
+  --radius-card: 6px;
+  --shadow-card: none;
   --font-sans: "Inter", ui-sans-serif, system-ui, "Segoe UI", Roboto,
     "Noto Sans Devanagari", sans-serif;
 }
@@ -35,7 +35,7 @@
     background-color: var(--color-canvas);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.55;
   }
 
@@ -64,6 +64,13 @@
 }
 
 @layer components {
+  .sidebar-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #c6cdd3 transparent;
+    scrollbar-gutter: stable;
+    overscroll-behavior-y: contain;
+  }
+
   .card {
     background-color: var(--color-surface);
     border: 1px solid var(--color-line);

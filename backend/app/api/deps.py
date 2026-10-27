@@ -10,8 +10,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.authorization import Principal, capabilities_for, not_found
-from app.core.security import decode_access_token
-from app.db.models import Fdr, RoleAssignment, User
+from app.core.security import decode_access_token, session_fingerprint
+from app.db.models import Fdr, RoleAssignment, User, RevokedSession
 from app.db.session import get_db
 
 SESSION_COOKIE = "koshsetu_session"
@@ -44,7 +44,9 @@ def build_principal(db: Session, user: User) -> Principal:
         display_name=user.display_name,
         roles=frozenset(roles),
         institution_ids=frozenset(
-            a.scope_id for a in assignments if a.scope_type == "INSTITUTION" and a.scope_id
+            a.scope_id
+            for a in assignments
+            if a.scope_type == "INSTITUTION" and a.scope_id
         ),
         region_codes=frozenset(
             a.scope_id for a in assignments if a.scope_type == "REGION" and a.scope_id
@@ -53,6 +55,9 @@ def build_principal(db: Session, user: User) -> Principal:
             a.scope_id for a in assignments if a.scope_type == "BUREAU" and a.scope_id
         ),
         capabilities=frozenset(capabilities_for(roles)),
+        labels={"global_scope": "true"}
+        if any(a.scope_type == "GLOBAL" for a in assignments)
+        else {},
         is_active=user.active,
         mfa_enrolled=user.mfa_enrolled,
     )
@@ -82,11 +87,21 @@ def get_principal(
         if not header_token or not cookie_token or header_token != cookie_token:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail={"code": "CSRF_FAILED", "message": "The request could not be verified."},
+                detail={
+                    "code": "CSRF_FAILED",
+                    "message": "The request could not be verified.",
+                },
             )
 
     user = db.get(User, claims["sub"])
     if user is None or not user.active:
+        raise _unauthenticated()
+    if db.get(RevokedSession, claims.get("jti", "")):
+        raise _unauthenticated()
+    assignments = list(
+        db.scalars(select(RoleAssignment).where(RoleAssignment.user_id == user.id))
+    )
+    if claims.get("session_fingerprint") != session_fingerprint(user, assignments):
         raise _unauthenticated()
     return build_principal(db, user)
 
@@ -101,9 +116,11 @@ def scoped_fdr_query(principal: Principal):
         if principal.region_codes:
             from app.db.models import Institution
 
-            statement = statement.join(Institution, Fdr.institution_id == Institution.id).where(
-                Institution.region_code.in_(principal.region_codes)
-            )
+            statement = statement.join(
+                Institution, Fdr.institution_id == Institution.id
+            ).where(Institution.region_code.in_(principal.region_codes))
+        elif principal.labels.get("global_scope") != "true":
+            return statement.where(Fdr.id == "__no_scope__")
         return statement
     if principal.institution_ids:
         return statement.where(Fdr.institution_id.in_(principal.institution_ids))

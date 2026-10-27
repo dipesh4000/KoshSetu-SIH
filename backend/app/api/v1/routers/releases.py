@@ -12,7 +12,7 @@ from decimal import Decimal
 from typing import Annotated
 
 from fastapi import APIRouter, Header, Query, Request, status
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from app.api import schemas
@@ -64,13 +64,23 @@ def get_release_policy(principal: CurrentPrincipal):
 def _scoped_requests(principal: Principal):
     statement = select(ReleaseRequest)
     if principal.is_official and principal.has("release:read"):
-        return statement
+        from app.api.deps import scoped_fdr_query
+
+        return statement.where(
+            ReleaseRequest.fdr_id.in_(
+                scoped_fdr_query(principal).with_only_columns(Fdr.id)
+            )
+        )
     if principal.institution_ids:
-        return statement.where(ReleaseRequest.institution_id.in_(principal.institution_ids))
+        return statement.where(
+            ReleaseRequest.institution_id.in_(principal.institution_ids)
+        )
     return statement.where(ReleaseRequest.id == "__no_scope__")
 
 
-def _checklist(db: Session, request_row: ReleaseRequest) -> list[schemas.ReleaseChecklistItem]:
+def _checklist(
+    db: Session, request_row: ReleaseRequest
+) -> list[schemas.ReleaseChecklistItem]:
     policy = load_policy()
     basis = policy.basis(request_row.basis_code)
     attached = {
@@ -90,7 +100,9 @@ def _checklist(db: Session, request_row: ReleaseRequest) -> list[schemas.Release
     ]
 
 
-def _clearance_out(db: Session, requirement: ClearanceRequirement) -> schemas.ClearanceOut:
+def _clearance_out(
+    db: Session, requirement: ClearanceRequirement
+) -> schemas.ClearanceOut:
     decision = db.scalar(
         select(ClearanceDecision)
         .where(ClearanceDecision.requirement_id == requirement.id)
@@ -100,7 +112,9 @@ def _clearance_out(db: Session, requirement: ClearanceRequirement) -> schemas.Cl
     actor_label = None
     if decision:
         user = db.get(User, decision.actor_id)
-        actor_label = f"{user.display_name} <{user.email}>" if user else decision.actor_id
+        actor_label = (
+            f"{user.display_name} <{user.email}>" if user else decision.actor_id
+        )
     return schemas.ClearanceOut(
         id=requirement.id,
         bureau_code=requirement.bureau_code,
@@ -141,7 +155,9 @@ def blocking_reasons(
     if pending:
         reasons.append(f"Required clearance pending: {', '.join(sorted(pending))}.")
 
-    missing_documents = [item.code for item in _checklist(db, request_row) if not item.satisfied]
+    missing_documents = [
+        item.code for item in _checklist(db, request_row) if not item.satisfied
+    ]
     if missing_documents:
         reasons.append(f"Prescribed document missing: {', '.join(missing_documents)}.")
 
@@ -155,13 +171,17 @@ def blocking_reasons(
         if not checker.has("release:approve"):
             reasons.append("You are not a designated final approver for this case.")
         if request_row.prepared_by == checker.user_id:
-            reasons.append("The officer who prepared the case cannot be its final approver.")
+            reasons.append(
+                "The officer who prepared the case cannot be its final approver."
+            )
         if request_row.requested_by == checker.user_id:
             reasons.append("The requester cannot approve their own release request.")
     return reasons
 
 
-def _to_out(db: Session, request_row: ReleaseRequest, principal: Principal) -> schemas.ReleaseRequestOut:
+def _to_out(
+    db: Session, request_row: ReleaseRequest, principal: Principal
+) -> schemas.ReleaseRequestOut:
     policy = load_policy()
     fdr = db.get(Fdr, request_row.fdr_id)
     institution = db.get(Institution, request_row.institution_id)
@@ -173,7 +193,9 @@ def _to_out(db: Session, request_row: ReleaseRequest, principal: Principal) -> s
             outcome=row.outcome,
             reason=row.reason,
             actor_label=(
-                lambda user: f"{user.display_name} <{user.email}>" if user else row.actor_id
+                lambda user: f"{user.display_name} <{user.email}>"
+                if user
+                else row.actor_id
             )(db.get(User, row.actor_id)),
             decided_at=row.decided_at,
         )
@@ -200,7 +222,9 @@ def _to_out(db: Session, request_row: ReleaseRequest, principal: Principal) -> s
         policy_version=request_row.policy_version_id or policy.version,
         version=request_row.version,
         requested_by_label=(
-            f"{requester.display_name} <{requester.email}>" if requester else request_row.requested_by
+            f"{requester.display_name} <{requester.email}>"
+            if requester
+            else request_row.requested_by
         ),
         prepared_by=request_row.prepared_by,
         approved_by=request_row.approved_by,
@@ -302,7 +326,11 @@ def create_request(
     attached = 0
     for document_id in payload.document_ids:
         document = db.get(FdrDocument, document_id)
-        if document is None or document.fdr_id != fdr.id or document.scan_status != "CLEAN":
+        if (
+            document is None
+            or document.fdr_id != fdr.id
+            or document.scan_status != "CLEAN"
+        ):
             continue
         db.add(
             ReleaseDocument(
@@ -315,7 +343,11 @@ def create_request(
         )
         attached += 1
 
-    request_row.status = "DOCUMENTS_PENDING" if attached < len(basis["required_documents"]) else "CLEARANCES_PENDING"
+    request_row.status = (
+        "DOCUMENTS_PENDING"
+        if attached < len(basis["required_documents"])
+        else "CLEARANCES_PENDING"
+    )
     sync_findings(db, fdr)
     record_audit(
         db,
@@ -343,8 +375,14 @@ def create_request(
     return _to_out(db, request_row, principal)
 
 
-def _load_scoped_request(db: Session, principal: Principal, request_id: str) -> ReleaseRequest:
-    row = db.scalar(_scoped_requests(principal).where(ReleaseRequest.id == request_id))
+def _load_scoped_request(
+    db: Session, principal: Principal, request_id: str
+) -> ReleaseRequest:
+    row = db.scalar(
+        _scoped_requests(principal)
+        .where(ReleaseRequest.id == request_id)
+        .with_for_update()
+    )
     if row is None:
         raise not_found()
     return row
@@ -399,7 +437,9 @@ def attach_document(
             )
         )
     db.flush()
-    if all(item.satisfied for item in _checklist(db, request_row)) and request_row.status in {
+    if all(
+        item.satisfied for item in _checklist(db, request_row)
+    ) and request_row.status in {
         "REQUESTED",
         "DOCUMENTS_PENDING",
     }:
@@ -476,7 +516,9 @@ def decide_clearance(
 
     if payload.outcome == "OBJECTION":
         request_row.status = "ON_HOLD"
-        request_row.hold_reason = f"{bureau_code} recorded an objection: {payload.reason}"
+        request_row.hold_reason = (
+            f"{bureau_code} recorded an objection: {payload.reason}"
+        )
     else:
         outstanding = db.scalar(
             select(ClearanceRequirement).where(
@@ -486,11 +528,16 @@ def decide_clearance(
                 ClearanceRequirement.id != requirement.id,
             )
         )
-        if payload.outcome == "CLEARED" and outstanding is None and request_row.status not in {
-            "APPROVED",
-            "REJECTED",
-            "CLOSED",
-        }:
+        if (
+            payload.outcome == "CLEARED"
+            and outstanding is None
+            and request_row.status
+            not in {
+                "APPROVED",
+                "REJECTED",
+                "CLOSED",
+            }
+        ):
             if all(item.satisfied for item in _checklist(db, request_row)):
                 request_row.status = "READY_FOR_DECISION"
                 request_row.hold_reason = None
@@ -518,7 +565,9 @@ def decide_clearance(
     return _to_out(db, request_row, principal)
 
 
-@router.post("/release-requests/{request_id}/prepare", response_model=schemas.ReleaseRequestOut)
+@router.post(
+    "/release-requests/{request_id}/prepare", response_model=schemas.ReleaseRequestOut
+)
 def prepare_case(
     request_id: str,
     payload: schemas.ReleaseActionIn,
@@ -564,7 +613,9 @@ def prepare_case(
     return _to_out(db, request_row, principal)
 
 
-@router.post("/release-requests/{request_id}/approve", response_model=schemas.ReleaseRequestOut)
+@router.post(
+    "/release-requests/{request_id}/approve", response_model=schemas.ReleaseRequestOut
+)
 def approve_release(
     request_id: str,
     payload: schemas.ReleaseActionIn,
@@ -591,7 +642,9 @@ def approve_release(
             )
         )
         if receipt is not None:
-            return schemas.ReleaseRequestOut.model_validate(json.loads(receipt.response_json))
+            return schemas.ReleaseRequestOut.model_validate(
+                json.loads(receipt.response_json)
+            )
 
     if payload.expected_version != request_row.version:
         raise conflict(
@@ -620,6 +673,20 @@ def approve_release(
         )
 
     old_status = request_row.status
+    claimed = db.execute(
+        update(ReleaseRequest)
+        .where(
+            ReleaseRequest.id == request_row.id,
+            ReleaseRequest.version == payload.expected_version,
+            ReleaseRequest.status == "READY_FOR_DECISION",
+        )
+        .values(version=ReleaseRequest.version + 1)
+        .execution_options(synchronize_session=False)
+    )
+    if claimed.rowcount != 1:
+        raise conflict(
+            "This case changed since you opened it.", code="CASE_VERSION_CONFLICT"
+        )
     request_row.status = "APPROVED"
     request_row.approved_by = principal.user_id
     request_row.decided_at = utcnow()
@@ -699,7 +766,9 @@ def approve_release(
     return response
 
 
-@router.post("/release-requests/{request_id}/reject", response_model=schemas.ReleaseRequestOut)
+@router.post(
+    "/release-requests/{request_id}/reject", response_model=schemas.ReleaseRequestOut
+)
 def reject_release(
     request_id: str,
     payload: schemas.ReleaseActionIn,

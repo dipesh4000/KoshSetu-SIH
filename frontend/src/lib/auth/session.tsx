@@ -52,6 +52,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     mutationFn: (credentials: { email: string; password: string }) =>
       apiFetch<Session>("/auth/login", { method: "POST", body: credentials }),
     onSuccess: (session) => {
+      queryClient.clear();
       queryClient.setQueryData(["session"], session);
     },
   });
@@ -73,6 +74,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     function onUnauthenticated() {
+      void queryClient.cancelQueries();
+      queryClient.clear();
       queryClient.setQueryData(["session"], null);
     }
     window.addEventListener("koshsetu:unauthenticated", onUnauthenticated);

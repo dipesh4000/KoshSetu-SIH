@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from datetime import timedelta
 from typing import Any
 
 from sqlalchemy import select
@@ -16,9 +17,22 @@ from sqlalchemy.orm import Session
 
 from app.core.authorization import Principal
 from app.db.base import as_utc, new_id, utcnow
-from app.db.models import AuditEvent, OutboxEvent
+from app.db.models import AuditEvent, OutboxEvent, AuditFormat
+from app.db.locking import transaction_lock
 
 SENSITIVE_KEYS = {"fdr_number", "password", "token", "authorization", "object_key"}
+
+
+def _complete_digest(event: AuditEvent) -> str:
+    fields = {
+        column.name: getattr(event, column.name)
+        for column in AuditEvent.__table__.columns
+        if column.name != "integrity_digest"
+    }
+    fields["occurred_at"] = as_utc(event.occurred_at).isoformat()
+    return hashlib.sha256(
+        json.dumps(fields, sort_keys=True, default=str, separators=(",", ":")).encode()
+    ).hexdigest()
 
 
 def redact(payload: dict[str, Any]) -> dict[str, Any]:
@@ -47,9 +61,14 @@ def record_audit(
     reason: str | None = None,
     request_id: str | None = None,
 ) -> AuditEvent:
-    previous = db.scalar(select(AuditEvent).order_by(AuditEvent.occurred_at.desc()).limit(1))
+    transaction_lock(db, "audit-chain")
+    previous = db.scalar(
+        select(AuditEvent).order_by(AuditEvent.occurred_at.desc()).limit(1)
+    )
     previous_digest = previous.integrity_digest if previous else None
     occurred_at = utcnow()
+    if previous and occurred_at <= as_utc(previous.occurred_at):
+        occurred_at = as_utc(previous.occurred_at) + timedelta(microseconds=1)
     old_summary = json.dumps(redact(old_state or {}), sort_keys=True, default=str)
     new_summary = json.dumps(redact(new_state or {}), sort_keys=True, default=str)
     digest_source = "|".join(
@@ -82,6 +101,9 @@ def record_audit(
         occurred_at=occurred_at,
     )
     db.add(event)
+    event.integrity_digest = _complete_digest(event)
+    db.flush()
+    db.add(AuditFormat(id=event.id, version=2))
     return event
 
 
@@ -123,8 +145,19 @@ def verify_chain(db: Session) -> dict[str, Any]:
                 as_utc(event.occurred_at).isoformat(),
             ]
         )
-        expected = hashlib.sha256(digest_source.encode()).hexdigest()
-        if expected != event.integrity_digest:
-            return {"verified": False, "events_checked": len(events), "first_divergence": event.id}
+        expected = (
+            _complete_digest(event)
+            if db.get(AuditFormat, event.id)
+            else hashlib.sha256(digest_source.encode()).hexdigest()
+        )
+        if (
+            expected != event.integrity_digest
+            or event.previous_digest != previous_digest
+        ):
+            return {
+                "verified": False,
+                "events_checked": len(events),
+                "first_divergence": event.id,
+            }
         previous_digest = event.integrity_digest
     return {"verified": True, "events_checked": len(events), "first_divergence": None}

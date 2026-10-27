@@ -1,0 +1,74 @@
+name: Checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        database: [sqlite, postgres]
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: koshsetu
+          POSTGRES_PASSWORD: test-only-password
+          POSTGRES_DB: koshsetu_test
+        ports: [5432:5432]
+        options: --health-cmd "pg_isready -U koshsetu -d koshsetu_test" --health-interval 5s --health-retries 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - run: python -m pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+      - run: python -m ruff check backend/app backend/tests backend/evaluation
+      - name: SQLite suite
+        if: matrix.database == 'sqlite'
+        working-directory: backend
+        run: python -m pytest -ra
+      - name: PostgreSQL suite including concurrency
+        if: matrix.database == 'postgres'
+        working-directory: backend
+        env:
+          KOSHSETU_TEST_DATABASE_URL: postgresql+psycopg://koshsetu:test-only-password@localhost:5432/koshsetu_test?sslmode=disable
+        run: python -m pytest -ra
+      - name: Synthetic extraction evaluation
+        working-directory: backend
+        run: python -m evaluation.run
+      - name: Dependency audit
+        run: python -m pip_audit -r backend/requirements.txt --format json --output python-audit.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-${{ matrix.database }}-evidence
+          path: |
+            backend/evaluation/results.json
+            python-audit.json
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm audit --audit-level=high
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker://zricethezav/gitleaks:latest
+        with:
+          args: dir /github/workspace --redact --no-banner

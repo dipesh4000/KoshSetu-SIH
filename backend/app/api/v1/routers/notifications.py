@@ -10,10 +10,10 @@ from fastapi import APIRouter, Query
 from sqlalchemy import or_, select
 
 from app.api import schemas
-from app.api.deps import CurrentPrincipal, DbSession
+from app.api.deps import CurrentPrincipal, DbSession, scoped_fdr_query
 from app.core.authorization import not_found
 from app.db.base import utcnow
-from app.db.models import NotificationEvent
+from app.db.models import NotificationEvent, Fdr
 
 router = APIRouter(tags=["notifications"])
 
@@ -24,7 +24,7 @@ def _scoped(principal):
     conditions = [NotificationEvent.recipient_scope.in_(scopes)]
     if principal.is_official:
         # Officials see the portfolio deadline notices for their scope as well.
-        conditions.append(NotificationEvent.recipient_scope.startswith("INSTITUTION:"))
+        conditions.append(NotificationEvent.fdr_id.in_(scoped_fdr_query(principal).with_only_columns(Fdr.id)))
     return select(NotificationEvent).where(or_(*conditions))
 
 

@@ -105,13 +105,25 @@ def evaluate_fdr(
                 "The instrument was submitted but no document has passed security scanning.",
             )
         )
-    if any(d.scan_status == "QUARANTINED" or d.processing_status in {"QUEUED", "EXTRACTING"} for d in documents):
+    if any(
+        d.scan_status == "QUARANTINED"
+        or d.processing_status in {"QUEUED", "EXTRACTING"}
+        for d in documents
+    ):
         results.append(
             EvaluatedFinding(
                 "DOC-002",
-                {"documents_pending": str(
-                    len([d for d in documents if d.processing_status in {"QUEUED", "EXTRACTING"}])
-                )},
+                {
+                    "documents_pending": str(
+                        len(
+                            [
+                                d
+                                for d in documents
+                                if d.processing_status in {"QUEUED", "EXTRACTING"}
+                            ]
+                        )
+                    )
+                },
                 "A document is still being scanned or parsed, so evidence is incomplete.",
             )
         )
@@ -122,7 +134,37 @@ def evaluate_fdr(
         confidence = json.loads(latest_extraction.confidence_json)
 
         extracted_amount = _as_decimal(extracted.get("principal_amount"))
-        if extracted_amount is not None and extracted_amount != _as_decimal(fdr.principal_amount):
+        maturity_value = _as_decimal(extracted.get("maturity_amount"))
+        from app.domains.documents.extraction import maturity_value_check
+
+        consistency = maturity_value_check(extracted)
+        if consistency and not consistency["consistent"]:
+            results.append(
+                EvaluatedFinding(
+                    "DATA-005",
+                    {**consistency, "document_id": latest_extraction.document_id},
+                    "The stated maturity value differs from a simple-interest estimate by more than 1%. Confirm day-count, tax and deposit terms; this estimate is not a bank valuation.",
+                )
+            )
+        if (
+            maturity_value is not None
+            and extracted_amount is not None
+            and maturity_value < extracted_amount
+        ):
+            results.append(
+                EvaluatedFinding(
+                    "DATA-004",
+                    {
+                        "principal": str(extracted_amount),
+                        "maturity_value": str(maturity_value),
+                        "document_id": latest_extraction.document_id,
+                    },
+                    "The stated maturity value is below principal. Review the source document and deposit terms; this is not proof of misconduct.",
+                )
+            )
+        if extracted_amount is not None and extracted_amount != _as_decimal(
+            fdr.principal_amount
+        ):
             results.append(
                 EvaluatedFinding(
                     "DATA-001",
@@ -151,7 +193,10 @@ def evaluate_fdr(
             )
 
         for field_name in ("issue_date", "maturity_date"):
-            if extracted.get(field_name) is None or confidence.get(field_name, 0) < 0.85:
+            if (
+                extracted.get(field_name) is None
+                or confidence.get(field_name, 0) < 0.85
+            ):
                 results.append(
                     EvaluatedFinding(
                         "DATA-002",
@@ -189,7 +234,11 @@ def evaluate_fdr(
         latest = bank_checks[0]
         detail = json.loads(latest.detail_json or "{}")
         lien_claim = detail.get("lien_claim")
-        if lien_claim and lien_claim.startswith("NOT_CONFIRMED") and fdr.lien_beneficiary:
+        if (
+            lien_claim
+            and lien_claim.startswith("NOT_CONFIRMED")
+            and fdr.lien_beneficiary
+        ):
             results.append(
                 EvaluatedFinding(
                     "VERIFY-002",
@@ -219,7 +268,9 @@ def evaluate_fdr(
     # --- Deadlines -------------------------------------------------------------
     days_remaining = (fdr.maturity_date - today).days
     unresolved = fdr.instrument_status in {"REGISTERED", "ACTIVE"}
-    if unresolved and 0 <= days_remaining <= catalog.thresholds.get("maturity_warning_days", 30):
+    if unresolved and 0 <= days_remaining <= catalog.thresholds.get(
+        "maturity_warning_days", 30
+    ):
         results.append(
             EvaluatedFinding(
                 "MAT-001",
@@ -246,7 +297,9 @@ def evaluate_fdr(
     # --- Duplicate candidates --------------------------------------------------
     duplicates = list(
         db.scalars(
-            select(Fdr).where(Fdr.fdr_lookup_hash == fdr.fdr_lookup_hash, Fdr.id != fdr.id)
+            select(Fdr).where(
+                Fdr.fdr_lookup_hash == fdr.fdr_lookup_hash, Fdr.id != fdr.id
+            )
         )
     )
     if duplicates:
@@ -308,7 +361,9 @@ def evaluate_fdr(
     return results
 
 
-def sync_findings(db: Session, fdr: Fdr, *, today: date | None = None) -> dict[str, int]:
+def sync_findings(
+    db: Session, fdr: Fdr, *, today: date | None = None
+) -> dict[str, int]:
     """Reconcile stored findings with a fresh evaluation.
 
     Dispositions survive: a finding marked false positive is not re-opened
@@ -316,7 +371,9 @@ def sync_findings(db: Session, fdr: Fdr, *, today: date | None = None) -> dict[s
     by the system rather than deleted.
     """
     catalog = load_catalog()
-    evaluated = {finding.rule_id: finding for finding in evaluate_fdr(db, fdr, today=today)}
+    evaluated = {
+        finding.rule_id: finding for finding in evaluate_fdr(db, fdr, today=today)
+    }
     existing = {
         finding.rule_id: finding
         for finding in db.scalars(select(Finding).where(Finding.fdr_id == fdr.id))
@@ -352,7 +409,10 @@ def sync_findings(db: Session, fdr: Fdr, *, today: date | None = None) -> dict[s
         current.evidence_json = evidence_json
         current.explanation = evaluation.explanation
         current.release_request_id = evaluation.release_request_id
-        if current.status in {"RESOLVED", "FALSE_POSITIVE", "AUTO_RESOLVED"} and evidence_changed:
+        if (
+            current.status in {"RESOLVED", "FALSE_POSITIVE", "AUTO_RESOLVED"}
+            and evidence_changed
+        ):
             current.status = "OPEN"
             current.disposition_reason = (
                 "Re-opened automatically: the underlying evidence changed."
@@ -364,13 +424,22 @@ def sync_findings(db: Session, fdr: Fdr, *, today: date | None = None) -> dict[s
     for rule_id, current in existing.items():
         if rule_id not in evaluated and current.status == "OPEN":
             current.status = "AUTO_RESOLVED"
-            current.disposition_reason = "No longer detected by the current rule evaluation."
+            current.disposition_reason = (
+                "No longer detected by the current rule evaluation."
+            )
             stats["auto_resolved"] += 1
 
     return stats
 
 
-ATTENTION_ORDER = {"BLOCKER": 0, "CRITICAL": 1, "HIGH": 2, "MEDIUM": 3, "ATTENTION": 4, "LOW": 5}
+ATTENTION_ORDER = {
+    "BLOCKER": 0,
+    "CRITICAL": 1,
+    "HIGH": 2,
+    "MEDIUM": 3,
+    "ATTENTION": 4,
+    "LOW": 5,
+}
 
 
 def attention_level(severities: list[str]) -> str:

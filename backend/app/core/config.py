@@ -53,9 +53,13 @@ def normalise_database_url(url: str) -> str:
         # A pooled endpoint cannot prepare statements across connections.
         if "channel_binding=" in query:
             query = "&".join(
-                item for item in query.split("&") if not item.startswith("channel_binding=")
+                item
+                for item in query.split("&")
+                if not item.startswith("channel_binding=")
             )
-        url = urlunsplit((parts.scheme, parts.netloc, parts.path, query, parts.fragment))
+        url = urlunsplit(
+            (parts.scheme, parts.netloc, parts.path, query, parts.fragment)
+        )
     return url
 
 
@@ -72,12 +76,28 @@ class Settings(BaseSettings):
     jwt_secret: str = "insecure-local-development-secret"
     jwt_ttl_minutes: int = 60
     fdr_hmac_key: str = "insecure-local-development-hmac"
+    encryption_key: str = ""
+    encryption_key_id: str = Field(default="local-v1", pattern=r"^[A-Za-z0-9_-]{1,24}$")
+    encryption_previous_keys: dict[str, str] = Field(default_factory=dict)
+    login_account_limit: int = 10
+    login_ip_limit: int = 100
+    login_window_seconds: int = 900
     mock_bank_enabled: bool = True
 
-    storage_backend: str = Field(default="filesystem", pattern="^(filesystem|database)$")
+    storage_backend: str = Field(
+        default="filesystem", pattern="^(filesystem|database|minio)$"
+    )
+    minio_endpoint: str = Field(
+        default="http://127.0.0.1:9000",
+        pattern=r"^http://(?:127\.0\.0\.1|localhost|minio):9000$",
+    )
+    minio_access_key: str = "local-demo"
+    minio_secret_key: str = "local-demo-only-change-me"
     storage_root: Path = Path("./data/objects")
 
     max_upload_bytes: int = 10 * 1024 * 1024
+    ocr_enabled: bool = False
+    ocr_languages: str = "eng+hin"
     allowed_content_types: tuple[str, ...] = ("application/pdf",)
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     expose_docs: bool = True
@@ -87,7 +107,9 @@ class Settings(BaseSettings):
     auto_create_schema: bool | None = None
     # Shared secret for the bootstrap and scheduled-task routes. CRON_SECRET is
     # read as a fallback because schedulers commonly set that name.
-    bootstrap_secret: str = Field(default_factory=lambda: os.environ.get("CRON_SECRET", ""))
+    bootstrap_secret: str = Field(
+        default_factory=lambda: os.environ.get("CRON_SECRET", "")
+    )
 
     @field_validator("storage_root")
     @classmethod
@@ -96,7 +118,11 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _resolve_database_url(self) -> "Settings":
-        url = self.database_url or _discover_database_url() or "sqlite:///./data/koshsetu.db"
+        url = (
+            self.database_url
+            or _discover_database_url()
+            or "sqlite:///./data/koshsetu.db"
+        )
         object.__setattr__(self, "database_url", normalise_database_url(url))
         if self.auto_create_schema is None:
             object.__setattr__(self, "auto_create_schema", self.environment == "local")
@@ -104,7 +130,9 @@ class Settings(BaseSettings):
 
     @property
     def cors_origin_list(self) -> list[str]:
-        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+        return [
+            origin.strip() for origin in self.cors_origins.split(",") if origin.strip()
+        ]
 
     @property
     def is_production(self) -> bool:
@@ -113,7 +141,9 @@ class Settings(BaseSettings):
     @property
     def is_serverless(self) -> bool:
         """True on a platform whose filesystem and process are ephemeral."""
-        return bool(os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
+        return bool(
+            os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME")
+        )
 
     @property
     def is_sqlite(self) -> bool:
@@ -123,8 +153,14 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     cfg = Settings()
+    if cfg.storage_backend == "minio" and cfg.environment != "local":
+        raise RuntimeError("The MinIO adapter is restricted to local development")
 
     if cfg.is_production:
+        if len(cfg.encryption_key) < 32:
+            raise RuntimeError(
+                "Set a dedicated KOSHSETU_ENCRYPTION_KEY of at least 32 characters"
+            )
         if cfg.mock_bank_enabled:
             raise RuntimeError("Mock bank adapter must never be enabled in production")
         if "insecure-local" in cfg.jwt_secret or "insecure-local" in cfg.fdr_hmac_key:

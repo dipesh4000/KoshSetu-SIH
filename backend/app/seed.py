@@ -33,7 +33,6 @@ from app.db.models import (
     FdrExtraction,
     FdrLink,
     FdrSubmission,
-    Finding,
     Institution,
     PolicyVersion,
     ReleaseDocument,

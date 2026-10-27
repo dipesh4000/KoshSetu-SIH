@@ -8,8 +8,10 @@ deployment, and nothing here claims government SSO.
 from __future__ import annotations
 
 import secrets
+import hashlib
+from datetime import timedelta, datetime, timezone
 
-from fastapi import APIRouter, Request, Response, status
+from fastapi import APIRouter, HTTPException, Request, Response, status
 from sqlalchemy import select
 
 from app.api import schemas
@@ -23,11 +25,69 @@ from app.api.deps import (
 )
 from app.core.authorization import INSTITUTION_ROLES, Principal
 from app.core.config import settings
-from app.core.security import create_access_token, verify_password
-from app.db.models import Institution, User
+from app.core.security import (
+    create_access_token,
+    verify_password,
+    hash_password,
+    session_fingerprint,
+    decode_access_token,
+)
+from app.db.models import Institution, User, RoleAssignment, RevokedSession, LoginBucket
+from app.db.base import utcnow, as_utc
+from app.db.locking import transaction_lock
 from app.domains.audit.service import record_audit
 
 router = APIRouter(tags=["session"])
+_DUMMY_HASH = hash_password(secrets.token_urlsafe(32))
+
+
+def _login_buckets(db, request, email):
+    # Forwarded headers are trusted only when uvicorn has a trusted proxy configured.
+    ip = request.client.host if request.client else "unknown"
+    buckets = []
+    for label, value, limit in (
+        ("account", email, settings.login_account_limit),
+        ("ip", ip, settings.login_ip_limit),
+    ):
+        key = hashlib.sha256(f"{label}:{value}".encode()).hexdigest()
+        transaction_lock(db, f"login:{key}")
+        bucket = db.get(LoginBucket, key)
+        now = utcnow()
+        if bucket is None:
+            bucket = LoginBucket(
+                id=key,
+                attempts=0,
+                reset_at=now + timedelta(seconds=settings.login_window_seconds),
+            )
+            db.add(bucket)
+        elif as_utc(bucket.reset_at) <= now:
+            bucket.attempts = 0
+            bucket.reset_at = now + timedelta(seconds=settings.login_window_seconds)
+        if bucket.attempts >= limit:
+            record_audit(
+                db,
+                aggregate_type="authentication",
+                aggregate_id="login",
+                action="auth.throttled",
+                outcome="DENY",
+                request_id=request_id_of(request),
+            )
+            db.commit()
+            raise HTTPException(
+                429,
+                detail={
+                    "code": "LOGIN_THROTTLED",
+                    "message": "Too many sign-in attempts. Try again later.",
+                },
+                headers={
+                    "Retry-After": str(
+                        max(1, int((as_utc(bucket.reset_at) - now).total_seconds()))
+                    )
+                },
+            )
+        bucket.attempts += 1
+        buckets.append(bucket)
+    return buckets
 
 
 def _workspace(principal: Principal) -> str:
@@ -38,7 +98,9 @@ def _workspace(principal: Principal) -> str:
     return "official"
 
 
-def _session_out(principal: Principal, csrf_token: str | None = None) -> schemas.SessionOut:
+def _session_out(
+    principal: Principal, csrf_token: str | None = None
+) -> schemas.SessionOut:
     return schemas.SessionOut(
         user_id=principal.user_id,
         email=principal.email,
@@ -55,9 +117,14 @@ def _session_out(principal: Principal, csrf_token: str | None = None) -> schemas
 
 
 @router.post("/auth/login", response_model=schemas.SessionOut)
-def login(payload: schemas.LoginIn, request: Request, response: Response, db: DbSession):
+def login(
+    payload: schemas.LoginIn, request: Request, response: Response, db: DbSession
+):
+    buckets = _login_buckets(db, request, str(payload.email).lower())
     user = db.scalar(select(User).where(User.email == str(payload.email).lower()))
-    authenticated = user is not None and verify_password(payload.password, user.password_hash)
+    authenticated = verify_password(
+        payload.password, user.password_hash if user else _DUMMY_HASH
+    )
 
     if not authenticated or user is None or not user.active:
         record_audit(
@@ -74,7 +141,14 @@ def login(payload: schemas.LoginIn, request: Request, response: Response, db: Db
         # address exists.
         raise _invalid_credentials()
 
-    token = create_access_token(user.id)
+    buckets[0].attempts = 0
+    assignments = list(
+        db.scalars(select(RoleAssignment).where(RoleAssignment.user_id == user.id))
+    )
+    token = create_access_token(
+        user.id,
+        extra_claims={"session_fingerprint": session_fingerprint(user, assignments)},
+    )
     csrf_token = secrets.token_urlsafe(24)
     secure = settings.environment != "local"
     response.set_cookie(
@@ -123,10 +197,30 @@ def _invalid_credentials():
 
 
 @router.post("/auth/logout", status_code=status.HTTP_204_NO_CONTENT)
-def logout() -> Response:
+def logout(request: Request, principal: CurrentPrincipal, db: DbSession) -> Response:
     # The deletions must be set on the response that is actually returned,
     # otherwise the session cookie survives the sign-out.
     response = Response(status_code=status.HTTP_204_NO_CONTENT)
+    token = request.cookies.get(SESSION_COOKIE)
+    if not token:
+        token = request.headers.get("authorization", "").split(" ", 1)[-1]
+    claims = decode_access_token(token)
+    if db.get(RevokedSession, claims["jti"]) is None:
+        db.add(
+            RevokedSession(
+                id=claims["jti"],
+                expires_at=datetime.fromtimestamp(claims["exp"], timezone.utc),
+            )
+        )
+    record_audit(
+        db,
+        aggregate_type="user",
+        aggregate_id=principal.user_id,
+        action="auth.logout",
+        actor=principal,
+        request_id=request_id_of(request),
+    )
+    db.commit()
     response.delete_cookie(SESSION_COOKIE, path="/")
     response.delete_cookie(CSRF_COOKIE, path="/")
     return response
@@ -154,4 +248,8 @@ def list_institutions(principal: CurrentPrincipal, db: DbSession):
     statement = select(Institution).order_by(Institution.name)
     if principal.region_codes:
         statement = statement.where(Institution.region_code.in_(principal.region_codes))
-    return [schemas.InstitutionOut.model_validate(item) for item in db.scalars(statement)]
+    elif principal.labels.get("global_scope") != "true":
+        return []
+    return [
+        schemas.InstitutionOut.model_validate(item) for item in db.scalars(statement)
+    ]

@@ -2,13 +2,25 @@
 # Versioned in source control; its sha256 is recorded against every finding so
 # a historical decision can be replayed against the rules that applied then.
 ruleset_name: fdr-integrity
-version: "1.0.0"
+version: "1.1.0"
 effective_from: "2026-10-01"
 thresholds:
   maturity_warning_days: 30
   maturity_critical_days: 7
   stale_verification_hours: 24
 rules:
+  - id: DATA-005
+    category: DATA_DISCREPANCY
+    severity: MEDIUM
+    authority: OPERATIONAL
+    title: Maturity value differs from explicit simple-interest terms
+    recommended_action: Confirm rate, tenure, day-count and tax treatment with the issuer.
+  - id: DATA-004
+    category: DATA_DISCREPANCY
+    severity: HIGH
+    authority: OPERATIONAL
+    title: Maturity value below principal
+    recommended_action: Review the source values and deposit terms with the institution.
   - id: DATA-001
     category: DATA_DISCREPANCY
     severity: HIGH
