@@ -1,23 +1,38 @@
-# Improvement plan progress
+# Improvement progress
 
-Source: `KoshSetu_Improvement_Plan.docx`.
+This is the implementation status for the improvement plan. It is deliberately
+honest about integrations that require institutional approval.
 
-## First increment
+## Delivered
 
-- Parser v2 requires explicit principal labels and valid Indian/western numeric grouping.
-- Fields are parsed within a single line, avoiding receipt-title and adjacent-date capture.
-- Missing critical fields, contradictory principal values and invalid date ordering require review.
-- Invented bounding boxes removed; source text and page navigation retained.
-- UI and documentation identify scores as uncalibrated heuristics.
-- README bank scenarios and clearance identifiers aligned with the implementation.
-- Eight native-PDF regression tests added; full backend suite passes.
+- Dense expandable review tables, freshness indicators, and a dark,
+  independently scrollable sidebar.
+- Code-split React routes, bulk CSV/XLSX preview and atomic commit, turnaround
+  analytics, audit export, and PDF signature inspection.
+- PyMuPDF extraction with page/span bounding boxes, conflict detection,
+  maturity checks, optional Hindi OCR, and explicit human-review gates.
+- Persistent login throttling, session revocation/fingerprint binding,
+  AES-GCM identifier storage with key rotation, fail-closed scopes,
+  replay receipts, database-backed locks, and tamper-evident audit chains.
+- Alembic migrations, local Postgres/MinIO Compose setup, local-only object
+  storage restrictions, CI test matrices, dependency auditing, and secret
+  scanning configuration.
+- Reproducible synthetic extraction evaluation with Wilson intervals and
+  reliability data (not a human calibration study).
 
-## Remaining P0 work
+## Validation
 
-- Broader issuer recognition, conflicting-date detection, maturity-value and submitted-value checks.
-- Labelled extraction evaluation and calibrated confidence; real coordinates and OCR remain pending.
-- Concurrent approval and audit serialization, authenticated encryption, login throttling,
-  session revocation, regional scope rules and persistent replay protection.
-- Explicit MFA limitations and full documentation/API catalogue reconciliation.
+The local SQLite suite passes (91 passed, 2 intentional PostgreSQL skips).
+The PostgreSQL concurrency suite is enabled in CI when
+`KOSHSETU_TEST_DATABASE_URL` points at the service matrix. Frontend lint/build
+and npm audit pass locally. Run the commands in `docs/DEPLOYMENT.md` before a
+release.
 
-This increment does not claim completion of the plan, calibrated extraction accuracy, or OCR support.
+## Deferred by approval boundary
+
+- Firebase Cloud Messaging is architecture-only; no project, service-account
+  credential, VAPID key, or outbound delivery is enabled. See
+  `docs/FIREBASE_ARCHITECTURE.md`.
+- Government SSO/MFA, production bank adapters, managed object storage,
+  approved email/SMS relays, and human calibration studies require owners,
+  contracts, credentials, and test populations outside this repository.

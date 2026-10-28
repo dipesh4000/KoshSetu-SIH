@@ -4540,8 +4540,7 @@
                 "exclusiveMinimum": 0.0
               },
               {
-                "type": "string",
-                "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,16}|(?=[\\d.]{1,19}0*$)\\d{0,16}\\.\\d{0,2}0*$)"
+                "type": "string"
               }
             ],
             "title": "Principal Amount"
@@ -4554,8 +4553,7 @@
                 "minimum": 0.0
               },
               {
-                "type": "string",
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -4655,8 +4653,7 @@
                 "exclusiveMinimum": 0.0
               },
               {
-                "type": "string",
-                "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,16}|(?=[\\d.]{1,19}0*$)\\d{0,16}\\.\\d{0,2}0*$)"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -4672,8 +4669,7 @@
                 "minimum": 0.0
               },
               {
-                "type": "string",
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -4893,7 +4889,6 @@
             "title": "Recommended Action"
           },
           "evidence": {
-            "additionalProperties": true,
             "type": "object",
             "title": "Evidence"
           },

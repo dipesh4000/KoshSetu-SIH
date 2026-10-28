@@ -1,0 +1,15 @@
+title = "KoshSetu local-demo secret policy"
+
+# These values are intentionally non-production fixtures used by the local
+# Compose stack and deterministic tests. Production secrets are supplied via
+# environment variables and are not allow-listed here.
+[allowlist]
+description = "Synthetic local credentials only"
+paths = [
+  '''^compose\.yaml$''',
+  '''^backend/app/seed\.py$''',
+  '''^backend/evaluation/load\.py$''',
+  '''^backend/tests/.*''',
+  '''^backend/app/core/config\.py$''',
+  '''^\.github/workflows/checks\.yml$''',
+]

@@ -2,8 +2,10 @@
 
 Roughly seven minutes over the seeded data. Every record is synthetic.
 
-Start the API and the web app, run `python -m app.seed --reset`, and open
-<http://localhost:5173>. All accounts use `Demo@12345`.
+Start the API with `python -m app.devserver` and the web app with
+`npm run dev`, then open <http://127.0.0.1:5173>. The server migrates and
+seeds missing synthetic rows without resetting existing data. All accounts use
+`Demo@12345`.
 
 ---
 

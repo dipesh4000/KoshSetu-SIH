@@ -1066,3 +1066,10 @@ CERT-In cyber directions and advisories — https://www.cert-in.org.in/ (consult
 W3C Web Content Accessibility Guidelines — https://www.w3.org/TR/WCAG22/ (frontend accessibility target, coordinated with GIGW).
 
 Inter-document contract: the companion Frontend Product & UI/UX Specification | SIH26265 uses the same role model, separate status dimensions, simulated-bank labeling, FDR evidence structure, threshold/deduped notifications, release checklist and action semantics. Changes to any of these contracts must be reviewed in both documents.
+# Status: design reference
+
+This file describes the original target and security requirements. It is not
+an inventory of implemented code. For the current implementation, use
+`README.md`, `docs/ARCHITECTURE.md`, `docs/DEPLOYMENT.md`, and the generated
+`docs/API.md`.
+

@@ -828,3 +828,9 @@ SIH context line: Smart India Hackathon 2026 • Problem Statement SIH26265
 Product tagline: Secure deposits. Traceable decisions.
 
 Mandatory notice: Independent prototype. Mock bank responses are synthetic and do not authenticate a financial instrument.
+# Status: design reference
+
+This file describes the original product and UI target. It is not an inventory
+of implemented screens. For the current implementation, use `README.md`,
+`docs/ARCHITECTURE.md`, and the `frontend/src/pages` route tree.
+
