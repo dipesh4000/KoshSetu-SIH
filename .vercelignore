@@ -2,6 +2,9 @@
 backend/.venv/
 backend/data/
 backend/tests/
+backend/evaluation/
+backend/tools/
+backend/dependency-audit*.json
 backend/.env
 **/__pycache__/
 **/*.pyc

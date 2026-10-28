@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "cd frontend && npm install",
+  "installCommand": "cd frontend && npm ci",
   "buildCommand": "cd frontend && npm run build",
   "outputDirectory": "frontend/dist",
   "framework": null,
@@ -10,8 +10,16 @@
   "functions": {
     "api/index.py": {
       "includeFiles": "backend/**",
+      "excludeFiles": "{backend/.venv/**,backend/data/**,backend/tests/**,backend/evaluation/**,backend/tools/**,frontend/**,docs/**,**/__pycache__/**}",
       "maxDuration": 60
     }
+  },
+  "env": {
+    "KOSHSETU_ENVIRONMENT": "demo",
+    "KOSHSETU_STORAGE_BACKEND": "database",
+    "KOSHSETU_AUTO_CREATE_SCHEMA": "false",
+    "KOSHSETU_EXPOSE_DOCS": "false",
+    "KOSHSETU_OCR_ENABLED": "false"
   },
   "rewrites": [
     {

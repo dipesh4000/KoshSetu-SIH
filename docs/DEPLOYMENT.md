@@ -1,7 +1,7 @@
 # Deployment and operations
 
-The supported, verified path is local development and the loopback Docker
-Compose stack. A hosted deployment requires an approved owner to supply a
+Local development has been tested. The loopback Docker Compose stack is
+configured but has not been run locally. A hosted deployment requires an owner to supply a
 PostgreSQL service, durable private object storage, secret management, TLS,
 backups, monitoring and an identity provider.
 
@@ -67,7 +67,28 @@ Run the PostgreSQL concurrency tests with an isolated
 `KOSHSETU_TEST_DATABASE_URL`. Review the synthetic evaluation output; it does
 not measure real bank documents or human reviewer calibration.
 
-## Operational boundaries
+## Vercel demo deployment
+
+Deploy from the repository root. `vercel.json` builds the Vite frontend with
+`npm ci`, routes `/api/*` to `api/index.py`, and uses Python 3.12 from
+`.python-version`. Root `requirements.txt` includes the backend pins so CI and
+Vercel use the same versions. The existing Singapore region and daily cron
+are retained.
+
+The configuration sets `demo` mode, database document storage, disables
+automatic schema creation, and disables OCR (Tesseract is not bundled in the
+Python function). Native PDF extraction and manual review remain available.
+Configure the PostgreSQL URL and secrets listed above in Vercel settings.
+Set `CRON_SECRET` equal to `KOSHSETU_BOOTSTRAP_SECRET` for the daily scan.
+
+After deployment, send an authenticated POST to
+`/api/v1/ops/bootstrap?step=schema` to create missing demo tables, then use
+`step=seed` for a new synthetic database. Existing rows are preserved. Check
+`/api/v1/health` and sign in to verify the deployment. Do not use `--reset`.
+Retain previous encryption keys during rotation so existing ciphertext remains
+readable; do not replace a key without a migration plan.
+
+## Integration status
 
 The repository does not activate Firebase, SMTP, SMS, real bank adapters,
 government SSO/MFA or managed cloud storage. The in-app notification outbox is
