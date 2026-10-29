@@ -1,0 +1,8 @@
+# Running the API as a long-lived process: locally, or in the container.
+# Adds the ASGI server, the migration tool and the S3/MinIO object store,
+# none of which the hosted function invokes.
+-r requirements.txt
+
+uvicorn[standard]==0.34.0
+alembic==1.18.4
+boto3==1.40.46

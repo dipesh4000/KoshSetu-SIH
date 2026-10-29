@@ -33,7 +33,7 @@ delivery are not enabled.
 
 ```powershell
 cd backend
-python -m pip install -r requirements.txt -r requirements-dev.txt
+python -m pip install -r requirements-dev.txt
 $env:PYTHONPATH = "."
 python -m app.devserver
 ```

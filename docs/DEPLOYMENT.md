@@ -9,7 +9,7 @@ backups, monitoring and an identity provider.
 
 ```powershell
 cd backend
-python -m pip install -r requirements.txt -r requirements-dev.txt
+python -m pip install -r requirements-dev.txt
 $env:PYTHONPATH = "."
 python -m app.devserver
 ```
@@ -71,9 +71,19 @@ not measure real bank documents or human reviewer calibration.
 
 Deploy from the repository root. `vercel.json` builds the Vite frontend with
 `npm ci`, routes `/api/*` to `api/index.py`, and uses Python 3.12 from
-`.python-version`. Root `requirements.txt` includes the backend pins so CI and
-Vercel use the same versions. The existing Singapore region and daily cron
-are retained.
+`.python-version`. Root `requirements.txt` includes the backend's **runtime**
+pins, so the function and everything else share one source of versions without
+the function carrying tooling it never invokes:
+
+| File | Installs | Used by |
+| --- | --- | --- |
+| `backend/requirements.txt` | API runtime | the hosted function |
+| `backend/requirements-server.txt` | + uvicorn, alembic, boto3 | container and local runs |
+| `backend/requirements-dev.txt` | + pytest, ruff, pip-audit, Pillow | tests, lint, audit, evaluation |
+
+That keeps the function around 168 MB against a 250 MB limit, instead of the
+212 MB it reaches when it installs the full set. The existing Singapore region
+and daily cron are retained.
 
 The configuration sets `demo` mode, database document storage, disables
 automatic schema creation, and disables OCR (Tesseract is not bundled in the

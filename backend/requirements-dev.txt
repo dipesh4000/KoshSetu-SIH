@@ -1,3 +1,9 @@
+# Tests, linting and the dependency audit, plus everything they run against.
+-r requirements-server.txt
+
+pytest==9.0.3
+httpx==0.28.1
 ruff==0.14.3
 pip-audit==2.9.0
+# Used by evaluation/run.py to synthesise degraded scans for the OCR dataset.
 Pillow==12.0.0

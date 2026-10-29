@@ -1,23 +1,36 @@
+# Runtime dependencies: exactly what the API needs to serve a request.
+#
+# The hosted function installs this file and nothing else, because a
+# serverless bundle has a hard size limit and every megabyte of unused
+# dependency is also cold-start time. Tooling that only runs in a container,
+# a terminal or a test lives in the files below, each of which includes this
+# one, so the pins stay in a single place and cannot drift.
+#
+#   requirements.txt         API runtime            (hosted function, and a base)
+#   requirements-server.txt  + local/container run  (uvicorn, migrations, MinIO)
+#   requirements-dev.txt     + tests                (pytest, httpx)
+
 fastapi==0.162.0
 starlette==1.3.1
-uvicorn[standard]==0.34.0
 sqlalchemy==2.0.36
 pydantic==2.10.4
 pydantic-settings==2.7.0
+email-validator==2.2.0
 PyJWT==2.15.0
 python-multipart==0.0.32
-pypdf==6.21.3
 PyYAML==6.0.2
+
 # PostgreSQL driver. Unused by the SQLite default; required once
 # KOSHSETU_DATABASE_URL points at Postgres, as the deployment does.
 psycopg[binary]==3.2.3
-httpx==0.28.1
-pytest==9.0.3
-email-validator==2.2.0
 
-cryptography==50.0.0
+# Document pipeline. PyMuPDF is the primary extractor for every upload, not
+# only the OCR path, so it is required even where OCR is switched off.
 PyMuPDF==1.27.2.3
-openpyxl==3.1.5
+pypdf==6.21.3
+
+# Signature inspection and the spreadsheet reader behind bulk import. Both are
+# imported lazily, but both back endpoints the deployed app serves.
 pyHanko==0.29.1
-alembic==1.18.4
-boto3==1.40.46
+cryptography==50.0.0
+openpyxl==3.1.5

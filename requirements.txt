@@ -1,2 +1,5 @@
-# Share the backend dependency pins so hosted and CI installs cannot drift.
+# The hosted function installs the backend's runtime pins, and only those:
+# server, migration and test tooling are in backend/requirements-server.txt
+# and backend/requirements-dev.txt. Sharing this file keeps the versions
+# from drifting between the function and everything else.
 -r backend/requirements.txt
