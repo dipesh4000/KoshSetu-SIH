@@ -49,6 +49,19 @@ jobs:
           path: |
             backend/evaluation/results.json
             python-audit.json
+  requirements-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Root requirements match the backend runtime pins
+        run: |
+          norm() { grep -E '^[A-Za-z]' "$1" | sed 's/[[:space:]]*#.*//' | sort; }
+          if ! diff <(norm requirements.txt) <(norm backend/requirements.txt); then
+            echo "::error::requirements.txt has drifted from backend/requirements.txt."
+            echo "The hosted function installs the root file; copy the backend pins across."
+            exit 1
+          fi
+          echo "root requirements.txt matches backend/requirements.txt"
   frontend:
     runs-on: ubuntu-latest
     defaults:
